@@ -1,4 +1,4 @@
-
+require('dotenv').config();
 
 const { REST, Routes, 
   DiscordjsError, IntegrationApplication, 
@@ -9,10 +9,10 @@ const { REST, Routes,
 
 const wait = require('node:timers/promises').setTimeout;
 
-// const CLIENT_ID = "731644582164430870"
-// const TOKEN = "NzMxNjQ0NTgyMTY0NDMwODcw.GnN_KO.4Qa3Fa6KQn-p5yLsLZ8Rnvg0EgSa1g7YSHqsCo"
 
-const { CLIENT_ID, TOKEN } = require('./config.json')
+// How to setup .env variables for confidential discord token information
+const CLIENT_ID = process.env.DISCORD_CLIENT_ID
+const TOKEN = process.env.DISCORD_TOKEN
 
 const commands = [  
     {
@@ -49,7 +49,8 @@ const client = new Client({
   intents: [
     GatewayIntentBits.Guilds, 
     GatewayIntentBits.GuildMessages, 
-    GatewayIntentBits.MessageContent
+    GatewayIntentBits.MessageContent,
+    GatewayIntentBits.DirectMessages
   ]
 });
 
