@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/pluffpenguin/Notion-Deadline-Reminder-Bot#readme",
   "dependencies": {
+    "@notionhq/client": "^2.2.1",
     "notion": "^0.0.1"
   }
 }
