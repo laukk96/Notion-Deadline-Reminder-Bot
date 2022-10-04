@@ -1,18 +1,22 @@
-require('dotenv').config();
+require('dotenv').config('/.env');
 
 const { REST, Routes, 
   DiscordjsError, IntegrationApplication, 
   Embed, EmbedBuilder,
-  ActionRowBuilder, ButtonBuilder, ButtonStyle, ButtonInteraction,
-  MessageComponentInteraction, ChatInputCommandInteraction } = require('discord.js');
+  ActionRowBuilder, ButtonBuilder, ButtonStyle, ButtonInteraction
+} = require('discord.js');
 
+  
+// MessageComponentInteraction, ChatInputCommandInteraction
 
 const wait = require('node:timers/promises').setTimeout;
 
 
 // How to setup .env variables for confidential discord token information
-const CLIENT_ID = process.env.DISCORD_CLIENT_ID
-const TOKEN = process.env.DISCORD_TOKEN
+const CLIENT_ID = process.env.DISCORD_CLIENT_ID;
+const TOKEN = process.env.DISCORD_TOKEN;
+
+
 
 const commands = [  
     {
@@ -118,6 +122,5 @@ client.on('messageCreate', (message) => {
 
 
 console.log('Hello World.');
-
 
 client.login(TOKEN);
