@@ -117,6 +117,15 @@ client.on('messageCreate', (message) => {
   // Check to see if the message created is it's own message
   if (message.author.id == '1018596435320639539'){ return; }
   // message.channel.send(message.content);
+  if (message.content == "dm me 4"){
+    try{
+      console.log(message.author.name, message.author.id);
+      message.channel.send(`Sending a message to ${message.author.toString()}`);
+      message.author.send("`Sending Direct Message 4`");
+    } catch(exception){
+      message.channel.send(`Could not send a message to ${message.author.toString()}`)
+    }
+  }
 });
 
 
