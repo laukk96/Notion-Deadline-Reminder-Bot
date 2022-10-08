@@ -24,7 +24,13 @@ class NotionDatabase {
     }
     
     getTask = (name) => {
-       const thenoob = "hello9";
+       return {
+        filter: {
+            property: "Person",
+            rich_text: {
+                contains: name
+            }
+        }
     }
     
 
