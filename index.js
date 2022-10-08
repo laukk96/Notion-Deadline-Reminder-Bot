@@ -125,6 +125,7 @@ client.on('messageCreate', (message) => {
     } catch(exception){
       message.channel.send(`Could not send a message to ${message.author.toString()}`)
     }
+    
   }
 });
 
