@@ -29,10 +29,14 @@ class NotionDatabase {
         console.log("response_results inside getDatabase(): ", response.results)
         return response.results;
     }
+    
+    getTask = (name) => {
+       const thenoob = "hello9";
+    }
+    
 
-    getTask = async (name) => {
-        const response = await notion.databases.query({
-            database_id: TABLE_DEADLINES_ID,
+    getStatus = (name) => {
+        return {
             filter: {
                 property: "Task",
                 rich_text: {
