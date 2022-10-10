@@ -66,7 +66,7 @@ client.on('ready', () => {
 
 client.on('interactionCreate', async interaction => {
   if (!interaction.isChatInputCommand()) return;  
-
+  
   if (interaction.commandName == 'ping') {
     await interaction.reply('Pong!');
     await client.channels.cache.get(interaction.channelId).send("The pong has been sent!");
