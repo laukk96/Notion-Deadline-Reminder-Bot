@@ -1,0 +1,25 @@
+{
+  "name": "notion-deadline-reminder-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pluffpenguin/Notion-Deadline-Reminder-Bot.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pluffpenguin/Notion-Deadline-Reminder-Bot/issues"
+  },
+  "homepage": "https://github.com/pluffpenguin/Notion-Deadline-Reminder-Bot#readme",
+  "dependencies": {
+    "@notionhq/client": "^2.2.1",
+    "discord.js": "^14.5.0",
+    "dotenv": "^16.0.3",
+    "notion": "^0.0.1"
+  }
+}
