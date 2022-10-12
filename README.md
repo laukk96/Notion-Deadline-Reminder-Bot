@@ -16,5 +16,6 @@ The Notion Bot Project for DVC's Google Developer Club.
 ```
 npm install discord.js
 npm install @notionhq/client
+npm install mongodb
 npm install dotenv
 ```
