@@ -1,21 +1,18 @@
-require('dotenv').config('/.env');
+require('dotenv').config();
 
 const { REST, Routes, 
   DiscordjsError, IntegrationApplication, 
   Embed, EmbedBuilder,
-  ActionRowBuilder, ButtonBuilder, ButtonStyle, ButtonInteraction
-} = require('discord.js');
+  ActionRowBuilder, ButtonBuilder, ButtonStyle, ButtonInteraction,
+  MessageComponentInteraction, ChatInputCommandInteraction } = require('discord.js');
 
-  
-// MessageComponentInteraction, ChatInputCommandInteraction
 
 const wait = require('node:timers/promises').setTimeout;
 
 
 // How to setup .env variables for confidential discord token information
-const CLIENT_ID = process.env.DISCORD_CLIENT_ID;
-const TOKEN = process.env.DISCORD_TOKEN;
-
+const CLIENT_ID = process.env.DISCORD_CLIENT_ID
+const TOKEN = process.env.DISCORD_TOKEN
 
 const commands = [  
     {
@@ -29,6 +26,14 @@ const commands = [
     {
       name: 'button',
       description: 'Test with Button Interactions.'
+    },
+    {
+      name: 'help',
+      description: 'If you need help to link your notion to discord!'
+    },
+    {
+      name: 'credits',
+      description: 'The original authors of the bot'
     }
 ];
 
@@ -106,10 +111,40 @@ client.on('interactionCreate', async interaction => {
           .setLabel('Green')
           .setStyle(ButtonStyle.Success),
       );
-    
-    
+  } else if (interaction.commandName == 'help') {
+    const helpEmbed = new EmbedBuilder()
+	.setColor(0x1099FF)
+	.setTitle('Help with Notion')
+	.setURL('https://www.simple.ink/integrations/discord-in-notion')
+	.setAuthor({ name: 'Notion', iconURL: 'https://upload.wikimedia.org/wikipedia/commons/4/45/Notion_app_logo.png', url: 'https://discord.js.org' })
+	.setDescription('This is a guide on how to get started with Notion')
+	.setThumbnail('https://cdn.dribbble.com/users/153131/screenshots/10878981/notion_4x.png')
+	.addFields(
+		{ name: 'Please click on this link to get started with linking your notion to discord!', value: 'https://www.simple.ink/integrations/discord-in-notion' },
+	)
+	.setImage('https://cdn.dribbble.com/users/153131/screenshots/10878981/notion_4x.png')
+	.setTimestamp()
+	.setFooter({ text: 'Courtesy of the GDSC Development Team', iconURL: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.Kg2FF2wpIK_HLyo8Q56ycAHaFj%26pid%3DApi&f=1&ipt=903b969ee37fcf7030b3b98b6b053ba7b2e31ca8f1478f60f135f1c5a5a5796a&ipo=images' });
 
-    await interaction.reply({embeds: [button_embed], components: [row]});
+  await interaction.reply({embeds: [helpEmbed],} );
+
+  } else if (interaction.commandName == 'credits') {
+    const creditsEmbed = new EmbedBuilder()
+	.setColor(0x1099FF)
+	.setTitle('Credits')
+	.setAuthor({ name: 'Google Developer Student Club', iconURL: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%3Fid%3DOIP.g1-tsdPVN-SCgajIwi75MQHaC5%26pid%3DApi&f=1&ipt=8bd00114b7cc9f8ccc54c9b084bb19abf05f20acd2b6f8831f285f3a4c789218&ipo=images', url: 'https://discord.gg/nxKfjYKFby'})
+	.setDescription('Credits to the authors!')
+	.setThumbnail('https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%3Fid%3DOIP.g1-tsdPVN-SCgajIwi75MQHaC5%26pid%3DApi&f=1&ipt=8bd00114b7cc9f8ccc54c9b084bb19abf05f20acd2b6f8831f285f3a4c789218&ipo=images')
+	.addFields(
+		{ name: 'Project Managers', value: 'Kiaran L, Konstantin V' },
+    { name: 'Discord JS', value: 'Jay C'},
+    { name: 'Notion Api', value: 'Richard A'},
+    { name: 'Security Analysis', value: 'Jay C'},
+    { name: 'Cost Analysis', value: 'Richard A'},
+	)
+	.setFooter({ text: 'Courtesy of the GDSC Development Team', iconURL: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.Kg2FF2wpIK_HLyo8Q56ycAHaFj%26pid%3DApi&f=1&ipt=903b969ee37fcf7030b3b98b6b053ba7b2e31ca8f1478f60f135f1c5a5a5796a&ipo=images' });
+
+  await interaction.reply({embeds: [creditsEmbed],} );
   }
 });
 
@@ -124,11 +159,12 @@ client.on('messageCreate', (message) => {
       message.author.send("`Sending Direct Message 4`");
     } catch(exception){
       message.channel.send(`Could not send a message to ${message.author.toString()}`)
-    } 
+    }
   }
 });
 
 
 console.log('Hello World.');
+
 
 client.login(TOKEN);
