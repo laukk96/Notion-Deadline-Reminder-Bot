@@ -46,22 +46,12 @@ class NotionDatabase {
                     contains: name
                 }
             }
-        });
+        };
 
         return response;
     }
 
     getPerson = async (name) => {
-        // const response = await notion.databases.query({
-        //     database_id: TABLE_DEADLINES_ID,
-        //     filter: {
-        //         "properties": "Person",
-        //         "rich_text": {
-        //             "contains": name
-        //         }
-        //     }
-        // });
-        
         const response = await notion.databases.query({
             database_id: TABLE_DEADLINES_ID
         });
