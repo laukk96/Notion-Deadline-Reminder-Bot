@@ -140,8 +140,8 @@ client.on('interactionCreate', async interaction => {
 	.setThumbnail('https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%3Fid%3DOIP.g1-tsdPVN-SCgajIwi75MQHaC5%26pid%3DApi&f=1&ipt=8bd00114b7cc9f8ccc54c9b084bb19abf05f20acd2b6f8831f285f3a4c789218&ipo=images')
 	.addFields(
 		{ name: 'Project Managers', value: 'Kiaran L, Konstantin V' },
-    { name: 'Discord JS', value: 'Jay C, Subrat T'},
-    { name: 'Notion Api', value: 'Richard A, Subrat T'},
+    { name: 'Discord JS', value: 'Jay C'},
+    { name: 'Notion Api', value: 'Richard A'},
     { name: 'Security Analysis', value: 'Jay C'},
     { name: 'Cost Analysis', value: 'Richard A'},
 	)
@@ -163,7 +163,6 @@ client.on('messageCreate', (message) => {
     } catch(exception){
       message.channel.send(`Could not send a message to ${message.author.toString()}`)
     }
-    
   }
 });
 

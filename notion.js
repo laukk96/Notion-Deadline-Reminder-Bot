@@ -46,7 +46,7 @@ class NotionDatabase {
                     contains: name
                 }
             }
-        });
+        };
 
         return response;
     }
