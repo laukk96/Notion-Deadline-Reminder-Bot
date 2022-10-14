@@ -10,45 +10,100 @@ const notion = new Client({
     auth: process.env.NOTION_KEY,
 })
 
+//just to check the objects in the properties
+const checkDataBase = async () => {
+    const payload = {
+        path: `databases/${TABLE_DEADLINES_ID}/query`,
+        method: 'POST'
+    }
+
+    const { results } = await notion.request(payload)
+
+    const detailData = results.map(page => {
+        console.log(page)
+    })
+}
+
 class NotionDatabase {
     
-    constructor (TABLE_DEADLINES_ID){
+    constructor (connectDatabase)
+    {
         console.log("The NotionDatabase is being created!");
         (async () => {
             const response = await notion.databases.query({
-                database_id: TABLE_DEADLINES_ID
+                database_id: this.connectDatabase
             });
         
             //console.log(response.results[1]['properties']['Person']);
         })();
     }
-    
-    getTask = (name) => {
-       return {
-        filter: {
-            property: "Person",
-            rich_text: {
-                contains: name
-            }
-        }
-    }
-    
-
-    getStatus = (name) => {
-        return {
-            filter: {
-                property: "Status",
-                rich_text: {
-                    contains: name
-                }
-            }
-        }
-    }
 
 }
 
-database1 = new NotionDatabase(TABLE_DEADLINES_ID);
-console.log(database1.getTask("Jay"));
+//locates a person's index
+getPerson = async (name) => {
+    const payload = {
+        path: `databases/${TABLE_DEADLINES_ID}/query`,
+        method: 'POST'
+    }
+    
+
+    const {results} = await notion.request(payload)
+
+    const people = results.map(page => {
+        tmpPeople = page.properties.Person.people[0].name
+
+        return tmpPeople
+    })
+
+    people.forEach((item, index, arr) => {
+        if (item == name)
+        {
+            personIndex = index
+        }
+    });
+
+    return personIndex
+}
+
+
+getStatus = async (name) => {
+    const payload = {
+        path: `databases/${TABLE_DEADLINES_ID}/query`,
+        method: 'POST'
+    }
+    
+
+    const {results} = await notion.request(payload)
+
+    const person = await getPerson(name);
+
+    const status = results.map(page => {
+        tmpStatus = page.properties.Status.checkbox
+
+        return tmpStatus
+    })
+
+    status.forEach((item, index, arr) => {
+        if(index == person)
+        {
+            personStatus = item + "!";
+        }
+    });
+
+    return personStatus;
+}
+
+
+(async() => {
+    const somePerson = await getStatus("Richard Azucenas")
+    console.log(somePerson)
+})();
+
+
+
+//checkDataBase()
+
 /*
 (async () => {
     // How to retrieve a database? 
@@ -57,6 +112,6 @@ console.log(database1.getTask("Jay"));
         database_id: TABLE_DEADLINES_ID
     });
 
-    console.log(response.results[1]['properties']['Person']);
+    console.log(response.results[1]['properties']['Person');
 })();
 */
