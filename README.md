@@ -13,11 +13,10 @@ The Notion Bot Project for DVC's Google Developer Club.
 4. `MONGODB_PASSWORD`
 
 
-### (With Node.js) Requires:
+### [With Node.js] Requires:
 ```
 npm install discord.js
 npm install @notionhq/client
-npm install typescript
 npm install mongodb
 npm install dotenv
 ```
