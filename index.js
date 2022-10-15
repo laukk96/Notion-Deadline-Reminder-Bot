@@ -1,10 +1,13 @@
 require("dotenv").config();
-const { UserRegistry } = require("./mongodb/databases");
+
 /* Example interface
 const UserRegistryDatabase = new UserRegistry();
 
 UserRegistryDatabase.connect();
-UserRegistryDatabase.queries.get.user("John");
+let payload = UserRegistryDatabase.queries.get.user({name: "John", id: "H1232"});
+if (!payload.error) {
+
+}
 UserRegistryDatabase.close();
 */
 const {
