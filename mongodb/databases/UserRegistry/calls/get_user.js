@@ -3,7 +3,7 @@ export default get_user = (MongoDB) =>
     const { name, id } = config; //Search parameters
     //TODO: Validate Strings
     if (id) {
-      //Put Precedence in checking by id
+      //Put Precedence in checking by id.
       try {
       } catch (error) {}
     } else if (name) {
