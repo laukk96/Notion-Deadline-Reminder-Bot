@@ -12,10 +12,11 @@ The Notion Bot Project for DVC's Google Developer Club.
 3. `NOTION_KEY`
 
 
-### Requires:
+### (With Node.js) Requires:
 ```
 npm install discord.js
 npm install @notionhq/client
+npm install typescript
 npm install mongodb
 npm install dotenv
 ```
