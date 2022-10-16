@@ -56,12 +56,11 @@ const commands = [
     description: "The original authors of the bot",
   },
   new SlashCommandBuilder()
-    .setName("add")
-    .setDescription("")
-    .addStringOption(option => option.setName("first_name").setDescription(""))
-    .addStringOption(option => option.setName("last_name").setDescription(""))
-    .addUserOption(option => option.setName("user").setDescription(""))
-    .addStringOption(option => option.setName("email").setDescription("")).toJSON()
+    .setName("adduser")
+    .setDescription("Add a User to the Database")
+    .addStringOption(option => option.setName("name").setDescription("Enter the Full Name"))
+    .addUserOption(option => option.setName("user").setDescription("user"))
+    .addStringOption(option => option.setName("email").setDescription("Notion Email")).toJSON()
 ];
 
 const rest = new REST({ version: "10" }).setToken(TOKEN);
@@ -214,11 +213,26 @@ client.on("interactionCreate", async (interaction) => {
     const adduserEmbed = new EmbedBuilder()
       .setColor("#00ff6e")
       .setTitle("Add User")
-      .setDescription("Very green");
+      .setDescription("**`Do you want to add this user to the database?`**")
+      .addFields(
+        {name: "Name", value: `${interaction.options.getString("name")}`},
+        {name: "User", value: `${interaction.options.getUser("user")}`},
+        {name: "Email", value: `${interaction.options.getString('email')}`}
+      );
+      
+    const adduserButtons = new ActionRowBuilder().addComponents(
+      new ButtonBuilder()
+        .setCustomId("Green")
+        .setLabel("Confirm")
+        .setStyle(ButtonStyle.Success)
+    );
 
-    await interaction.reply({embeds: [adduserEmbed]});
+        
+    await interaction.reply({embeds: [adduserEmbed], components: [adduserButtons]});
   }
 });
+
+
 
 client.on("messageCreate", (message) => {
   // Check to see if the message created is it's own message
