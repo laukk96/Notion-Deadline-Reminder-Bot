@@ -34,7 +34,6 @@ async function UserRegistryDatabase() {
   async function get(USER_REGISTRY_DATABASE) {
     const data = {
       name: "John",
-      notion_id: "123",
       email: "John@insite.4cd.edu",
       discord_id: "123123123",
       uid: "awedawdaw",
