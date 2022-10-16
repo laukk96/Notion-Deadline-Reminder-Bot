@@ -18,11 +18,14 @@ const {
   Embed,
   EmbedBuilder,
   ActionRowBuilder,
+  SlashCommandBuilder,
   ButtonBuilder,
   ButtonStyle,
   ButtonInteraction,
   MessageComponentInteraction,
+  CommandInteractionOptionResolver,
   ChatInputCommandInteraction,
+  InteractionResponse,
 } = require("discord.js");
 
 const wait = require("node:timers/promises").setTimeout;
@@ -52,6 +55,13 @@ const commands = [
     name: "credits",
     description: "The original authors of the bot",
   },
+  new SlashCommandBuilder()
+    .setName("add")
+    .setDescription("")
+    .addStringOption(option => option.setName("first_name").setDescription(""))
+    .addStringOption(option => option.setName("last_name").setDescription(""))
+    .addUserOption(option => option.setName("user").setDescription(""))
+    .addStringOption(option => option.setName("email").setDescription("")).toJSON()
 ];
 
 const rest = new REST({ version: "10" }).setToken(TOKEN);
@@ -91,11 +101,13 @@ client.on("interactionCreate", async (interaction) => {
     await client.channels.cache
       .get(interaction.channelId)
       .send("The pong has been sent!");
-  } else if (interaction.commandName == "doc") {
+  } 
+  else if (interaction.commandName == "doc") {
     await interaction.reply(
       "https://www.notion.so/help/guides/category/documentation"
     );
-  } else if (interaction.commandName == "button") {
+  } 
+  else if (interaction.commandName == "button") {
     // [ Embed Message ]
     const button_embed = new EmbedBuilder()
       .setColor("Grey")
@@ -130,7 +142,8 @@ client.on("interactionCreate", async (interaction) => {
     );
 
     await interaction.reply({ embeds: [button_embed], components: [row] });
-  } else if (interaction.commandName == "help") {
+  } 
+  else if (interaction.commandName == "help") {
     const helpEmbed = new EmbedBuilder()
       .setColor(0x1099ff)
       .setTitle("Help with Notion")
@@ -160,7 +173,8 @@ client.on("interactionCreate", async (interaction) => {
       });
 
     await interaction.reply({ embeds: [helpEmbed] });
-  } else if (interaction.commandName == "credits") {
+  } 
+  else if (interaction.commandName == "credits") {
     const creditsEmbed = new EmbedBuilder()
       .setColor(0x1099ff)
       .setTitle("Credits")
@@ -188,6 +202,21 @@ client.on("interactionCreate", async (interaction) => {
       });
 
     await interaction.reply({ embeds: [creditsEmbed] });
+  }
+  else if (interaction.commandName == "adduser"){
+    if (interaction.isChatInputCommand()){
+      console.log("interaction IS chat input command: ");
+    }
+    else{
+      console.log("is NOT chat input command.");
+    }
+      
+    const adduserEmbed = new EmbedBuilder()
+      .setColor("#00ff6e")
+      .setTitle("Add User")
+      .setDescription("Very green");
+
+    await interaction.reply({embeds: [adduserEmbed]});
   }
 });
 
