@@ -144,7 +144,7 @@ client.on("interactionCreate", async (interaction) => {
   } 
   else if (interaction.commandName == "help") {
     const helpEmbed = new EmbedBuilder()
-      .setColor(0x1099ff)
+      .setColor("Yellow")
       .setTitle("Help with Notion")
       .setURL("https://www.simple.ink/integrations/discord-in-notion")
       .setAuthor({
