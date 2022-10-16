@@ -51,7 +51,11 @@ const commands = [
   {
     name: "credits",
     description: "The original authors of the bot",
-  },
+  }, 
+  {
+    name: "adduser",
+    description: "Officer is trying to add a user to the USER_REGISTRY database:",
+  }
 ];
 
 const rest = new REST({ version: "10" }).setToken(TOKEN);
@@ -132,7 +136,7 @@ client.on("interactionCreate", async (interaction) => {
     await interaction.reply({ embeds: [button_embed], components: [row] });
   } else if (interaction.commandName == "help") {
     const helpEmbed = new EmbedBuilder()
-      .setColor(0x1099ff)
+      .setColor("Yellow")
       .setTitle("Help with Notion")
       .setURL("https://www.simple.ink/integrations/discord-in-notion")
       .setAuthor({
@@ -188,6 +192,8 @@ client.on("interactionCreate", async (interaction) => {
       });
 
     await interaction.reply({ embeds: [creditsEmbed] });
+  } else if (interaction.commandName == "adduser") {
+
   }
 });
 
