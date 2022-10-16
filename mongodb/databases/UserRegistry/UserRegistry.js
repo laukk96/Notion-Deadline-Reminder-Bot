@@ -4,6 +4,7 @@ const { queries } = require("./queries");
 const COLLECTION_NAME = process.env.USER_REGISTRY_COLLECTION_NAME; //This ought to be defined in an .env file;
 let MongoDBClient = null;
 let Collection = null;
+
 class UserRegistry {
   constructor() {
     if (MongoDBClient === null) MongoDBClient = new MongoDBWrapper();

@@ -13,7 +13,7 @@ get_user = (UserRegistry) =>
       //Put Precedence in checking by id.
       try {
         result.status = 1;
-        result.payload = await UserRegistry.findOne(user_data);
+        result.payload = user(await UserRegistry.findOne(user_data));
         return result;
       } catch (error) {
         result.status = 0;
