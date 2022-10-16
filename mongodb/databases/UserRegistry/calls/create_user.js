@@ -1,4 +1,4 @@
-const { user } = require("../schemas/user");
+const { UserSchema } = require("../schemas/user");
 const create_user = (UserRegistry) =>
   async function (data) {
     let result = {
@@ -6,9 +6,11 @@ const create_user = (UserRegistry) =>
       error: null,
       payload: null,
     };
+
     try {
-      const user_data = user(data);
-      result.payload = await UserRegistry.insertOne(user_data);
+      const user_data = UserSchema.exclude(data);
+      const payload = await UserRegistry.insertOne(user_data);
+      result.payload = payload;
       result.status = 1;
     } catch (error) {
       result.error = error; //TODO: replace error
