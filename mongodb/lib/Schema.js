@@ -6,14 +6,14 @@ class Schema {
   exclude(objB) {
     let objA = {};
     Object.keys(this.structure).forEach((key) => {
-      if (objB?.[key]) objA[key] = objB[key];
+      if (objB?.[key]) objA[key] = this.structure[key](objB[key]) || null;
     });
     return objA;
   }
   intersect(objB) {
     let objA = {};
     Object.keys(this.structure).forEach((key) => {
-      if (objB?.[key]) objA[key] = objB[key];
+      if (objB?.[key]) objA[key] = this.structure[key](objB[key]);
       else {
         objA[key] = undefined;
       }
