@@ -16,21 +16,41 @@ let DeadlineRequest = {
 };
 //Deadline filters
 Deadline.date_assigned = (date) => {
-  return date;
+  if (typeof date === "string") {
+    return date;
+  } else {
+    throw "Wrong type.";
+  }
 };
 Deadline.finish_date = (date) => {
-  return date;
+  if (typeof date === "string") {
+    return date;
+  } else {
+    throw "Wrong type.";
+  }
 };
 Deadline.text = (text) => {
-  return text;
+  if (typeof text === "string") {
+    return text;
+  } else {
+    throw "Wrong type.";
+  }
 };
 
 //DeadlineMeta filters
 DeadlineMeta.user_id = (id) => {
-  return id;
+  if (typeof id === "string") {
+    return id;
+  } else {
+    throw "Wrong type.";
+  }
 };
-DeadlineMeta.all_deadlines = (text) => {
-  return text;
+DeadlineMeta.all_deadlines = (array) => {
+  if (array.length > 0) return array;
+  else {
+    //TODO: parse through array
+    return array;
+  }
 };
 
 //DeadlineRequest filters
