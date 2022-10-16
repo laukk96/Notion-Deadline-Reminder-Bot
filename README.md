@@ -10,9 +10,10 @@ The Notion Bot Project for DVC's Google Developer Club.
 1. `DISCORD_CLIENT_ID`
 2. `DISCORD_TOKEN`
 3. `NOTION_KEY`
+4. `MONGODB_PASSWORD`
 
 
-### Requires:
+### [With Node.js] Requires:
 ```
 npm install discord.js
 npm install @notionhq/client
