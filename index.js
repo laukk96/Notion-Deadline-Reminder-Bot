@@ -1,5 +1,6 @@
 require("dotenv").config();
-
+const { UserRegistry } = require("./mongodb/databases");
+const UserRegistryDatabase = new UserRegistry();
 /* Example interface
 const UserRegistryDatabase = new UserRegistry();
 
@@ -61,9 +62,14 @@ const commands = [
   new SlashCommandBuilder()
     .setName("adduser")
     .setDescription("Add a User to the Database")
-    .addStringOption(option => option.setName("name").setDescription("Enter the Full Name"))
-    .addUserOption(option => option.setName("user").setDescription("user"))
-    .addStringOption(option => option.setName("email").setDescription("Notion Email")).toJSON()
+    .addStringOption((option) =>
+      option.setName("name").setDescription("Enter the Full Name")
+    )
+    .addUserOption((option) => option.setName("user").setDescription("user"))
+    .addStringOption((option) =>
+      option.setName("email").setDescription("Notion Email")
+    )
+    .toJSON(),
 ];
 
 const rest = new REST({ version: "10" }).setToken(TOKEN);
@@ -81,6 +87,7 @@ const rest = new REST({ version: "10" }).setToken(TOKEN);
 })();
 
 const { Client, GatewayIntentBits } = require("discord.js");
+const { endianness } = require("node:os");
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -103,13 +110,11 @@ client.on("interactionCreate", async (interaction) => {
     await client.channels.cache
       .get(interaction.channelId)
       .send("The pong has been sent!");
-  } 
-  else if (interaction.commandName == "doc") {
+  } else if (interaction.commandName == "doc") {
     await interaction.reply(
       "https://www.notion.so/help/guides/category/documentation"
     );
-  } 
-  else if (interaction.commandName == "button") {
+  } else if (interaction.commandName == "button") {
     // [ Embed Message ]
     const button_embed = new EmbedBuilder()
       .setColor("Grey")
@@ -144,8 +149,7 @@ client.on("interactionCreate", async (interaction) => {
     );
 
     await interaction.reply({ embeds: [button_embed], components: [row] });
-  } 
-  else if (interaction.commandName == "help") {
+  } else if (interaction.commandName == "help") {
     const helpEmbed = new EmbedBuilder()
       .setColor("Yellow")
       .setTitle("Help with Notion")
@@ -175,8 +179,7 @@ client.on("interactionCreate", async (interaction) => {
       });
 
     await interaction.reply({ embeds: [helpEmbed] });
-  } 
-  else if (interaction.commandName == "credits") {
+  } else if (interaction.commandName == "credits") {
     const creditsEmbed = new EmbedBuilder()
       .setColor(0x1099ff)
       .setTitle("Credits")
@@ -212,7 +215,7 @@ client.on("interactionCreate", async (interaction) => {
   //   else{
   //     console.log("is NOT chat input command.");
   //   }
-      
+
   //   const adduserEmbed = new EmbedBuilder()
   //     .setColor("#00ff6e")
   //     .setTitle("Add User")
@@ -222,7 +225,7 @@ client.on("interactionCreate", async (interaction) => {
   //       {name: "User", value: `${interaction.options.getUser("user")}`},
   //       {name: "Email", value: `${interaction.options.getString('email')}`}
   //     );
-      
+
   //   const adduserButtons = new ActionRowBuilder().addComponents(
   //     new ButtonBuilder()
   //       .setCustomId("Green")
@@ -231,54 +234,75 @@ client.on("interactionCreate", async (interaction) => {
   //   );
 
   //   const filter = (i) => i.user.id === interaction.user.id;
-        
+
   //   await interaction.reply({embeds: [adduserEmbed], components: [adduserButtons]});
-  // } 
-}); 
-
-client.on('interactionCreate', async interaction => {
-	if (!interaction.isChatInputCommand()) return;
-
-	if (interaction.commandName === 'adduser') {
-		// Create the modal
-		const modal = new ModalBuilder()
-			.setCustomId('myModal')
-			.setTitle('My Modal');
-
-		// Create the text input components
-		const nameInput = new TextInputBuilder()
-			.setCustomId('nameInput')
-			.setLabel("What is your name")		    
-			.setStyle(TextInputStyle.Short)
-      .setRequired(true);
-
-		const discordInput = new TextInputBuilder()
-			.setCustomId('discordInput')
-			.setLabel("What is your discord tag")		    
-			.setStyle(TextInputStyle.Short)
-      .setRequired(true);
-
-      const emailInput = new TextInputBuilder()
-			.setCustomId('emailInput')
-			.setLabel("What is your Email")
-			.setStyle(TextInputStyle.Short)
-      .setRequired(true);
-
-
-		const firstActionRow = new ActionRowBuilder().addComponents(nameInput);
-		const secondActionRow = new ActionRowBuilder().addComponents(discordInput);
-    const thirdActionRow = new ActionRowBuilder().addComponents(emailInput)
-
-
-		modal.addComponents(firstActionRow, secondActionRow, thirdActionRow);
-
-		await interaction.showModal(modal);
-    await interaction.reply({ content: 'Your submission was received successfully!' });
-
-	}
+  // }
 });
 
+client.on("interactionCreate", async (interaction) => {
+  if (!interaction.isChatInputCommand()) return;
 
+  if (interaction.commandName === "adduser") {
+    // Create the modal
+    const modal = new ModalBuilder()
+      .setCustomId("myModal")
+      .setTitle("My Modal");
+
+    // Create the text input components
+    const nameInput = new TextInputBuilder()
+      .setCustomId("name")
+      .setLabel("What is your name")
+      .setStyle(TextInputStyle.Short)
+      .setRequired(true);
+
+    const discordInput = new TextInputBuilder()
+      .setCustomId("discord_id")
+      .setLabel("What is your discord tag")
+      .setStyle(TextInputStyle.Short)
+      .setRequired(true);
+
+    const emailInput = new TextInputBuilder()
+      .setCustomId("email")
+      .setLabel("What is your Email")
+      .setStyle(TextInputStyle.Short)
+      .setRequired(true);
+
+    const firstActionRow = new ActionRowBuilder().addComponents(nameInput);
+    const secondActionRow = new ActionRowBuilder().addComponents(discordInput);
+    const thirdActionRow = new ActionRowBuilder().addComponents(emailInput);
+
+    modal.addComponents(firstActionRow, secondActionRow, thirdActionRow);
+
+    await interaction.showModal(modal);
+    // await interaction.reply({
+    //   content: "Your submission was received successfully!",
+    // });
+  }
+});
+
+client.on("interactionCreate", async (interaction) => {
+  if (!interaction.isModalSubmit()) return;
+  if (interaction.customId === "myModal") {
+    let user = {};
+    interaction.fields.fields.find((field, index, array) => {
+      user[index] = field.value;
+    });
+    console.log(user);
+    await UserRegistryDatabase.connect();
+    let payload = await UserRegistryDatabase.queries.create.user(user);
+    if (payload.error === null) {
+      await interaction.reply({
+        content: "Your submission was received successfully!",
+      });
+    } else {
+      await interaction.reply({
+        content:
+          "Your submission was not received successfully: " + payload.error,
+      });
+    }
+    await UserRegistryDatabase.close();
+  }
+});
 client.on("messageCreate", (message) => {
   // Check to see if the message created is it's own message
   if (message.author.id == "1018596435320639539") {

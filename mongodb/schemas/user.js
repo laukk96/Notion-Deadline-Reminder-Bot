@@ -1,6 +1,6 @@
 const { Schema } = require("../lib/Schema");
 //Represents the abstract structure
-const NAME_LENGTH = 12;
+const NAME_LENGTH = 24;
 let User = {
   name: null,
   notion_id: null,
