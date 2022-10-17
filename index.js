@@ -259,6 +259,5 @@ client.on("messageCreate", (message) => {
   }
 });
 
-console.log("Hello World.");
 
 client.login(TOKEN);
