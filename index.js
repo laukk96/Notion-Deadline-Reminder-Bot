@@ -26,6 +26,9 @@ const {
   CommandInteractionOptionResolver,
   ChatInputCommandInteraction,
   InteractionResponse,
+  ModalBuilder,
+  TextInputBuilder,
+  TextInputStyle,
 } = require("discord.js");
 
 const wait = require("node:timers/promises").setTimeout;
@@ -202,42 +205,78 @@ client.on("interactionCreate", async (interaction) => {
 
     await interaction.reply({ embeds: [creditsEmbed] });
   }
-  else if (interaction.commandName == "adduser"){
-    if (interaction.isChatInputCommand()){
-      console.log("interaction IS chat input command: ");
-    }
-    else{
-      console.log("is NOT chat input command.");
-    }
+  // else if (interaction.commandName == "adduser"){
+  //   if (interaction.isChatInputCommand()){
+  //     console.log("interaction IS chat input command: ");
+  //   }
+  //   else{
+  //     console.log("is NOT chat input command.");
+  //   }
       
-    const adduserEmbed = new EmbedBuilder()
-      .setColor("#00ff6e")
-      .setTitle("Add User")
-      .setDescription("**`Do you want to add this user to the database?`**")
-      .addFields(
-        {name: "Name", value: `${interaction.options.getString("name")}`},
-        {name: "User", value: `${interaction.options.getUser("user")}`},
-        {name: "Email", value: `${interaction.options.getString('email')}`}
-      );
+  //   const adduserEmbed = new EmbedBuilder()
+  //     .setColor("#00ff6e")
+  //     .setTitle("Add User")
+  //     .setDescription("**`Do you want to add this user to the database?`**")
+  //     .addFields(
+  //       {name: "Name", value: `${interaction.options.getString("name")}`},
+  //       {name: "User", value: `${interaction.options.getUser("user")}`},
+  //       {name: "Email", value: `${interaction.options.getString('email')}`}
+  //     );
       
-    const adduserButtons = new ActionRowBuilder().addComponents(
-      new ButtonBuilder()
-        .setCustomId("Green")
-        .setLabel("Confirm")
-        .setStyle(ButtonStyle.Success)
-    );
+  //   const adduserButtons = new ActionRowBuilder().addComponents(
+  //     new ButtonBuilder()
+  //       .setCustomId("Green")
+  //       .setLabel("Confirm")
+  //       .setStyle(ButtonStyle.Success)
+  //   );
 
-    const filter = (i) => i.user.id === interaction.user.id;
+  //   const filter = (i) => i.user.id === interaction.user.id;
         
-    await interaction.reply({embeds: [adduserEmbed], components: [adduserButtons]});
-  }
+  //   await interaction.reply({embeds: [adduserEmbed], components: [adduserButtons]});
+  // } 
 }); 
 
-client.on('interactionCreate', (interaction) => {
-  if (interaction.isButton()) {
-    interaction.reply({ content: 'Thanks for filling this out, it has been updated' })
-  }
-})
+client.on('interactionCreate', async interaction => {
+	if (!interaction.isChatInputCommand()) return;
+
+	if (interaction.commandName === 'adduser') {
+		// Create the modal
+		const modal = new ModalBuilder()
+			.setCustomId('myModal')
+			.setTitle('My Modal');
+
+		// Create the text input components
+		const nameInput = new TextInputBuilder()
+			.setCustomId('nameInput')
+			.setLabel("What is your name")		    
+			.setStyle(TextInputStyle.Short)
+      .setRequired(true);
+
+		const discordInput = new TextInputBuilder()
+			.setCustomId('discordInput')
+			.setLabel("What is your discord tag")		    
+			.setStyle(TextInputStyle.Short)
+      .setRequired(true);
+
+      const emailInput = new TextInputBuilder()
+			.setCustomId('emailInput')
+			.setLabel("What is your Email")
+			.setStyle(TextInputStyle.Short)
+      .setRequired(true);
+
+
+		const firstActionRow = new ActionRowBuilder().addComponents(nameInput);
+		const secondActionRow = new ActionRowBuilder().addComponents(discordInput);
+    const thirdActionRow = new ActionRowBuilder().addComponents(emailInput)
+
+
+		modal.addComponents(firstActionRow, secondActionRow, thirdActionRow);
+
+		await interaction.showModal(modal);
+    await interaction.reply({ content: 'Your submission was received successfully!' });
+
+	}
+});
 
 
 client.on("messageCreate", (message) => {
@@ -259,5 +298,6 @@ client.on("messageCreate", (message) => {
   }
 });
 
+console.log("Hello World.");
 
 client.login(TOKEN);
