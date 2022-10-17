@@ -227,11 +227,17 @@ client.on("interactionCreate", async (interaction) => {
         .setStyle(ButtonStyle.Success)
     );
 
+    const filter = (i) => i.user.id === interaction.user.id;
         
     await interaction.reply({embeds: [adduserEmbed], components: [adduserButtons]});
   }
-});
+}); 
 
+client.on('interactionCreate', (interaction) => {
+  if (interaction.isButton()) {
+    interaction.reply({ content: 'Thanks for filling this out, it has been updated' })
+  }
+})
 
 
 client.on("messageCreate", (message) => {
