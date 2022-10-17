@@ -6,7 +6,7 @@ class Schema {
   exclude(objB) {
     let objA = {};
     Object.keys(this.structure).forEach((key) => {
-      if (objB?.[key]) objA[key] = this.structure[key](objB[key]) || null;
+      objA[key] = this.structure[key](objB?.[key] || null);
     });
     return objA;
   }
