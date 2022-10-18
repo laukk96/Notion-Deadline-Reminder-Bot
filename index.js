@@ -264,7 +264,6 @@ client.on('interactionCreate', async interaction => {
 			.setStyle(TextInputStyle.Short)
       .setRequired(true);
 
-
 		const firstActionRow = new ActionRowBuilder().addComponents(nameInput);
 		const secondActionRow = new ActionRowBuilder().addComponents(discordInput);
     const thirdActionRow = new ActionRowBuilder().addComponents(emailInput)
