@@ -1,5 +1,29 @@
 require("dotenv").config();
 
+// Get Collections from MongoDB
+const {
+  UserRegistry,
+  DeadlineHistory,
+} = require("./mongodb/databases");
+
+// Get Schema Data Objects
+const { UserSchema } = require("./mongodb/schemas/user")
+const { DeadlineSchema } = require("./mongodb/schemas/deadlines")
+
+const UserRegistryDatabase = new UserRegistry();
+const DeadlineHistoryDatabase = new DeadlineHistory();
+
+// const query = async function () {
+//   const payload = await UserRegistryDatabase.connect();
+//   if (payload.error) return;
+//   UserRegistryDatabase.queries.create.user({
+//     name: "Asdawdaw",
+//     notion_id: "Awdawdaw",
+//   });
+
+//   UserRegistryDatabase.close();
+// };
+
 /* Example interface
 const UserRegistryDatabase = new UserRegistry();
 
@@ -10,6 +34,10 @@ if (!payload.error) {
 }
 UserRegistryDatabase.close();
 */
+
+
+
+
 const {
   REST,
   Routes,
@@ -63,7 +91,10 @@ const commands = [
     .setDescription("Add a User to the Database")
     .addStringOption(option => option.setName("name").setDescription("Enter the Full Name"))
     .addUserOption(option => option.setName("user").setDescription("user"))
-    .addStringOption(option => option.setName("email").setDescription("Notion Email")).toJSON()
+    .addStringOption(option => option.setName("email").setDescription("Notion Email")).toJSON(),
+  new SlashCommandBuilder()
+    .setName("getusers")
+    .setDescription("Get a list of the users in the database")
 ];
 
 const rest = new REST({ version: "10" }).setToken(TOKEN);
@@ -236,31 +267,32 @@ client.on("interactionCreate", async (interaction) => {
   // } 
 }); 
 
-client.on('interactionCreate', async interaction => {
+// Second 'interactionCreate' function, I guess?
+client.on('interactionCreate', async (interaction) => {
 	if (!interaction.isChatInputCommand()) return;
 
-	if (interaction.commandName === 'adduser') {
+	if (interaction.commandName === "adduser") {
 		// Create the modal
 		const modal = new ModalBuilder()
-			.setCustomId('myModal')
-			.setTitle('My Modal');
+			.setCustomId("addUserModal")
+			.setTitle("Add User");
 
 		// Create the text input components
 		const nameInput = new TextInputBuilder()
-			.setCustomId('nameInput')
-			.setLabel("What is your name")		    
+			.setCustomId("nameInput")
+			.setLabel("What is the user's Name?")
 			.setStyle(TextInputStyle.Short)
       .setRequired(true);
 
 		const discordInput = new TextInputBuilder()
-			.setCustomId('discordInput')
-			.setLabel("What is your discord tag")		    
+			.setCustomId("discordInput")
+			.setLabel("What is this user's Discord UID?")		    
 			.setStyle(TextInputStyle.Short)
       .setRequired(true);
 
       const emailInput = new TextInputBuilder()
-			.setCustomId('emailInput')
-			.setLabel("What is your Email")
+			.setCustomId("emailInput")
+			.setLabel("What is the user's Email on the Notion page?")
 			.setStyle(TextInputStyle.Short)
       .setRequired(true);
 
@@ -272,9 +304,33 @@ client.on('interactionCreate', async interaction => {
 		modal.addComponents(firstActionRow, secondActionRow, thirdActionRow);
 
 		await interaction.showModal(modal);
-    await interaction.reply({ content: 'Your submission was received successfully!' });
-
+    //await interaction.reply({c: 'Your submission was received successfully!'});
 	}
+  else if (interaction.commandName == "getusers"){
+    
+  }
+});
+
+
+// Third Interaction Create, for Modals / Buttons
+client.on('interactionCreate', async (interaction) => {
+  // Check if interaction is Modal or Button
+  if ( !(interaction.isModalSubmit() || interaction.isButton()) ) return;
+
+  if (interaction.isModalSubmit() ){
+    console.log("Received a Modal: ", interaction.customId);
+    // adduser Modal
+    if (interaction.customId == "addUserModal"){
+      const name = interaction.fields.getTextInputValue("nameInput");
+      const discord_uid = interaction.fields.getTextInputValue("discordInput");
+      const email = interaction.fields.getTextInputValue("emailInput");
+
+      console.log("New User Info Received: ", name, " ", discord_uid, " ", email);
+      interaction.reply({content:"Thank you for submitting your User Info! "});
+      // const discord_user = client.get(Guilds);
+      // interaction.reply({content:`The new user is: ${discord_user}!`});
+    }
+  }
 });
 
 
