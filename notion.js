@@ -5,22 +5,22 @@ const { Client } = require("@notionhq/client")
 const notion = new Client({
     auth: process.env.NOTION_KEY, 
 })
-const { Client } = require("@notionhq/client");
+
 const { getDatabase } = require('@notionhq/client/build/src/api-endpoints');
 
 // const databaseId = process.env.NOTION_DATABASE_ID;
 // How to share a database with an notion integration/connection? 
-const TABLE_DEADLINES_ID = "0f201482f6f1407899e8f7c8ae7dea28";
+// const TABLE_DEADLINES_ID = "0f201482f6f1407899e8f7c8ae7dea28";
 
+const TABLE_DEADLINES_ID = "f944e134b0584cc289d0a97775384d76";
 
 
 //console.log(response.results[1]['properties']['Person']);
 
 
 class NotionDatabase {
-
     constructor (TABLE_DEADLINES_ID){
-        console.log("The NotionClient constructor has been run:");
+        console.log("The NotionClient constructor has been run:", TABLE_DEADLINES_ID);
     }
 
     getDatabase = async () => {
@@ -47,8 +47,6 @@ class NotionDatabase {
                 }
             }
         };
-
-        return response;
     }
 
     getPerson = async (name) => {
@@ -57,7 +55,12 @@ class NotionDatabase {
         });
 
         for (let i = 0; i < response.results.length; i++){
-            console.log(response.results[i]['properties']['Person']['people'][0]['name']);
+            // console.log(response.results[i]['properties']['Person']['people'][0]['name']);
+            console.log(response.results[i]['properties']);
+            if (response.results[i]['properties']['Deadline']['date'] != null){
+                console.log('>>> Finish Date: ', response.results[i]['properties']['Deadline']['date']['start']);    
+            }
+            console.log('\n\n======================================================\n');
         }
         // console.log(response.results[1]['properties']['Person']);
         return response;
