@@ -56,7 +56,11 @@ class NotionDatabase {
 
         for (let i = 0; i < response.results.length; i++){
             // console.log(response.results[i]['properties']['Person']['people'][0]['name']);
-            console.log(response.results[i]);
+            console.log(response.results[i]['properties']);
+            if (response.results[i]['properties']['Deadline']['date'] != null){
+                console.log('>>> Finish Date: ', response.results[i]['properties']['Deadline']['date']['start']);    
+            }
+            console.log('\n\n======================================================\n');
         }
         // console.log(response.results[1]['properties']['Person']);
         return response;
