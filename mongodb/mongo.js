@@ -7,7 +7,7 @@ const MONGODB_USERNAME = process.env.MONGODB_USERNAME;
 const MONGODB_CLUSTER = process.env.MONGODB_CLUSTER;
 const URI = `mongodb+srv://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@${MONGODB_CLUSTER}/?retryWrites=true&w=majority`;
 
-let Client = null;
+let Client = null; //private
 //TODO: Remove above comment.
 // This is put outside of the object so that it's visibility is limited, i.e. private.
 //User is then forced to utilize the interface we design for them, allowing us to ensure that they can use

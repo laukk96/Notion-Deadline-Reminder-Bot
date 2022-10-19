@@ -4,6 +4,7 @@ let Deadline = {
   finish_date: null,
   text: null,
 };
+
 let DeadlineMeta = {
   user_id: null,
   all_deadlines: null,
