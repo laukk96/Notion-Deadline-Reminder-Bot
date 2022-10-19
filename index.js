@@ -7,9 +7,6 @@ const { UserRegistry, DeadlineHistory } = require("./mongodb/databases");
 const { UserSchema } = require("./mongodb/schemas/user");
 const { DeadlineSchema } = require("./mongodb/schemas/deadlines");
 
-const UserRegistryDatabase = new UserRegistry();
-const DeadlineHistoryDatabase = new DeadlineHistory();
-
 // const query = async function () {
 //   const payload = await UserRegistryDatabase.connect();
 //   if (payload.error) return;
@@ -58,7 +55,8 @@ const wait = require("node:timers/promises").setTimeout;
 // How to setup .env variables for confidential discord token information
 const CLIENT_ID = process.env.DISCORD_CLIENT_ID;
 const TOKEN = process.env.DISCORD_TOKEN;
-
+let UserRegistryDatabase = null;
+let DeadlineHistoryDatabase = null;
 const commands = [
   {
     name: "ping",
@@ -120,9 +118,13 @@ const client = new Client({
   ],
 });
 
-client.on("ready", () => {
+client.on("ready", async () => {
   console.log(`Logged in as ${client.user.tag}!`);
   client.user.setActivity("Project Notion 2");
+  UserRegistryDatabase = new UserRegistry();
+  DeadlineHistoryDatabase = new DeadlineHistory();
+  await UserRegistryDatabase.connect();
+  await DeadlineHistoryDatabase.connect();
 });
 
 client.on("interactionCreate", async (interaction) => {
@@ -315,7 +317,16 @@ client.on("interactionCreate", async (interaction) => {
       const name = interaction.fields.getTextInputValue("nameInput");
       const discord_uid = interaction.fields.getTextInputValue("discordInput");
       const email = interaction.fields.getTextInputValue("emailInput");
-
+      const request = {
+        discord_id: discord_uid,
+        name: name,
+        email: email,
+      };
+      console.log(UserRegistryDatabase);
+      const { error, payload } = await UserRegistryDatabase.queries.create.user(
+        request
+      );
+      console.log(error);
       console.log(
         "New User Info Received: ",
         name,
@@ -324,9 +335,14 @@ client.on("interactionCreate", async (interaction) => {
         " ",
         email
       );
-      interaction.reply({
-        content: "Thank you for submitting your User Info! ",
-      });
+      if (!error)
+        interaction.reply({
+          content: "Thank you for submitting your User Info! ",
+        });
+      else
+        interaction.reply({
+          content: `${error}`,
+        });
       // const discord_user = client.get(Guilds);
       // interaction.reply({content:`The new user is: ${discord_user}!`});
     }

@@ -1,5 +1,5 @@
 const { UserSchema } = require("../../../schemas/user");
-const create_user = (UserRegistry) =>
+const create_user = ({ UserRegistry, Discord }) =>
   async function (data) {
     let result = {
       status: null,
