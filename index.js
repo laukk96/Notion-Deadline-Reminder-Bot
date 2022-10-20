@@ -88,10 +88,10 @@ const commands = [
   },
   new SlashCommandBuilder()
     .setName("adduser")
-    .setDescription("Add a User to the Database")
-    .addStringOption(option => option.setName("name").setDescription("Enter the Full Name"))
-    .addUserOption(option => option.setName("user").setDescription("user"))
-    .addStringOption(option => option.setName("email").setDescription("Notion Email")).toJSON(),
+    .setDescription("Add a User to the Database"),
+    // .addStringOption(option => option.setName("name").setDescription("Enter the Full Name"))
+    // .addUserOption(option => option.setName("user").setDescription("user"))
+    // .addStringOption(option => option.setName("email").setDescription("Notion Email")).toJSON(),
   new SlashCommandBuilder()
     .setName("getusers")
     .setDescription("Get a list of the users in the database")
