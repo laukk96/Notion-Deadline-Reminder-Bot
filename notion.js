@@ -136,8 +136,6 @@ class NotionDatabase
                 }
             }
         };
-
-        return response;
     }
 }
 
