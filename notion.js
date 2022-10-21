@@ -5,6 +5,8 @@ const { getDatabase } = require('@notionhq/client/build/src/api-endpoints');
 // const databaseId = process.env.NOTION_DATABASE_ID;
 // How to share a database with an notion integration/connection? 
 const TABLE_DEADLINES_ID = "0f201482f6f1407899e8f7c8ae7dea28";
+//GDSC f944e134b0584cc289d0a97775384d76
+//NOTION DEV TEAM 0f201482f6f1407899e8f7c8ae7dea28
 
 const notion = new Client({
     auth: process.env.NOTION_KEY,
@@ -23,11 +25,36 @@ const checkDataBase = async () => {
         console.log(page)
     })
 }
+//locates a person's index
+getIndex = async (name) => {
+    const payload = {
+        path: `databases/${TABLE_DEADLINES_ID}/query`,
+        method: 'POST'
+    }
+    
+
+    const {results} = await notion.request(payload)
+
+    const people = results.map(page => {
+        return page.properties.Person.people[0].name
+    })
+
+    people.forEach((item, index, arr) => {
+        if (item.includes(name))
+        {
+            personIndex = index
+        }
+    });
+
+    return personIndex
+}
+
 
 class NotionDatabase {
-    
+
     constructor (connectDatabase)
     {
+        this.connectDatabase = connectDatabase
         console.log("The NotionDatabase is being created!");
         (async () => {
             const response = await notion.databases.query({
@@ -37,34 +64,15 @@ class NotionDatabase {
             //console.log(response.results[1]['properties']['Person']);
         })();
     }
-
-    //locates a person's index
-    getIndex = async (name) => {
-        const payload = {
-            path: `databases/${TABLE_DEADLINES_ID}/query`,
-            method: 'POST'
-        }
-        
-
-        const {results} = await notion.request(payload)
-
-        const people = results.map(page => {
-            return page.properties.Person.people[0].name
-        })
-
-        people.forEach((item, index, arr) => {
-            if (item.includes(name))
-            {
-                personIndex = index
-            }
-        });
-
-        return personIndex
-    }
+    
+    //sendDeadlines() =>
 
     getPerson = async (name) => {
+        let personName;
+        let personIndex;
+        
         console.log("Getting " + name + "...")
-
+        
         const payload = {
             path: `databases/${TABLE_DEADLINES_ID}/query`,
             method: 'POST'
@@ -81,7 +89,6 @@ class NotionDatabase {
         const personID = results.map(page => {
             return page.properties.Person.people[0].id
         })
-        
         
         peopleNameList.forEach((item, index, arr) => {
             if (item.includes(name))
@@ -106,10 +113,24 @@ class NotionDatabase {
             }
     }
     */
+    }
 
+    getTask = async (name) => {
+        console.log("Getting " + name + " task...")
+        
+        const response = await notion.databases.query({
+            database_id: TABLE_DEADLINES_ID
+        });
+    
+        const indexLoc = await getIndex(name);
+
+        return response.results[indexLoc]['properties']['Tasks']['rich_text'][0]['text']['content'];
+        
     }
 
     getStatus = async (name) => {
+        let personStatus;
+
         const payload = {
             path: `databases/${TABLE_DEADLINES_ID}/query`,
             method: 'POST'
@@ -121,13 +142,11 @@ class NotionDatabase {
         const indexLoc = await getIndex(name);
 
         const status = results.map(page => {
-            tmpStatus = page.properties.Status.checkbox
-
-            return tmpStatus
+            return page.properties.Status.checkbox
         })
 
         status.forEach((item, index, arr) => {
-            if(index == indexLoc)
+            if (index == indexLoc)
             {
                 personStatus = item
             }
@@ -142,7 +161,23 @@ class NotionDatabase {
 
     }
 
+    getDueDate = async (name) => {
+    
+        console.log("Getting " + name + " due date...")
+        
+        const response = await notion.databases.query({
+            database_id: TABLE_DEADLINES_ID
+        });
+    
+        const indexLoc = await getIndex(name);
+
+        return response.results[indexLoc]['properties']['Finish Date']['date']['end'];
+        
+    }
+
 }
+
+
 
 
 
@@ -153,52 +188,13 @@ class NotionDatabase {
 
 database1 = new NotionDatabase(TABLE_DEADLINES_ID);
 
-database1.getPerson("Jay");
-
-/*
 (async() => {
-    const somePerson = await getPerson("Jay")
-    console.log(somePerson)
-})();
-*/
-/*
-someFunc = async () => {
-   
-
-    const payload = {
-        path: `databases/${TABLE_DEADLINES_ID}/query`,
-        method: 'POST'
-    }
-    
-    const {results} = await notion.request(payload)
-
-    
-    const peopleList = results.map(page => {
-        tmpList = page.properties.Person.people[0].name
-
-        return tmpList
-    })
-
-    return peopleList
-}
-
-(async() => {
-    const test = await someFunc()
-    console.log(test)
-})();
-
-
-
-//checkDataBase()
-
-/*
-(async () => {
-    // How to retrieve a database? 
-    // https://developers.notion.com/reference/retrieve-a-database
     const response = await notion.databases.query({
         database_id: TABLE_DEADLINES_ID
     });
 
-    console.log(response.results[1]['properties']['Person']);
+    const tester = await database1.getTask("Kon");
+    console.log(tester);
 })();
-*/
+
+//checkDataBase();
