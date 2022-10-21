@@ -52,7 +52,42 @@ class NotionDatabase
         })();
     }
     
-    //pushDeadlines() =>
+    parseNotionId = async (email) =>
+    {
+        const response = await notion.databases.query({
+            database_id: TABLE_DEADLINES_ID
+        });
+
+        for (let i = 0; i < response.results.length; i++){
+            if (response.results[i]['properties']['Deadline']['date'] != null){
+                
+                const peopleArray = response.results[i]['properties']['Taskee']['people'];
+                let deadLineIndex;
+                let personIndex;
+                let j = 0;
+                while (j < peopleArray.length)
+                {
+                    if (peopleArray[j]['person']['email'] != null)
+                    {
+                        if (peopleArray[j]['person']['email'].includes(email))
+                        {
+                            deadLineIndex = i;
+                            personIndex = j;
+                            break;
+                        }
+                    }
+                    j++;
+                }
+            }
+        }
+        console.log(response.results[deadLineIndex]['properties']['Taskee'][personIndex]['people']['id']);
+    }
+
+    AddUser = async (server_id, info) =>
+    {
+        
+    }
+
 
     getPerson = async (deadline) => {
         const response = await notion.databases.query({
@@ -144,6 +179,9 @@ class NotionDatabase
 
 database1 = new NotionDatabase(TABLE_DEADLINES_ID);
 
+//database1.getTask("Afraz");
+database1.parseNotionId("jsaleh849@insite.4cd.edu");
+
 /*
 (async() => {
     const response = await notion.databases.query({
@@ -160,7 +198,6 @@ database1 = new NotionDatabase(TABLE_DEADLINES_ID);
 })();
 */
 
-database1.getTask("Afraz");
 
 //checkDataBase();
 
