@@ -139,19 +139,6 @@ class NotionDatabase
 
         return response;
     }
-
-    getPerson = async (name) => {
-        const response = await notion.databases.query({
-            database_id: TABLE_DEADLINES_ID
-        });
-
-        for (let i = 0; i < response.results.length; i++){
-            console.log(response.results[i]['properties']['Person']['people'][0]['name']);
-        }
-        // console.log(response.results[1]['properties']['Person']);
-        return response;
-    }
-
 }
 
 
