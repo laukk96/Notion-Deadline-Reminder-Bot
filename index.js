@@ -92,7 +92,8 @@ const commands = [
     // .addStringOption(option => option.setName("name").setDescription("Enter the Full Name"))
     // .addUserOption(option => option.setName("user").setDescription("user"))
     // .addStringOption(option => option.setName("email").setDescription("Notion Email")).toJSON(),
-  new SlashCommandBuilder()
+  
+    new SlashCommandBuilder()
     .setName("getusers")
     .setDescription("Get a list of the users in the database")
 ];
@@ -124,6 +125,19 @@ const client = new Client({
 client.on("ready", () => {
   console.log(`Logged in as ${client.user.tag}!`);
   client.user.setActivity("Project Notion 2");
+});
+
+// Bot joins a server
+client.on("guildCreate", (guild) => {
+  console.log(`> Joined a guild: ${guild.id}`);
+
+});
+
+
+// Bot leaves a server
+client.on("guildDelete", (guild) => {
+  // TODO: Remove from the Database
+  console.log(`> Left a guild: ${guild.id}`);
 });
 
 client.on("interactionCreate", async (interaction) => {
@@ -158,7 +172,7 @@ client.on("interactionCreate", async (interaction) => {
     //   description: 'Test this message by clicking one of the buttons!'
     // })
 
-    // [ Row of Buttons ]
+    // Row of Buttons
     const row = new ActionRowBuilder().addComponents(
       new ButtonBuilder()
         .setCustomId("Primary")

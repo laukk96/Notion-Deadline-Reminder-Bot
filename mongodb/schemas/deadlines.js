@@ -62,4 +62,4 @@ DeadlineRequest.finish_date = Deadline.finish_date;
 const DeadlineSchema = new Schema(Deadline);
 const DeadlineMetaSchema = new Schema(DeadlineMeta);
 const DeadlineRequestSchema = new Schema(DeadlineRequest);
-module.exports = { DeadlineMetaSchema, DeadlineSchema, DeadlineRequestSchema };
+module.exports = { DeadlineMetaSchema, DeadlineSchema, DeadlineRequestSchema }; 
