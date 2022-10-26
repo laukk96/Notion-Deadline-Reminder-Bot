@@ -3,7 +3,7 @@ const { queries } = require("./queries");
 const COLLECTION_NAME = process.env.USER_REGISTRY_COLLECTION_NAME; //This ought to be defined in an .env file;
 let MongoDBClient = null;
 let Collection = null;
-let Dependencies = null;
+let Dependencies = {};
 
 class UserRegistry {
   constructor() {
