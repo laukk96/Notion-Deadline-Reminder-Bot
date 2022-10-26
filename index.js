@@ -1,14 +1,15 @@
 require("dotenv").config();
 
 // Get Collections from MongoDB
-const { UserRegistry, DeadlineHistory } = require("./mongodb/databases");
+// const { UserRegistry, DeadlineHistory } = require("./mongodb/databases");
 
-// Get Schema Data Objects
-const { UserSchema } = require("./mongodb/schemas/user");
-const { DeadlineSchema } = require("./mongodb/schemas/deadlines");
+// // Get Schema Data Objects
+// const { UserSchema } = require("./mongodb/schemas/user");
+// const { DeadlineSchema } = require("./mongodb/schemas/deadlines");
 
-const UserRegistryDatabase = new UserRegistry();
-const DeadlineHistoryDatabase = new DeadlineHistory();
+// const UserRegistryDatabase = new UserRegistry();
+// const DeadlineHistoryDatabase = new DeadlineHistory();
+
 
 // const query = async function () {
 //   const payload = await UserRegistryDatabase.connect();
@@ -291,16 +292,31 @@ client.on("interactionCreate", async (interaction) => {
     //    + "\n* Discord ID"
     //    + "\n* Notion ID"
     //    + "\n\nType \"Agree\" if you agree to these terms.")
-    const agreementInput = new TextInputBuilder()
-      .setCustomId("agreementInput")
-      .setLabel("Do you agree to store information?")
+    const clubNameInput = new TextInputBuilder()
+      .setCustomId("clubNameInput")
+      .setLabel("What is your club name?")
       .setStyle(TextInputStyle.Short)
       .setRequired(true);
 
-    const firstActionRow = new ActionRowBuilder().addComponents(agreementInput);
+    const clubDescriptionInput = new TextInputBuilder()
+      .setCustomId("clubDescriptionInput")
+      .setLabel("Tell us a brief description about your club!")
+      .setStyle(TextInputStyle.Paragraph)
+      .setMaxLength(280) // Same as twitter length lol
+      .setRequired(false);
 
-    initiateModal.addComponents(firstActionRow);
-    initiateModal;
+    const agreementInput = new TextInputBuilder()
+      .setCustomId("agreementInput")
+      .setLabel("Do you agree to store information?")
+      .setStyle(TextInputStyle.Paragraph)
+      .setRequired(true);
+
+    const firstActionRow = new ActionRowBuilder().addComponents(clubNameInput);
+    const secondActionRow = new ActionRowBuilder().addComponents(clubDescriptionInput);
+    const thirdActionRow = new ActionRowBuilder().addComponents(agreementInput);
+
+    initiateModal.addComponents([firstActionRow, secondActionRow, thirdActionRow]);
+    
     await interaction.showModal(initiateModal);
   }
 });
@@ -312,6 +328,7 @@ client.on("interactionCreate", async (interaction) => {
 
   if (interaction.isModalSubmit()) {
     console.log("Received a Modal: ", interaction.customId);
+    
     // adduser Modal
     if (interaction.customId == "adduserModal") {
       const name = interaction.fields.getTextInputValue("nameInput");
@@ -331,13 +348,35 @@ client.on("interactionCreate", async (interaction) => {
       });
       // const discord_user = client.get(Guilds);
       // interaction.reply({content:`The new user is: ${discord_user}!`});
-    } else if (interaction.customId == "initiateModal") {
+    } 
+
+    // initiate Modal 
+    else if (interaction.customId == "initiateModal") {
       const agreement = interaction.fields.getTextInputValue("agreementInput");
+      const clubName = interaction.fields.getTextInputValue("clubNameInput");
+      const clubDescription = interaction.fields.getTextInputValue("clubDescriptionInput");
+
       if (agreement.toLowerCase() != "agree") {
         interaction.reply({ content: "Did not agree." });
       } else {
+        const clubEmbed = new EmbedBuilder()
+          .setTitle("Club Information")
+          .setAuthor({
+            name: `${interaction.guild.name}`,
+            iconURL: `${interaction.guild.iconURL()}`,
+            url: "https://discord.js.org"
+          })
+          .addFields(
+            { "name": "Club Name", 
+              "value": clubName 
+            },
+            { "name": "Club Description",
+              "value": clubDescription 
+            }
+          )
         interaction.reply({
           content: `${interaction.user.toString()} \`Setting up your server...\``,
+          embeds: [clubEmbed]
         });
       }
     }
