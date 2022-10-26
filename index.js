@@ -360,13 +360,15 @@ client.on("interactionCreate", async (interaction) => {
         interaction.reply({ content: "Did not agree." });
       } else {
         const clubEmbed = new EmbedBuilder()
-          .setTitle("Club Information")
           .setAuthor({
             name: `${interaction.guild.name}`,
             iconURL: `${interaction.guild.iconURL()}`,
             url: "https://discord.js.org"
           })
           .addFields(
+            { "name": "Club Server ID", 
+              "value": `\`${interaction.guild.id}\``
+            },
             { "name": "Club Name", 
               "value": clubName 
             },
