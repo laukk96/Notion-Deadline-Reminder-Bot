@@ -86,7 +86,11 @@ const commands = [
     // .addStringOption(option => option.setName("email").setDescription("Notion Email")).toJSON(),
   new SlashCommandBuilder()
     .setName("getusers")
-    .setDescription("Get a list of the users in the database")
+    .setDescription("Get a list of the users in the database"),
+
+  new SlashCommandBuilder()
+  .setName("removeusers")
+  .setDescription("Use this to remove users from the database!"),
 ];
 
 const rest = new REST({ version: "10" }).setToken(TOKEN);
@@ -201,35 +205,6 @@ client.on("interactionCreate", async (interaction) => {
 
     await interaction.reply({ embeds: [creditsEmbed] });
   }
-  // else if (interaction.commandName == "adduser"){
-  //   if (interaction.isChatInputCommand()){
-  //     console.log("interaction IS chat input command: ");
-  //   }
-  //   else{
-  //     console.log("is NOT chat input command.");
-  //   }
-      
-  //   const adduserEmbed = new EmbedBuilder()
-  //     .setColor("#00ff6e")
-  //     .setTitle("Add User")
-  //     .setDescription("**`Do you want to add this user to the database?`**")
-  //     .addFields(
-  //       {name: "Name", value: `${interaction.options.getString("name")}`},
-  //       {name: "User", value: `${interaction.options.getUser("user")}`},
-  //       {name: "Email", value: `${interaction.options.getString('email')}`}
-  //     );
-      
-  //   const adduserButtons = new ActionRowBuilder().addComponents(
-  //     new ButtonBuilder()
-  //       .setCustomId("Green")
-  //       .setLabel("Confirm")
-  //       .setStyle(ButtonStyle.Success)
-  //   );
-
-  //   const filter = (i) => i.user.id === interaction.user.id;
-        
-  //   await interaction.reply({embeds: [adduserEmbed], components: [adduserButtons]});
-  // } 
 }); 
 
 // Second 'interactionCreate' function, I guess?
