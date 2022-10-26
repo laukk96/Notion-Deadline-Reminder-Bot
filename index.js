@@ -82,18 +82,18 @@ const commands = [
   },
   new SlashCommandBuilder()
     .setName("adduser")
-    .setDescription("Add a User to the Database")
-    .addStringOption((option) =>
-      option.setName("name").setDescription("Enter the Full Name")
-    )
-    .addUserOption((option) => option.setName("user").setDescription("user"))
-    .addStringOption((option) =>
-      option.setName("email").setDescription("Notion Email")
-    )
-    .toJSON(),
+    .setDescription("Add a User to the Database"),
+  // .addStringOption(option => option.setName("name").setDescription("Enter the Full Name"))
+  // .addUserOption(option => option.setName("user").setDescription("user"))
+  // .addStringOption(option => option.setName("email").setDescription("Notion Email")).toJSON(),
+
   new SlashCommandBuilder()
     .setName("getusers")
     .setDescription("Get a list of the users in the database"),
+
+  new SlashCommandBuilder()
+    .setName("initiate")
+    .setDescription("initiate the server for Notion Deadline Reminders."),
 ];
 
 const rest = new REST({ version: "10" }).setToken(TOKEN);
@@ -125,6 +125,17 @@ client.on("ready", () => {
   client.user.setActivity("Project Notion 2");
 });
 
+// Bot joins a server
+client.on("guildCreate", (guild) => {
+  console.log(`> Joined a guild: ${guild.id}`);
+});
+
+// Bot leaves a server
+client.on("guildDelete", (guild) => {
+  // TODO: Remove from the Database
+  console.log(`> Left a guild: ${guild.id}`);
+});
+
 client.on("interactionCreate", async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
 
@@ -147,15 +158,8 @@ client.on("interactionCreate", async (interaction) => {
         "https://cdn.dribbble.com/users/153131/screenshots/10878981/notion_4x.png"
       )
       .setTimestamp();
-    // .setURL()
-    // .setAuthor({
-    //   name: 'Notion Bot',
-    //   iconURL: 'https://upload.wikimedia.org/wikipedia/commons/4/45/Notion_app_logo.png',
-    //   url: 'https://developers.notion.com/reference/intro',
-    //   description: 'Test this message by clicking one of the buttons!'
-    // })
 
-    // [ Row of Buttons ]
+    // Row of Buttons
     const row = new ActionRowBuilder().addComponents(
       new ButtonBuilder()
         .setCustomId("Primary")
@@ -231,35 +235,6 @@ client.on("interactionCreate", async (interaction) => {
 
     await interaction.reply({ embeds: [creditsEmbed] });
   }
-  // else if (interaction.commandName == "adduser"){
-  //   if (interaction.isChatInputCommand()){
-  //     console.log("interaction IS chat input command: ");
-  //   }
-  //   else{
-  //     console.log("is NOT chat input command.");
-  //   }
-
-  //   const adduserEmbed = new EmbedBuilder()
-  //     .setColor("#00ff6e")
-  //     .setTitle("Add User")
-  //     .setDescription("**`Do you want to add this user to the database?`**")
-  //     .addFields(
-  //       {name: "Name", value: `${interaction.options.getString("name")}`},
-  //       {name: "User", value: `${interaction.options.getUser("user")}`},
-  //       {name: "Email", value: `${interaction.options.getString('email')}`}
-  //     );
-
-  //   const adduserButtons = new ActionRowBuilder().addComponents(
-  //     new ButtonBuilder()
-  //       .setCustomId("Green")
-  //       .setLabel("Confirm")
-  //       .setStyle(ButtonStyle.Success)
-  //   );
-
-  //   const filter = (i) => i.user.id === interaction.user.id;
-
-  //   await interaction.reply({embeds: [adduserEmbed], components: [adduserButtons]});
-  // }
 });
 
 // Second 'interactionCreate' function, I guess?
@@ -269,7 +244,7 @@ client.on("interactionCreate", async (interaction) => {
   if (interaction.commandName === "adduser") {
     // Create the modal
     const modal = new ModalBuilder()
-      .setCustomId("addUserModal")
+      .setCustomId("adduserModal")
       .setTitle("Add User");
 
     // Create the text input components
@@ -300,6 +275,33 @@ client.on("interactionCreate", async (interaction) => {
     await interaction.showModal(modal);
     //await interaction.reply({c: 'Your submission was received successfully!'});
   } else if (interaction.commandName == "getusers") {
+  } else if (interaction.commandName == "initiate") {
+    // TODO: Check if the server has not been initiated already
+
+    const initiateModal = new ModalBuilder()
+      .setCustomId("initiateModal")
+      .setTitle("Initiate your Server");
+
+    // const agreementInput = new TextInputBuilder()
+    //   .setLabel("Do you agree to have your officer information stored on the MongoDB"
+    //    + "Cloud managed by our development team?"
+    //    + "\nThis includes your officer's:"
+    //    + "\n* Name"
+    //    + "\n* Email"
+    //    + "\n* Discord ID"
+    //    + "\n* Notion ID"
+    //    + "\n\nType \"Agree\" if you agree to these terms.")
+    const agreementInput = new TextInputBuilder()
+      .setCustomId("agreementInput")
+      .setLabel("Do you agree to store information?")
+      .setStyle(TextInputStyle.Short)
+      .setRequired(true);
+
+    const firstActionRow = new ActionRowBuilder().addComponents(agreementInput);
+
+    initiateModal.addComponents(firstActionRow);
+    initiateModal;
+    await interaction.showModal(initiateModal);
   }
 });
 
@@ -311,7 +313,7 @@ client.on("interactionCreate", async (interaction) => {
   if (interaction.isModalSubmit()) {
     console.log("Received a Modal: ", interaction.customId);
     // adduser Modal
-    if (interaction.customId == "addUserModal") {
+    if (interaction.customId == "adduserModal") {
       const name = interaction.fields.getTextInputValue("nameInput");
       const discord_uid = interaction.fields.getTextInputValue("discordInput");
       const email = interaction.fields.getTextInputValue("emailInput");
@@ -329,6 +331,15 @@ client.on("interactionCreate", async (interaction) => {
       });
       // const discord_user = client.get(Guilds);
       // interaction.reply({content:`The new user is: ${discord_user}!`});
+    } else if (interaction.customId == "initiateModal") {
+      const agreement = interaction.fields.getTextInputValue("agreementInput");
+      if (agreement.toLowerCase() != "agree") {
+        interaction.reply({ content: "Did not agree." });
+      } else {
+        interaction.reply({
+          content: `${interaction.user.toString()} \`Setting up your server...\``,
+        });
+      }
     }
   }
 });
