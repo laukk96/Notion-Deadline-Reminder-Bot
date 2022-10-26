@@ -1,14 +1,11 @@
 require("dotenv").config();
 
 // Get Collections from MongoDB
-const {
-  UserRegistry,
-  DeadlineHistory,
-} = require("./mongodb/databases");
+const { UserRegistry, DeadlineHistory } = require("./mongodb/databases");
 
 // Get Schema Data Objects
-const { UserSchema } = require("./mongodb/schemas/user")
-const { DeadlineSchema } = require("./mongodb/schemas/deadlines")
+const { UserSchema } = require("./mongodb/schemas/user");
+const { DeadlineSchema } = require("./mongodb/schemas/deadlines");
 
 const UserRegistryDatabase = new UserRegistry();
 const DeadlineHistoryDatabase = new DeadlineHistory();
@@ -34,9 +31,6 @@ if (!payload.error) {
 }
 UserRegistryDatabase.close();
 */
-
-
-
 
 const {
   REST,
@@ -89,17 +83,17 @@ const commands = [
   new SlashCommandBuilder()
     .setName("adduser")
     .setDescription("Add a User to the Database"),
-    // .addStringOption(option => option.setName("name").setDescription("Enter the Full Name"))
-    // .addUserOption(option => option.setName("user").setDescription("user"))
-    // .addStringOption(option => option.setName("email").setDescription("Notion Email")).toJSON(),
-  
+  // .addStringOption(option => option.setName("name").setDescription("Enter the Full Name"))
+  // .addUserOption(option => option.setName("user").setDescription("user"))
+  // .addStringOption(option => option.setName("email").setDescription("Notion Email")).toJSON(),
+
   new SlashCommandBuilder()
     .setName("getusers")
     .setDescription("Get a list of the users in the database"),
 
   new SlashCommandBuilder()
     .setName("initiate")
-    .setDescription("initiate the server for Notion Deadline Reminders.")
+    .setDescription("initiate the server for Notion Deadline Reminders."),
 ];
 
 const rest = new REST({ version: "10" }).setToken(TOKEN);
@@ -134,9 +128,7 @@ client.on("ready", () => {
 // Bot joins a server
 client.on("guildCreate", (guild) => {
   console.log(`> Joined a guild: ${guild.id}`);
-
 });
-
 
 // Bot leaves a server
 client.on("guildDelete", (guild) => {
@@ -152,13 +144,11 @@ client.on("interactionCreate", async (interaction) => {
     await client.channels.cache
       .get(interaction.channelId)
       .send("The pong has been sent!");
-  } 
-  else if (interaction.commandName == "doc") {
+  } else if (interaction.commandName == "doc") {
     await interaction.reply(
       "https://www.notion.so/help/guides/category/documentation"
     );
-  } 
-  else if (interaction.commandName == "button") {
+  } else if (interaction.commandName == "button") {
     // [ Embed Message ]
     const button_embed = new EmbedBuilder()
       .setColor("Grey")
@@ -186,8 +176,7 @@ client.on("interactionCreate", async (interaction) => {
     );
 
     await interaction.reply({ embeds: [button_embed], components: [row] });
-  } 
-  else if (interaction.commandName == "help") {
+  } else if (interaction.commandName == "help") {
     const helpEmbed = new EmbedBuilder()
       .setColor("Yellow")
       .setTitle("Help with Notion")
@@ -217,10 +206,9 @@ client.on("interactionCreate", async (interaction) => {
       });
 
     await interaction.reply({ embeds: [helpEmbed] });
-  } 
-  else if (interaction.commandName == "credits") {
+  } else if (interaction.commandName == "credits") {
     const creditsEmbed = new EmbedBuilder()
-      .setColor(0x1099ff) 
+      .setColor(0x1099ff)
       .setTitle("Credits")
       .setAuthor({
         name: "Google Developer Student Club",
@@ -247,51 +235,47 @@ client.on("interactionCreate", async (interaction) => {
 
     await interaction.reply({ embeds: [creditsEmbed] });
   }
-}); 
+});
 
 // Second 'interactionCreate' function, I guess?
-client.on('interactionCreate', async (interaction) => {
-	if (!interaction.isChatInputCommand()) return;
+client.on("interactionCreate", async (interaction) => {
+  if (!interaction.isChatInputCommand()) return;
 
-	if (interaction.commandName === "adduser") {
-		// Create the modal
-		const modal = new ModalBuilder()
-			.setCustomId("adduserModal")
-			.setTitle("Add User");
+  if (interaction.commandName === "adduser") {
+    // Create the modal
+    const modal = new ModalBuilder()
+      .setCustomId("adduserModal")
+      .setTitle("Add User");
 
-		// Create the text input components
-		const nameInput = new TextInputBuilder()
-			.setCustomId("nameInput")
-			.setLabel("What is the user's Name?")
-			.setStyle(TextInputStyle.Short)
+    // Create the text input components
+    const nameInput = new TextInputBuilder()
+      .setCustomId("nameInput")
+      .setLabel("What is the user's Name?")
+      .setStyle(TextInputStyle.Short)
       .setRequired(true);
 
-		const discordInput = new TextInputBuilder()
-			.setCustomId("discordInput")
-			.setLabel("What is this user's Discord UID?")		    
-			.setStyle(TextInputStyle.Short)
+    const discordInput = new TextInputBuilder()
+      .setCustomId("discordInput")
+      .setLabel("What is this user's Discord UID?")
+      .setStyle(TextInputStyle.Short)
       .setRequired(true);
 
-      const emailInput = new TextInputBuilder()
-			.setCustomId("emailInput")
-			.setLabel("What is the user's Email on the Notion page?")
-			.setStyle(TextInputStyle.Short)
+    const emailInput = new TextInputBuilder()
+      .setCustomId("emailInput")
+      .setLabel("What is the user's Email on the Notion page?")
+      .setStyle(TextInputStyle.Short)
       .setRequired(true);
 
-		const firstActionRow = new ActionRowBuilder().addComponents(nameInput);
-		const secondActionRow = new ActionRowBuilder().addComponents(discordInput);
-    const thirdActionRow = new ActionRowBuilder().addComponents(emailInput)
+    const firstActionRow = new ActionRowBuilder().addComponents(nameInput);
+    const secondActionRow = new ActionRowBuilder().addComponents(discordInput);
+    const thirdActionRow = new ActionRowBuilder().addComponents(emailInput);
 
+    modal.addComponents(firstActionRow, secondActionRow, thirdActionRow);
 
-		modal.addComponents(firstActionRow, secondActionRow, thirdActionRow);
-
-		await interaction.showModal(modal);
+    await interaction.showModal(modal);
     //await interaction.reply({c: 'Your submission was received successfully!'});
-	}
-  else if (interaction.commandName == "getusers"){
-
-  }
-  else if (interaction.commandName == "initiate"){
+  } else if (interaction.commandName == "getusers") {
+  } else if (interaction.commandName == "initiate") {
     // TODO: Check if the server has not been initiated already
 
     const initiateModal = new ModalBuilder()
@@ -316,47 +300,55 @@ client.on('interactionCreate', async (interaction) => {
     const firstActionRow = new ActionRowBuilder().addComponents(agreementInput);
 
     initiateModal.addComponents(firstActionRow);
-    initiateModal
+    initiateModal;
     await interaction.showModal(initiateModal);
   }
 });
 
-
 // Third Interaction Create, for Modals / Buttons
-client.on('interactionCreate', async (interaction) => {
+client.on("interactionCreate", async (interaction) => {
   // Check if interaction is Modal or Button
-  if ( !(interaction.isModalSubmit() || interaction.isButton()) ) return;
+  if (!(interaction.isModalSubmit() || interaction.isButton())) return;
 
-  if (interaction.isModalSubmit() ){
+  if (interaction.isModalSubmit()) {
     console.log("Received a Modal: ", interaction.customId);
     // adduser Modal
-    if (interaction.customId == "adduserModal"){
+    if (interaction.customId == "adduserModal") {
       const name = interaction.fields.getTextInputValue("nameInput");
       const discord_uid = interaction.fields.getTextInputValue("discordInput");
       const email = interaction.fields.getTextInputValue("emailInput");
 
-      console.log("New User Info Received: ", name, " ", discord_uid, " ", email);
-      interaction.reply({content:"Thank you for submitting your User Info! "});
+      console.log(
+        "New User Info Received: ",
+        name,
+        " ",
+        discord_uid,
+        " ",
+        email
+      );
+      interaction.reply({
+        content: "Thank you for submitting your User Info! ",
+      });
       // const discord_user = client.get(Guilds);
       // interaction.reply({content:`The new user is: ${discord_user}!`});
-    }
-    else if (interaction.customId == "initiateModal"){
+    } else if (interaction.customId == "initiateModal") {
       const agreement = interaction.fields.getTextInputValue("agreementInput");
-      if (agreement.toLowerCase() != "agree"){
-        interaction.reply({content:"Did not agree."})
-      }
-      else{
-        interaction.reply({content:`${interaction.user.toString()} \`Setting up your server...\``});
-        // TODO: Add the server_id to USER_REGISTRY / DEADLINE_HISTORY collections
+      if (agreement.toLowerCase() != "agree") {
+        interaction.reply({ content: "Did not agree." });
+      } else {
+        interaction.reply({
+          content: `${interaction.user.toString()} \`Setting up your server...\``,
+        });
       }
     }
   }
 });
 
-
 client.on("messageCreate", (message) => {
   // Check to see if the message created is it's own message
-  if (message.author.id == "1018596435320639539") { return; }
+  if (message.author.id == "1018596435320639539") {
+    return;
+  }
   // message.channel.send(message.content);
   if (message.content == "dm me 4") {
     try {
