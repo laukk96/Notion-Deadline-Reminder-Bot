@@ -57,6 +57,8 @@ const {
   ModalBuilder,
   TextInputBuilder,
   TextInputStyle,
+  SelectMenuBuilder,
+  SelectMenuOptionBuilder,
 } = require("discord.js");
 
 const wait = require("node:timers/promises").setTimeout;
@@ -88,7 +90,7 @@ const commands = [
     .setName("getusers")
     .setDescription("Get a list of the users in the database"),
 
-  new SlashCommandBuilder()
+    new SlashCommandBuilder()
   .setName("removeusers")
   .setDescription("Use this to remove users from the database!"),
 ];
@@ -252,6 +254,7 @@ client.on('interactionCreate', async (interaction) => {
 });
 
 
+
 // Third Interaction Create, for Modals / Buttons
 client.on('interactionCreate', async (interaction) => {
   // Check if interaction is Modal or Button
@@ -272,6 +275,22 @@ client.on('interactionCreate', async (interaction) => {
     }
   }
 });
+
+client.on('interactionCreate', (interaction) => {
+  if (interaction.isChatInputCommand()) {
+    if (interaction.commandName == "removeusers") {
+      const actionRowComponent = new ActionRowBuilder().setComponents(
+        new SelectMenuBuilder().setCustomId('whoh').setOptions([
+          {label: 'removeName', value: 'lol1'},
+          {label: 'removeEmail', value: 'lol2'},
+        ])
+      );
+      interaction.reply({
+        components: [actionRowComponent.toJSON()],
+      })
+    }
+  }
+})
 
 
 client.on("messageCreate", (message) => {
