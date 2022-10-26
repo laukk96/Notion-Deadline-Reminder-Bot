@@ -1,4 +1,4 @@
-const { UserRegistry, DeadlineHistory } = require("../mongodb/databases");
+const { UserRegistry, DeadlineHistory } = require("../mongodb/collections");
 
 const tests = async () => {
   await UserRegistryDatabase();
