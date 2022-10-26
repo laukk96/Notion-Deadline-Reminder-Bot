@@ -1,13 +1,13 @@
 require("dotenv").config({ path: "../.env" });
 const { MongoClient, ServerApiVersion } = require("mongodb");
-
-const MONGODB_PASSWORD = process.env.MONGODB_PASSWORD;
-const MONGODB_DATABASE_NAME = process.env.MONGODB_DATABASE_NAME;
-const MONGODB_USERNAME = process.env.MONGODB_USERNAME;
-const MONGODB_CLUSTER = process.env.MONGODB_CLUSTER;
 const URI = `mongodb+srv://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@${MONGODB_CLUSTER}/?retryWrites=true&w=majority`;
-
-let Client = null;
+const MONGODB_CONFIG = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  serverApi: ServerApiVersion.v1,
+};
+const DATABASE_NAME = process.env.MONGODB_DATABASE_NAME;
+let Client = null; //private
 //TODO: Remove above comment.
 // This is put outside of the object so that it's visibility is limited, i.e. private.
 //User is then forced to utilize the interface we design for them, allowing us to ensure that they can use
@@ -16,19 +16,19 @@ let Client = null;
 class MongoDBWrapper {
   constructor() {
     if (Client !== null) return; //This prevents multiple instances
-    Client = new MongoClient(URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      serverApi: ServerApiVersion.v1,
-    });
+    try {
+      Client = new MongoClient(URI, MONGODB_CONFIG);
+    } catch (error) {
+      console.error(error);
+    }
   }
-
   async connect(collection_name) {
     try {
-      await Client.connect().catch();
-      return await Client.db(MONGODB_DATABASE_NAME).collection(collection_name);
+      if (Client === null)
+        await Client.connect().catch((error) => console.error(error));
+      return await Client.db(DATABASE_NAME).collection(collection_name);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       //Define what happens when there is an error
     }
   }
