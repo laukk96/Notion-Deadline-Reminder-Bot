@@ -68,28 +68,21 @@ const CLIENT_ID = process.env.DISCORD_CLIENT_ID;
 const TOKEN = process.env.DISCORD_TOKEN;
 
 const commands = [
-  {
-    name: "update",
-    description: "Send a manual notification to officers!",
-  },
-  {
-    name: "help",
-    description: "If you need help to link your notion to discord!",
-  },
-  {
-    name: "credits",
-    description: "The original authors of the bot",
-  },
   new SlashCommandBuilder()
-    .setName("adduser")
-    .setDescription("Add a User to the Database"),
-    // .addStringOption(option => option.setName("name").setDescription("Enter the Full Name"))
-    // .addUserOption(option => option.setName("user").setDescription("user"))
-    // .addStringOption(option => option.setName("email").setDescription("Notion Email")).toJSON(),
+.setName("update")
+.setDescription("Send a manual notification to officers!"),
+  new SlashCommandBuilder()
+.setName("help")
+.setDescription("If you need help to link your notion to discord!"),
+  new SlashCommandBuilder()
+ .setName("credits")
+ .setDescription("The original authors of the bot"),
+  new SlashCommandBuilder()
+  .setName("adduser")
+  .setDescription("Add a User to the Database"),
   new SlashCommandBuilder()
     .setName("getusers")
     .setDescription("Get a list of the users in the database"),
-
     new SlashCommandBuilder()
   .setName("removeusers")
   .setDescription("Use this to remove users from the database!"),
@@ -276,6 +269,7 @@ client.on('interactionCreate', async (interaction) => {
   }
 });
 
+//Removeusers selection menu
 client.on('interactionCreate', (interaction) => {
   if (interaction.isChatInputCommand()) {
     if (interaction.commandName == "removeusers") {
@@ -291,27 +285,5 @@ client.on('interactionCreate', (interaction) => {
     }
   }
 })
-
-
-client.on("messageCreate", (message) => {
-  // Check to see if the message created is it's own message
-  if (message.author.id == "1018596435320639539") {
-    return;
-  }
-  // message.channel.send(message.content);
-  if (message.content == "dm me 4") {
-    try {
-      console.log(message.author.name, message.author.id);
-      message.channel.send(`Sending a message to ${message.author.toString()}`);
-      message.author.send("`Sending Direct Message 4`");
-    } catch (exception) {
-      message.channel.send(
-        `Could not send a message to ${message.author.toString()}`
-      );
-    }
-  }
-});
-
-
 
 client.login(TOKEN);
