@@ -347,6 +347,7 @@ client.on('interactionCreate', async (interaction) => {
       }
       else{
         interaction.reply({content:`${interaction.user.toString()} \`Setting up your server...\``});
+        // TODO: Add the server_id to USER_REGISTRY / DEADLINE_HISTORY collections
       }
     }
   }
