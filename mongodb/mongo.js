@@ -1,12 +1,18 @@
 require("dotenv").config({ path: "../.env" });
 const { MongoClient, ServerApiVersion } = require("mongodb");
+const {
+  MONGODB_USERNAME,
+  MONGODB_PASSWORD,
+  MONGODB_CLUSTER,
+  MONGODB_DATABASE_NAME,
+} = process.env;
 const URI = `mongodb+srv://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@${MONGODB_CLUSTER}/?retryWrites=true&w=majority`;
 const MONGODB_CONFIG = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   serverApi: ServerApiVersion.v1,
 };
-const DATABASE_NAME = process.env.MONGODB_DATABASE_NAME;
+const DATABASE_NAME = MONGODB_DATABASE_NAME;
 let Client = null; //private
 //TODO: Remove above comment.
 // This is put outside of the object so that it's visibility is limited, i.e. private.

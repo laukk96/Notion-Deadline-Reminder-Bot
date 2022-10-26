@@ -1,4 +1,4 @@
-const { UserSchema } = require("../../../schemas/user");
+const { UserSchema } = require("../../../schemas/User");
 const get_user = ({ UserRegistry }) =>
   async function (data) {
     const result = {
