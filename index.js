@@ -67,16 +67,8 @@ const TOKEN = process.env.DISCORD_TOKEN;
 
 const commands = [
   {
-    name: "ping",
-    description: "Replies with Pong!",
-  },
-  {
-    name: "doc",
-    description: "Sends a link to the Notion Documentation.",
-  },
-  {
-    name: "button",
-    description: "Test with Button Interactions.",
+    name: "update",
+    description: "Send a manual notification to officers!",
   },
   {
     name: "help",
@@ -92,14 +84,9 @@ const commands = [
     // .addStringOption(option => option.setName("name").setDescription("Enter the Full Name"))
     // .addUserOption(option => option.setName("user").setDescription("user"))
     // .addStringOption(option => option.setName("email").setDescription("Notion Email")).toJSON(),
-  
   new SlashCommandBuilder()
     .setName("getusers")
-    .setDescription("Get a list of the users in the database"),
-
-  new SlashCommandBuilder()
-    .setName("initiate")
-    .setDescription("initiate the server for Notion Deadline Reminders.")
+    .setDescription("Get a list of the users in the database")
 ];
 
 const rest = new REST({ version: "10" }).setToken(TOKEN);
@@ -131,84 +118,51 @@ client.on("ready", () => {
   client.user.setActivity("Project Notion 2");
 });
 
-// Bot joins a server
-client.on("guildCreate", (guild) => {
-  console.log(`> Joined a guild: ${guild.id}`);
-
-});
-
-
-// Bot leaves a server
-client.on("guildDelete", (guild) => {
-  // TODO: Remove from the Database
-  console.log(`> Left a guild: ${guild.id}`);
-});
-
 client.on("interactionCreate", async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
+  
+  if (interaction.commandName === 'update') {
+		const row = new ActionRowBuilder()
+			.addComponents(
+				new ButtonBuilder()
+					.setCustomId('primary')
+					.setLabel('Notification Update!')
+					.setStyle(ButtonStyle.Primary),
+          
+			);
 
-  if (interaction.commandName == "ping") {
-    await interaction.reply("Pong!");
-    await client.channels.cache
-      .get(interaction.channelId)
-      .send("The pong has been sent!");
-  } 
-  else if (interaction.commandName == "doc") {
-    await interaction.reply(
-      "https://www.notion.so/help/guides/category/documentation"
-    );
-  } 
-  else if (interaction.commandName == "button") {
-    // [ Embed Message ]
-    const button_embed = new EmbedBuilder()
-      .setColor("Grey")
-      .setTitle("Button Interaction Test")
-      .setDescription("Test this message by clicking one of the buttons!")
-      .setImage(
-        "https://cdn.dribbble.com/users/153131/screenshots/10878981/notion_4x.png"
-      )
-      .setTimestamp();
-
-    // Row of Buttons
-    const row = new ActionRowBuilder().addComponents(
-      new ButtonBuilder()
-        .setCustomId("Primary")
-        .setLabel("Blue")
-        .setStyle(ButtonStyle.Primary),
-      new ButtonBuilder()
-        .setCustomId("Secondary")
-        .setLabel("Red")
-        .setStyle(ButtonStyle.Danger),
-      new ButtonBuilder()
-        .setCustomId("Green")
-        .setLabel("Green")
-        .setStyle(ButtonStyle.Success)
-    );
-
-    await interaction.reply({ embeds: [button_embed], components: [row] });
-  } 
+		await interaction.reply({ content: 'Are you sure you want to update all users?', components: [row] });
+	}
   else if (interaction.commandName == "help") {
     const helpEmbed = new EmbedBuilder()
-      .setColor("Yellow")
+      .setColor("White")
       .setTitle("Help with Notion")
       .setURL("https://www.simple.ink/integrations/discord-in-notion")
       .setAuthor({
-        name: "Notion",
+        name: "This is a guide to using Notion with Discord",
         iconURL:
           "https://upload.wikimedia.org/wikipedia/commons/4/45/Notion_app_logo.png",
         url: "https://discord.js.org",
       })
-      .setDescription("This is a guide on how to get started with Notion")
       .setThumbnail(
         "https://cdn.dribbble.com/users/153131/screenshots/10878981/notion_4x.png"
       )
       .addFields({
-        name: "Please click on this link to get started with linking your notion to discord!",
-        value: "https://www.simple.ink/integrations/discord-in-notion",
+        name: "Step 1: Find your Discord UID",
+        value: "Settings → Advanced → Enable Developer Mode",
       })
-      .setImage(
-        "https://cdn.dribbble.com/users/153131/screenshots/10878981/notion_4x.png"
-      )
+      .addFields({
+        name: "Step 2: Find your UID",
+        value: "Right click on your profile and select **Copy ID**",
+      })
+      .addFields({
+        name: "Step 3: Use /adduser",
+        value: "Input your name, UID, and Notion Email",
+      })
+      .addFields({
+        name: "Step 4: To be set",
+        value: ":)",
+      })
       .setTimestamp()
       .setFooter({
         text: "Courtesy of the GDSC Development Team",
@@ -220,7 +174,7 @@ client.on("interactionCreate", async (interaction) => {
   } 
   else if (interaction.commandName == "credits") {
     const creditsEmbed = new EmbedBuilder()
-      .setColor(0x1099ff) 
+      .setColor(0x1099ff)
       .setTitle("Credits")
       .setAuthor({
         name: "Google Developer Student Club",
@@ -233,11 +187,11 @@ client.on("interactionCreate", async (interaction) => {
         "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%3Fid%3DOIP.g1-tsdPVN-SCgajIwi75MQHaC5%26pid%3DApi&f=1&ipt=8bd00114b7cc9f8ccc54c9b084bb19abf05f20acd2b6f8831f285f3a4c789218&ipo=images"
       )
       .addFields(
-        { name: "Project Managers", value: "Kiaran L, Konstantin V" },
-        { name: "Discord JS", value: "Jay C" },
-        { name: "Notion Api", value: "Richard A" },
-        { name: "Security Analysis", value: "Jay C" },
-        { name: "Cost Analysis", value: "Richard A" }
+        { name: "Project Leads", value: "Kiaran L, Konstantin V" },
+        { name: "Discord JS", value: "Jay C, Kiaran L" },
+        { name: "Notion Api", value: "Richard A, Kiaran L" },
+        { name: "Security Analysis", value: "Jay C, Konstantin V" },
+        { name: "Cost Analysis", value: "Konstantin V, Richard A" }
       )
       .setFooter({
         text: "Courtesy of the GDSC Development Team",
@@ -247,6 +201,35 @@ client.on("interactionCreate", async (interaction) => {
 
     await interaction.reply({ embeds: [creditsEmbed] });
   }
+  // else if (interaction.commandName == "adduser"){
+  //   if (interaction.isChatInputCommand()){
+  //     console.log("interaction IS chat input command: ");
+  //   }
+  //   else{
+  //     console.log("is NOT chat input command.");
+  //   }
+      
+  //   const adduserEmbed = new EmbedBuilder()
+  //     .setColor("#00ff6e")
+  //     .setTitle("Add User")
+  //     .setDescription("**`Do you want to add this user to the database?`**")
+  //     .addFields(
+  //       {name: "Name", value: `${interaction.options.getString("name")}`},
+  //       {name: "User", value: `${interaction.options.getUser("user")}`},
+  //       {name: "Email", value: `${interaction.options.getString('email')}`}
+  //     );
+      
+  //   const adduserButtons = new ActionRowBuilder().addComponents(
+  //     new ButtonBuilder()
+  //       .setCustomId("Green")
+  //       .setLabel("Confirm")
+  //       .setStyle(ButtonStyle.Success)
+  //   );
+
+  //   const filter = (i) => i.user.id === interaction.user.id;
+        
+  //   await interaction.reply({embeds: [adduserEmbed], components: [adduserButtons]});
+  // } 
 }); 
 
 // Second 'interactionCreate' function, I guess?
@@ -256,7 +239,7 @@ client.on('interactionCreate', async (interaction) => {
 	if (interaction.commandName === "adduser") {
 		// Create the modal
 		const modal = new ModalBuilder()
-			.setCustomId("adduserModal")
+			.setCustomId("addUserModal")
 			.setTitle("Add User");
 
 		// Create the text input components
@@ -289,35 +272,7 @@ client.on('interactionCreate', async (interaction) => {
     //await interaction.reply({c: 'Your submission was received successfully!'});
 	}
   else if (interaction.commandName == "getusers"){
-
-  }
-  else if (interaction.commandName == "initiate"){
-    // TODO: Check if the server has not been initiated already
-
-    const initiateModal = new ModalBuilder()
-      .setCustomId("initiateModal")
-      .setTitle("Initiate your Server");
-
-    // const agreementInput = new TextInputBuilder()
-    //   .setLabel("Do you agree to have your officer information stored on the MongoDB"
-    //    + "Cloud managed by our development team?"
-    //    + "\nThis includes your officer's:"
-    //    + "\n* Name"
-    //    + "\n* Email"
-    //    + "\n* Discord ID"
-    //    + "\n* Notion ID"
-    //    + "\n\nType \"Agree\" if you agree to these terms.")
-    const agreementInput = new TextInputBuilder()
-      .setCustomId("agreementInput")
-      .setLabel("Do you agree to store information?")
-      .setStyle(TextInputStyle.Short)
-      .setRequired(true);
-
-    const firstActionRow = new ActionRowBuilder().addComponents(agreementInput);
-
-    initiateModal.addComponents(firstActionRow);
-    initiateModal
-    await interaction.showModal(initiateModal);
+    
   }
 });
 
@@ -330,7 +285,7 @@ client.on('interactionCreate', async (interaction) => {
   if (interaction.isModalSubmit() ){
     console.log("Received a Modal: ", interaction.customId);
     // adduser Modal
-    if (interaction.customId == "adduserModal"){
+    if (interaction.customId == "addUserModal"){
       const name = interaction.fields.getTextInputValue("nameInput");
       const discord_uid = interaction.fields.getTextInputValue("discordInput");
       const email = interaction.fields.getTextInputValue("emailInput");
@@ -340,22 +295,15 @@ client.on('interactionCreate', async (interaction) => {
       // const discord_user = client.get(Guilds);
       // interaction.reply({content:`The new user is: ${discord_user}!`});
     }
-    else if (interaction.customId == "initiateModal"){
-      const agreement = interaction.fields.getTextInputValue("agreementInput");
-      if (agreement.toLowerCase() != "agree"){
-        interaction.reply({content:"Did not agree."})
-      }
-      else{
-        interaction.reply({content:`${interaction.user.toString()} \`Setting up your server...\``});
-      }
-    }
   }
 });
 
 
 client.on("messageCreate", (message) => {
   // Check to see if the message created is it's own message
-  if (message.author.id == "1018596435320639539") { return; }
+  if (message.author.id == "1018596435320639539") {
+    return;
+  }
   // message.channel.send(message.content);
   if (message.content == "dm me 4") {
     try {
@@ -370,6 +318,6 @@ client.on("messageCreate", (message) => {
   }
 });
 
-console.log("Hello World.");
+
 
 client.login(TOKEN);
