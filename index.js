@@ -335,7 +335,7 @@ client.on('interactionCreate', (interaction) => {
         }
     } else if (interaction.isSelectMenu()) {
         console.log("its working?");
-        interaction.reply("THE PROJECT IS IN SHAMBLES");
+        interaction.reply("THE PROJECT IS IN SHAMBLES2");
     }});
 
 client.login(TOKEN);
