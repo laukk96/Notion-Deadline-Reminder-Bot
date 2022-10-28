@@ -203,7 +203,7 @@ client.on("interactionCreate", async (interaction) => {
       .setFooter({
         text: "Courtesy of the GDSC Development Team",
         iconURL:
-          "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.Kg2FF2wpIK_HLyo8Q56ycAHaFj%26pid%3DApi&f=1&ipt=903b969ee37fcf7030b3b98b6b053ba7b2e31ca8f1478f60f135f1c5a5a5796a&ipo=images",
+          "https://media.discordapp.net/attachments/1019361668226101258/1034733977308778517/7627391_app_search_logo_google_engine_icon.png",
       });
 
     await interaction.reply({ embeds: [helpEmbed] });
