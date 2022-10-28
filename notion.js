@@ -57,13 +57,11 @@ class NotionDatabase
         const response = await notion.databases.query({
             database_id: TABLE_DEADLINES_ID
         });
-
-        for (let i = 0; i < response.results.length; i++){
+        console.log("Getting " + email + "'s Notion ID...");
+        outerloop: for (let i = 0; i < response.results.length; i++){
             if (response.results[i]['properties']['Deadline']['date'] != null){
                 
                 const peopleArray = response.results[i]['properties']['Taskee']['people'];
-                let deadLineIndex;
-                let personIndex;
                 let j = 0;
                 while (j < peopleArray.length)
                 {
@@ -71,16 +69,15 @@ class NotionDatabase
                     {
                         if (peopleArray[j]['person']['email'].includes(email))
                         {
-                            deadLineIndex = i;
-                            personIndex = j;
-                            break;
+                            console.log(peopleArray[j]['id']);
+                            break outerloop;
                         }
                     }
                     j++;
                 }
             }
         }
-        console.log(response.results[deadLineIndex]['properties']['Taskee'][personIndex]['people']['id']);
+        //console.log(response.results[deadLineIndex]['properties']['Taskee'][personIndex]['people']['id']);
     }
 
     AddUser = async (server_id, info) =>
@@ -182,22 +179,17 @@ database1 = new NotionDatabase(TABLE_DEADLINES_ID);
 //database1.getTask("Afraz");
 database1.parseNotionId("jsaleh849@insite.4cd.edu");
 
+//jsaleh849@insite.4cd.edu
+
 /*
 (async() => {
     const response = await notion.databases.query({
         database_id: TABLE_DEADLINES_ID
     });
-    for (let i = 0; i < response.results.length; i++)
-    {   
-        if (response.results[i]['properties']['Deadline']['date'] != null)
-        {
-        console.log(response.results[i]['properties']['Task']['title'][0]['plain_text']);
-        }
-    }
+    console.log(response.results[0]['properties']['Taskee']['people'][1]['id']);
+
     
 })();
 */
 
-
 //checkDataBase();
-
