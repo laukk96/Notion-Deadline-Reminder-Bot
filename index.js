@@ -94,8 +94,7 @@ const commands = [
 
 const rest = new REST({
     version: "10"
-})
-.setToken(TOKEN);
+}).setToken(TOKEN);
 
 (async() => {
     try {
@@ -336,40 +335,7 @@ client.on('interactionCreate', (interaction) => {
         }
     } else if (interaction.isSelectMenu()) {
         console.log("its working?");
-        interaction.reply( {content:new EmbedBuilder()
-            .setColor("White")
-            .setTitle("Help with Notion")
-            .setURL("https://www.simple.ink/integrations/discord-in-notion")
-            .setAuthor({
-                name: "This is a guide to using Notion with Discord",
-                iconURL: "https://upload.wikimedia.org/wikipedia/commons/4/45/Notion_app_logo.png",
-                url: "https://discord.js.org",
-            })
-            .setThumbnail(
-                "https://cdn.dribbble.com/users/153131/screenshots/10878981/notion_4x.png"
-            )
-            .addFields({
-                name: "Step 1: Find your Discord UID",
-                value: "Settings → Advanced → Enable Developer Mode",
-            })
-            .addFields({
-                name: "Step 2: Find your UID",
-                value: "Right click on your profile and select **Copy ID**",
-            })
-            .addFields({
-                name: "Step 3: Use /adduser",
-                value: "Input your name, UID, and Notion Email",
-            })
-            .addFields({
-                name: "Step 4: To be set",
-                value: ":)",
-            })
-            .setTimestamp()
-            .setFooter({
-                text: "Courtesy of the GDSC Development Team",
-                iconURL: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.Kg2FF2wpIK_HLyo8Q56ycAHaFj%26pid%3DApi&f=1&ipt=903b969ee37fcf7030b3b98b6b053ba7b2e31ca8f1478f60f135f1c5a5a5796a&ipo=images",
-            }) });
-    }
-});
+        interaction.reply("THE PROJECT IS IN SHAMBLES");
+    }});
 
 client.login(TOKEN);
