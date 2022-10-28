@@ -14,7 +14,7 @@ const TABLE_DEADLINES_ID = "f944e134b0584cc289d0a97775384d76";
 //GDSC f944e134b0584cc289d0a97775384d76
 //NOTION DEV TEAM 0f201482f6f1407899e8f7c8ae7dea28
 
-const TABLE_DEADLINES_ID = "f944e134b0584cc289d0a97775384d76";
+
 
 
 //console.log(response.results[1]['properties']['Person']);
