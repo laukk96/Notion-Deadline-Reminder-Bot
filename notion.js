@@ -40,7 +40,6 @@ const checkDataBase = async () => {
 
 class NotionDatabase 
 {
-
     constructor (connectDatabase)
     {
         this.connectDatabase = connectDatabase;
@@ -51,7 +50,18 @@ class NotionDatabase
             });
         })();
     }
+
+    AddUser = async (server_id, info) =>
+    {
+        
+    }
+
+    PushDeadlines = async () =>
+    {
+
+    }
     
+    //hi
     parseNotionId = async (email) =>
     {
         const response = await notion.databases.query({
@@ -79,12 +89,6 @@ class NotionDatabase
         }
         //console.log(response.results[deadLineIndex]['properties']['Taskee'][personIndex]['people']['id']);
     }
-
-    AddUser = async (server_id, info) =>
-    {
-        
-    }
-
 
     getPerson = async (deadline) => {
         const response = await notion.databases.query({
@@ -143,7 +147,6 @@ class NotionDatabase
         console.log('\n======================================================');
     }
     
-
     getDueDate = async (deadline) => 
     {
         const response = await notion.databases.query({
