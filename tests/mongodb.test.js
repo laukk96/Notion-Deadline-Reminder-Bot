@@ -1,8 +1,8 @@
-const { UserRegistry, DeadlineHistory } = require("../mongodb/databases");
+const { UserRegistry, DeadlineHistory } = require("../mongodb/collections");
 
 const tests = async () => {
-  //await UserRegistryDatabase();
-  await DeadlineHistoryDatabase();
+  await UserRegistryDatabase();
+  //await DeadlineHistoryDatabase();
 };
 tests();
 
@@ -10,9 +10,9 @@ async function UserRegistryDatabase() {
   //tests-------------------------------------------//
   const USER_REGISTRY_DATABASE = new UserRegistry();
   await connect(USER_REGISTRY_DATABASE);
-  //await create(USER_REGISTRY_DATABASE);
-  await get(USER_REGISTRY_DATABASE);
-  await close(USER_REGISTRY_DATABASE);
+  await create(USER_REGISTRY_DATABASE);
+  //await get(USER_REGISTRY_DATABASE);
+  //await close(USER_REGISTRY_DATABASE);
 
   //unit tests--------------------------------------//
   async function connect(USER_REGISTRY_DATABASE) {
@@ -23,19 +23,17 @@ async function UserRegistryDatabase() {
     const data = {
       name: "John",
       notion_id: "123",
-      email: "John@insite.4cd.edu",
       discord_id: "123123123",
-      uid: "awedawdaw",
     };
-    const result = await USER_REGISTRY_DATABASE.queries.create.user(data);
+    const result = await USER_REGISTRY_DATABASE.queries.create.user({
+      data: data,
+      server_id: "1019361421642965014",
+    });
     console.log("TEST_MONGODB_STORE:", result);
   }
   async function get(USER_REGISTRY_DATABASE) {
     const data = {
-      name: "John",
-      email: "John@insite.4cd.edu",
-      discord_id: "123123123",
-      uid: "awedawdaw",
+      email: "epidemeus@gmail.com",
     };
     const result = await USER_REGISTRY_DATABASE.queries.get.user(data);
     console.log("TEST_MONGODB_GET:", result);

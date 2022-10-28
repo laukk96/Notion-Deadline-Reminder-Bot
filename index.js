@@ -1,21 +1,15 @@
 require("dotenv").config();
 
 // Get Collections from MongoDB
-const {
-    UserRegistry,
-    DeadlineHistory,
-} = require("./mongodb/databases");
+// const { UserRegistry, DeadlineHistory } = require("./mongodb/databases");
 
-// Get Schema Data Objects
-const {
-    UserSchema
-} = require("./mongodb/schemas/user")
-const {
-    DeadlineSchema
-} = require("./mongodb/schemas/deadlines")
+// // Get Schema Data Objects
+// const { UserSchema } = require("./mongodb/schemas/user");
+// const { DeadlineSchema } = require("./mongodb/schemas/deadlines");
 
-const UserRegistryDatabase = new UserRegistry();
-const DeadlineHistoryDatabase = new DeadlineHistory();
+// const UserRegistryDatabase = new UserRegistry();
+// const DeadlineHistoryDatabase = new DeadlineHistory();
+
 
 // const query = async function () {
 //   const payload = await UserRegistryDatabase.connect();
@@ -38,9 +32,6 @@ if (!payload.error) {
 }
 UserRegistryDatabase.close();
 */
-
-
-
 
 const {
     REST,
@@ -87,6 +78,11 @@ const commands = [
     new SlashCommandBuilder()
     .setName("getusers")
     .setDescription("Get a list of the users in the database"),
+
+  new SlashCommandBuilder()
+    .setName("initiate")
+    .setDescription("initiate the server for Notion Deadline Reminders."),
+
     new SlashCommandBuilder()
     .setName("removeusers")
     .setDescription("Use this to remove users from the database!"),
@@ -128,8 +124,19 @@ client.on("ready", () => {
     client.user.setActivity("Project Notion 2");
 });
 
-client.on("interactionCreate", async(interaction) => {
-    if (!interaction.isChatInputCommand()) return;
+// Bot joins a server
+client.on("guildCreate", (guild) => {
+  console.log(`> Joined a guild: ${guild.id}`);
+});
+
+// Bot leaves a server
+client.on("guildDelete", (guild) => {
+  // TODO: Remove from the Database
+  console.log(`> Left a guild: ${guild.id}`);
+});
+
+client.on("interactionCreate", async (interaction) => {
+  if (!interaction.isChatInputCommand()) return;
 
     if (interaction.commandName === 'update') {
         const row = new ActionRowBuilder()
@@ -259,27 +266,67 @@ client.on('interactionCreate', async(interaction) => {
 
         modal.addComponents(firstActionRow, secondActionRow, thirdActionRow);
 
-        await interaction.showModal(modal);
-        //await interaction.reply({c: 'Your submission was received successfully!'});
-    } else if (interaction.commandName == "getusers") {
+    await interaction.showModal(modal);
+    //await interaction.reply({c: 'Your submission was received successfully!'});
+  } else if (interaction.commandName == "getusers") {
+  } else if (interaction.commandName == "initiate") {
+    // TODO: Check if the server has not been initiated already
 
-    }
+    const initiateModal = new ModalBuilder()
+      .setCustomId("initiateModal")
+      .setTitle("Initiate your Server");
+
+    // const agreementInput = new TextInputBuilder()
+    //   .setLabel("Do you agree to have your officer information stored on the MongoDB"
+    //    + "Cloud managed by our development team?"
+    //    + "\nThis includes your officer's:"
+    //    + "\n* Name"
+    //    + "\n* Email"
+    //    + "\n* Discord ID"
+    //    + "\n* Notion ID"
+    //    + "\n\nType \"Agree\" if you agree to these terms.")
+    const clubNameInput = new TextInputBuilder()
+      .setCustomId("clubNameInput")
+      .setLabel("What is your club name?")
+      .setStyle(TextInputStyle.Short)
+      .setRequired(true);
+
+    const clubDescriptionInput = new TextInputBuilder()
+      .setCustomId("clubDescriptionInput")
+      .setLabel("Tell us a brief description about your club!")
+      .setStyle(TextInputStyle.Paragraph)
+      .setMaxLength(280) // Same as twitter length lol
+      .setRequired(false);
+
+    const agreementInput = new TextInputBuilder()
+      .setCustomId("agreementInput")
+      .setLabel("Do you agree to store information?")
+      .setStyle(TextInputStyle.Paragraph)
+      .setRequired(true);
+
+    const firstActionRow = new ActionRowBuilder().addComponents(clubNameInput);
+    const secondActionRow = new ActionRowBuilder().addComponents(clubDescriptionInput);
+    const thirdActionRow = new ActionRowBuilder().addComponents(agreementInput);
+
+    initiateModal.addComponents([firstActionRow, secondActionRow, thirdActionRow]);
+    
+    await interaction.showModal(initiateModal);
+  }
 });
 
-
-
 // Third Interaction Create, for Modals / Buttons
-client.on('interactionCreate', async(interaction) => {
-    // Check if interaction is Modal or Button
-    if (!(interaction.isModalSubmit() || interaction.isButton())) return;
+client.on("interactionCreate", async (interaction) => {
+  // Check if interaction is Modal or Button
+  if (!(interaction.isModalSubmit() || interaction.isButton())) return;
 
-    if (interaction.isModalSubmit()) {
-        console.log("Received a Modal: ", interaction.customId);
-        // adduser Modal
-        if (interaction.customId == "addUserModal") {
-            const name = interaction.fields.getTextInputValue("nameInput");
-            const discord_uid = interaction.fields.getTextInputValue("discordInput");
-            const email = interaction.fields.getTextInputValue("emailInput");
+  if (interaction.isModalSubmit()) {
+    console.log("Received a Modal: ", interaction.customId);
+    
+    // adduser Modal
+    if (interaction.customId == "adduserModal") {
+      const name = interaction.fields.getTextInputValue("nameInput");
+      const discord_uid = interaction.fields.getTextInputValue("discordInput");
+      const email = interaction.fields.getTextInputValue("emailInput");
 
             console.log("New User Info Received: ", name, " ", discord_uid, " ", email);
             interaction.reply({
