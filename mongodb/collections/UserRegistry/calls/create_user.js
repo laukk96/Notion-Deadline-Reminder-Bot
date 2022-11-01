@@ -10,7 +10,7 @@ const create_user = ({ UserRegistry }) =>
     try {
       const user_data = UserSchema.exclude(data);
       const server = await UserRegistry.findOne({ _id: server_id });
-      console.log(server_id, server);
+
       if (!server) {
         const payload = await UserRegistry.insertOne({
           _id: server_id,
