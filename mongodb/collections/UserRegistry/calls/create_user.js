@@ -6,24 +6,25 @@ const create_user = ({ UserRegistry }) =>
       error: null,
       payload: null,
     };
-
     try {
-      const user_data = UserSchema.exclude(data);
+      const User = UserSchema.exclude(data);
       const server = await UserRegistry.findOne({ _id: server_id });
-      console.log(server_id, server);
+
       if (!server) {
         const payload = await UserRegistry.insertOne({
           _id: server_id,
-          [data.discord_id]: data,
+          [User.discord_id]: User,
         });
+        result.payload = payload;
       } else {
         const payload = await UserRegistry.updateOne(
           { _id: server_id },
-          { $set: { [123123123123123]: data } }
+          { $set: { [User.discord_id]: User } }
         );
         result.payload = payload;
-        result.status = 1;
       }
+
+      result.status = 1;
     } catch (error) {
       result.error = error; //TODO: replace error
       result.status = 0;
