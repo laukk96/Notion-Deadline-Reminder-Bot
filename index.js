@@ -364,7 +364,6 @@ client.on('interactionCreate', (interaction) => {
 
 client.on(Events.InteractionCreate, async interaction => {
 	if (!interaction.isChatInputCommand()) return;
-
 	if (interaction.commandName === 'help') {
 		const row = new ActionRowBuilder()
 			.addComponents(
@@ -385,15 +384,13 @@ client.on(Events.InteractionCreate, async interaction => {
 							value: 'second_option',
 						},
 						{
-							label: 'Future Help',
-							description: 'Nothing here yet!',
+							label: 'Github Documentation',
+							description: 'Technical Documentation of Notion Bot',
 							value: 'third_option',
 						},
 					]),
 			);
-            const filter = (i) => i.user.id === interaction.user.id;
-   
-
+            
 		const embed = new EmbedBuilder()
         .setColor("White")
                 .setTitle("This is a guide to for the Notion Deadline Reminder Bot")
@@ -403,7 +400,6 @@ client.on(Events.InteractionCreate, async interaction => {
                     iconURL: "https://upload.wikimedia.org/wikipedia/commons/4/45/Notion_app_logo.png",
                     url: "https://discord.js.org",
                 })
-                
                 .setTimestamp()
                 .setFooter({
                   text: "Courtesy of the GDSC Development Team",
@@ -413,5 +409,17 @@ client.on(Events.InteractionCreate, async interaction => {
 	}
 });
 
+client.on(Events.InteractionCreate, async interaction => {
+	if (!interaction.isSelectMenu()) return;
 
+	const selected = interaction.values[0];
+
+	if (selected === 'first_option') {
+		await interaction.reply('Shambles 1');
+	} else if (selected === 'second_option') {
+		await interaction.reply('Shambles 2');
+	} else if (selected === 'third_option') {
+        await interaction.reply('Shambles 3');
+    }
+});
 client.login(TOKEN);
