@@ -12,6 +12,7 @@ const notion = new Client({
     auth: process.env.NOTION_KEY,
 })
 
+
 //just to check the objects in the properties
 const checkDataBase = async () => {
     const response = await notion.databases.query({
@@ -53,7 +54,7 @@ class NotionDatabase
 
     AddUser = async (server_id, info) =>
     {
-        
+        // 
     }
 
     PushDeadlines = async () =>
@@ -61,7 +62,6 @@ class NotionDatabase
 
     }
     
-    //hi
     parseNotionId = async (email) =>
     {
         const response = await notion.databases.query({
