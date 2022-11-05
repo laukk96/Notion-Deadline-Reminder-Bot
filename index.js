@@ -1,28 +1,9 @@
 require("dotenv").config();
 
-// Get Collections from MongoDB
-// const { UserRegistry, DeadlineHistory } = require("./mongodb/databases");
-
-// // Get Schema Data Objects
-// const { UserSchema } = require("./mongodb/schemas/user");
-// const { DeadlineSchema } = require("./mongodb/schemas/deadlines");
-
-// const UserRegistryDatabase = new UserRegistry();
-// const DeadlineHistoryDatabase = new DeadlineHistory();
-
-
-// const query = async function () {
-//   const payload = await UserRegistryDatabase.connect();
-//   if (payload.error) return;
-//   UserRegistryDatabase.queries.create.user({
-//     name: "Asdawdaw",
-//     notion_id: "Awdawdaw",
-//   });
-
 //   UserRegistryDatabase.close();
 // };
 
-/* Example interface
+// Example interface
 const UserRegistryDatabase = new UserRegistry();
 
 UserRegistryDatabase.connect();
@@ -30,8 +11,8 @@ let payload = UserRegistryDatabase.queries.get.user({name: "John", id: "H1232"})
 if (!payload.error) {
 
 }
+
 UserRegistryDatabase.close();
-*/
 
 const {
     Events,
@@ -224,8 +205,7 @@ client.on('interactionCreate', async(interaction) => {
 
         const firstActionRow = new ActionRowBuilder().addComponents(nameInput);
         const secondActionRow = new ActionRowBuilder().addComponents(discordInput);
-        const thirdActionRow = new ActionRowBuilder().addComponents(emailInput)
-
+        const thirdActionRow = new ActionRowBuilder().addComponents(emailInput);
 
         modal.addComponents(firstActionRow, secondActionRow, thirdActionRow);
 
@@ -239,39 +219,47 @@ client.on('interactionCreate', async(interaction) => {
       .setCustomId("initiateModal")
       .setTitle("Initiate your Server");
 
-    // const agreementInput = new TextInputBuilder()
-    //   .setLabel("Do you agree to have your officer information stored on the MongoDB"
-    //    + "Cloud managed by our development team?"
-    //    + "\nThis includes your officer's:"
-    //    + "\n* Name"
-    //    + "\n* Email"
-    //    + "\n* Discord ID"
-    //    + "\n* Notion ID"
-    //    + "\n\nType \"Agree\" if you agree to these terms.")
     const clubNameInput = new TextInputBuilder()
-      .setCustomId("clubNameInput")
-      .setLabel("What is your club name?")
-      .setStyle(TextInputStyle.Short)
-      .setRequired(true);
+        .setCustomId("clubNameInput")
+        .setLabel("What is your club name?")
+        .setStyle(TextInputStyle.Short)
+        .setRequired(true);
 
     const clubDescriptionInput = new TextInputBuilder()
-      .setCustomId("clubDescriptionInput")
-      .setLabel("Tell us a brief description about your club!")
-      .setStyle(TextInputStyle.Paragraph)
-      .setMaxLength(280) // Same as twitter length lol
-      .setRequired(false);
+        .setCustomId("clubDescriptionInput")
+        .setLabel("Tell us a brief description about your club!")
+        .setStyle(TextInputStyle.Paragraph)
+        .setMaxLength(280) // Same as twitter length lol
+        .setRequired(false);
+
+    const integrationKeyInput = new TextInputBuilder()
+        .setCustomId("integrationKeyInput")
+        .setLabel("What is your Notion Integration Key?")
+        .setStyle(TextInputStyle.Short)
+        .setMaxLength(200) 
+        .setRequired(false);
+      
+    const databaseIdInput = new TextInputBuilder()
+        .setCustomId("databaseIdInput")
+        .setLabel("What is your Notion's Database ID?")
+        .setStyle(TextInputStyle.Short)
+        .setMaxLength(200) 
+        .setRequired(false);
 
     const agreementInput = new TextInputBuilder()
-      .setCustomId("agreementInput")
-      .setLabel("Do you agree to store information?")
-      .setStyle(TextInputStyle.Paragraph)
-      .setRequired(true);
+        .setCustomId("agreementInput")
+        .setLabel("Do you agree to store your data? (Type \"Agree\"")
+        .setStyle(TextInputStyle.Short)
+        .setMaxLength(8)
+        .setRequired(true);
 
     const firstActionRow = new ActionRowBuilder().addComponents(clubNameInput);
     const secondActionRow = new ActionRowBuilder().addComponents(clubDescriptionInput);
-    const thirdActionRow = new ActionRowBuilder().addComponents(agreementInput);
+    const thirdActionRow = new ActionRowBuilder().addComponents(integrationKeyInput);
+    const fourthActionRow = new ActionRowBuilder().addComponents(databaseIdInput);
+    const fifthActionRow = new ActionRowBuilder().addComponents(agreementInput);
 
-    initiateModal.addComponents([firstActionRow, secondActionRow, thirdActionRow]);
+    initiateModal.addComponents([firstActionRow, secondActionRow, thirdActionRow, fourthActionRow, fifthActionRow]);
     
     await interaction.showModal(initiateModal);
   }
@@ -286,7 +274,10 @@ client.on("interactionCreate", async (interaction) => {
     console.log("Received a Modal: ", interaction.customId);
     
     // adduser Modal
-    if (interaction.customId == "adduserModal") {
+    if (interaction.customId == "initiateModal"){
+        
+    }
+    else if (interaction.customId == "adduserModal") {
       const name = interaction.fields.getTextInputValue("nameInput");
       const discord_uid = interaction.fields.getTextInputValue("discordInput");
       const email = interaction.fields.getTextInputValue("emailInput");
@@ -295,13 +286,11 @@ client.on("interactionCreate", async (interaction) => {
             interaction.reply({
                 content: "Thank you for submitting your User Info! "
             });
-            // const discord_user = client.get(Guilds);
-            // interaction.reply({content:`The new user is: ${discord_user}!`});
         }
     }
 });
 
-//Removeusers selection menu
+// Removeusers selection menu
 client.on('interactionCreate', (interaction) => {
     if (interaction.isChatInputCommand()) {
         if (interaction.commandName == "removeusers") {
