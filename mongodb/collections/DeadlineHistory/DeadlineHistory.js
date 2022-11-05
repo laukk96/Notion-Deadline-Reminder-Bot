@@ -1,11 +1,11 @@
 const { MongoDBWrapper } = require("../../mongo");
 const { queries } = require("./queries");
-const COLLECTION_NAME = process.env.USER_REGISTRY_COLLECTION_NAME; //This ought to be defined in an .env file;
+const COLLECTION_NAME = process.env.DEADLINE_HISTORY_COLLECTION_NAME; //This ought to be defined in an .env file;
 let MongoDBClient = null;
 let Collection = null;
 let Dependencies = {};
 
-class UserRegistry {
+class DeadlineHistory {
   constructor() {
     if (MongoDBClient === null) MongoDBClient = new MongoDBWrapper();
   }
@@ -17,7 +17,7 @@ class UserRegistry {
     try {
       if (Collection) return;
       Collection = await MongoDBClient.connect(COLLECTION_NAME);
-      Dependencies.UserRegistry = Collection;
+      Dependencies.DeadlineHistory = Collection;
       this.queries = queries(Dependencies);
       result.status = 1;
     } catch (error) {
@@ -30,4 +30,4 @@ class UserRegistry {
   }
 }
 
-module.exports = { UserRegistry };
+module.exports = { DeadlineHistory };
