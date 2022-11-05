@@ -1,28 +1,9 @@
 require("dotenv").config();
 
-// Get Collections from MongoDB
-// const { UserRegistry, DeadlineHistory } = require("./mongodb/databases");
-
-// // Get Schema Data Objects
-// const { UserSchema } = require("./mongodb/schemas/user");
-// const { DeadlineSchema } = require("./mongodb/schemas/deadlines");
-
-// const UserRegistryDatabase = new UserRegistry();
-// const DeadlineHistoryDatabase = new DeadlineHistory();
-
-
-// const query = async function () {
-//   const payload = await UserRegistryDatabase.connect();
-//   if (payload.error) return;
-//   UserRegistryDatabase.queries.create.user({
-//     name: "Asdawdaw",
-//     notion_id: "Awdawdaw",
-//   });
-
 //   UserRegistryDatabase.close();
 // };
 
-/* Example interface
+// Example interface
 const UserRegistryDatabase = new UserRegistry();
 
 UserRegistryDatabase.connect();
@@ -30,8 +11,9 @@ let payload = UserRegistryDatabase.queries.get.user({name: "John", id: "H1232"})
 if (!payload.error) {
 
 }
+
 UserRegistryDatabase.close();
-*/
+
 
 const {
     Events,

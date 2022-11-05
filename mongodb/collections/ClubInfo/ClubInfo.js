@@ -1,11 +1,11 @@
 const { MongoDBWrapper } = require("../../mongo");
 const { queries } = require("./queries");
-const COLLECTION_NAME = process.env.DEADLINE_HISTORY_COLLECTION_NAME; //This ought to be defined in an .env file;
+const COLLECTION_NAME = process.env.CLUB_INFO_COLLECTION_NAME; //This ought to be defined in an .env file;
 let MongoDBClient = null;
 let Collection = null;
 let Dependencies = {};
 
-class DeadlineHistory {
+class ClubInfo {
   constructor() {
     if (MongoDBClient === null) MongoDBClient = new MongoDBWrapper();
   }
@@ -17,7 +17,7 @@ class DeadlineHistory {
     try {
       if (Collection) return;
       Collection = await MongoDBClient.connect(COLLECTION_NAME);
-      Dependencies.DeadlineHistory = Collection;
+      Dependencies.ClubInfo = Collection;
       this.queries = queries(Dependencies);
       result.status = 1;
     } catch (error) {
@@ -30,4 +30,4 @@ class DeadlineHistory {
   }
 }
 
-module.exports = { DeadlineHistory };
+module.exports = { ClubInfo };
