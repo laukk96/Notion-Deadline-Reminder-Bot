@@ -1,19 +1,5 @@
 require("dotenv").config();
 
-//   UserRegistryDatabase.close();
-// };
-
-// Example interface
-const UserRegistryDatabase = new UserRegistry();
-
-UserRegistryDatabase.connect();
-let payload = UserRegistryDatabase.queries.get.user({name: "John", id: "H1232"});
-if (!payload.error) {
-
-}
-
-UserRegistryDatabase.close();
-
 const {
     Events,
     REST,
@@ -108,17 +94,17 @@ client.on("ready", () => {
 
 // Bot joins a server
 client.on("guildCreate", (guild) => {
-  console.log(`> Joined a guild: ${guild.id}`);
+    console.log(`> Joined a guild: ${guild.id}`); 
 });
 
 // Bot leaves a server
 client.on("guildDelete", (guild) => {
-  // TODO: Remove from the Database
-  console.log(`> Left a guild: ${guild.id}`);
+    // TODO: Remove from the Database
+    console.log(`> Left a guild: ${guild.id}`);
 });
 
 client.on("interactionCreate", async (interaction) => {
-  if (!interaction.isChatInputCommand()) return;
+    if (!interaction.isChatInputCommand()) return;
 
     if (interaction.commandName === 'update') {
         const row = new ActionRowBuilder()
@@ -134,46 +120,7 @@ client.on("interactionCreate", async (interaction) => {
             content: 'Are you sure you want to update all users?',
             components: [row]
         });
- }
-     //else if (interaction.commandName == "help") {
-    //     const helpEmbed = new EmbedBuilder()
-    //         .setColor("White")
-    //         .setTitle("Help with Notion")
-    //         .setURL("https://www.simple.ink/integrations/discord-in-notion")
-    //         .setAuthor({
-    //             name: "This is a guide to using Notion with Discord",
-    //             iconURL: "https://upload.wikimedia.org/wikipedia/commons/4/45/Notion_app_logo.png",
-    //             url: "https://discord.js.org",
-    //         })
-    //         .setThumbnail(
-    //             "https://cdn.dribbble.com/users/153131/screenshots/10878981/notion_4x.png"
-    //         )
-    //         .addFields({
-    //             name: "Step 1: Find your Discord UID",
-    //             value: "Settings → Advanced → Enable Developer Mode",
-    //         })
-    //         .addFields({
-    //             name: "Step 2: Find your UID",
-    //             value: "Right click on your profile and select **Copy ID**",
-    //         })
-    //         .addFields({
-    //             name: "Step 3: Use /adduser",
-    //             value: "Input your name, UID, and Notion Email",
-    //         })
-    //         .addFields({
-    //             name: "Step 4: To be set",
-    //             value: ":)",
-    //         })
-    //         .setTimestamp()
-    //         .setFooter({
-    //             text: "Courtesy of the GDSC Development Team",
-    //             iconURL: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.Kg2FF2wpIK_HLyo8Q56ycAHaFj%26pid%3DApi&f=1&ipt=903b969ee37fcf7030b3b98b6b053ba7b2e31ca8f1478f60f135f1c5a5a5796a&ipo=images",
-    //         });
-
-    //     await interaction.reply({
-    //         embeds: [helpEmbed]
-    //     });
-     
+    }
     else if (interaction.commandName == "credits") {
         const creditsEmbed = new EmbedBuilder()
             .setColor(0x1099ff)
@@ -315,7 +262,12 @@ client.on("interactionCreate", async (interaction) => {
     
     // adduser Modal
     if (interaction.customId == "initiateModal"){
-        
+        const clubName = interaction.modal.getTextInputValue("clubNameInput");
+        const clubDescription = interaction.modal.getTextInputValue("clubDescriptionInput")
+        const integrationKey = interaction.modal.getTextInputValue("integrationKeyInput")
+        const databaseId = interaction.modal.getTextInputValue("databaseIdInput")
+
+        var valid = true
     }
     else if (interaction.customId == "adduserModal") {
       const name = interaction.fields.getTextInputValue("nameInput");
