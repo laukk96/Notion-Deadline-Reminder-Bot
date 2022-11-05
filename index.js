@@ -1,18 +1,6 @@
 require("dotenv").config();
 
-//   UserRegistryDatabase.close();
-// };
 
-// Example interface
-const UserRegistryDatabase = new UserRegistry();
-
-UserRegistryDatabase.connect();
-let payload = UserRegistryDatabase.queries.get.user({name: "John", id: "H1232"});
-if (!payload.error) {
-
-}
-
-UserRegistryDatabase.close();
 
 const {
     Events,
@@ -60,11 +48,9 @@ const commands = [
     new SlashCommandBuilder()
     .setName("getusers")
     .setDescription("Get a list of the users in the database"),
-
-  new SlashCommandBuilder()
+    new SlashCommandBuilder()
     .setName("initiate")
     .setDescription("initiate the server for Notion Deadline Reminders."),
-
     new SlashCommandBuilder()
     .setName("removeusers")
     .setDescription("Use this to remove users from the database!"),
@@ -108,17 +94,17 @@ client.on("ready", () => {
 
 // Bot joins a server
 client.on("guildCreate", (guild) => {
-  console.log(`> Joined a guild: ${guild.id}`);
+    console.log(`> Joined a guild: ${guild.id}`);
 });
 
 // Bot leaves a server
 client.on("guildDelete", (guild) => {
-  // TODO: Remove from the Database
-  console.log(`> Left a guild: ${guild.id}`);
+    // TODO: Remove from the Database
+    console.log(`> Left a guild: ${guild.id}`);
 });
 
-client.on("interactionCreate", async (interaction) => {
-  if (!interaction.isChatInputCommand()) return;
+client.on("interactionCreate", async(interaction) => {
+    if (!interaction.isChatInputCommand()) return;
 
     if (interaction.commandName === 'update') {
         const row = new ActionRowBuilder()
@@ -127,14 +113,13 @@ client.on("interactionCreate", async (interaction) => {
                 .setCustomId('primary')
                 .setLabel('Notification Update!')
                 .setStyle(ButtonStyle.Primary),
-
             );
 
         await interaction.reply({
             content: 'Are you sure you want to update all users?',
             components: [row]
         });
- }  else if (interaction.commandName == "credits") {
+    } else if (interaction.commandName == "credits") {
         const creditsEmbed = new EmbedBuilder()
             .setColor(0x1099ff)
             .setTitle("Credits")
@@ -157,11 +142,8 @@ client.on("interactionCreate", async (interaction) => {
                 name: "Notion Api",
                 value: "Kiaran L, Richard A "
             }, {
-                name: "Security Analysis",
-                value: "Jay C, Konstantin V"
-            }, {
-                name: "Cost Analysis",
-                value: "Konstantin V, Richard A"
+                name: "Mongo Wrapper",
+                value: "Konstantin V"
             })
             .setFooter({
                 text: "Courtesy of the GDSC Development Team",
@@ -209,78 +191,76 @@ client.on('interactionCreate', async(interaction) => {
 
         modal.addComponents(firstActionRow, secondActionRow, thirdActionRow);
 
-    await interaction.showModal(modal);
-    //await interaction.reply({c: 'Your submission was received successfully!'});
-  } else if (interaction.commandName == "getusers") {
-  } else if (interaction.commandName == "initiate") {
-    // TODO: Check if the server has not been initiated already
+        await interaction.showModal(modal);
+        //await interaction.reply({c: 'Your submission was received successfully!'});
+    } else if (interaction.commandName == "getusers") {} else if (interaction.commandName == "initiate") {
+        // TODO: Check if the server has not been initiated already
 
-    const initiateModal = new ModalBuilder()
-      .setCustomId("initiateModal")
-      .setTitle("Initiate your Server");
+        const initiateModal = new ModalBuilder()
+            .setCustomId("initiateModal")
+            .setTitle("Initiate your Server");
 
-    const clubNameInput = new TextInputBuilder()
-        .setCustomId("clubNameInput")
-        .setLabel("What is your club name?")
-        .setStyle(TextInputStyle.Short)
-        .setRequired(true);
+        const clubNameInput = new TextInputBuilder()
+            .setCustomId("clubNameInput")
+            .setLabel("What is your club name?")
+            .setStyle(TextInputStyle.Short)
+            .setRequired(true);
 
-    const clubDescriptionInput = new TextInputBuilder()
-        .setCustomId("clubDescriptionInput")
-        .setLabel("Tell us a brief description about your club!")
-        .setStyle(TextInputStyle.Paragraph)
-        .setMaxLength(280) // Same as twitter length lol
-        .setRequired(false);
+        const clubDescriptionInput = new TextInputBuilder()
+            .setCustomId("clubDescriptionInput")
+            .setLabel("Tell us a brief description about your club!")
+            .setStyle(TextInputStyle.Paragraph)
+            .setMaxLength(280) // Same as twitter length lol
+            .setRequired(false);
 
-    const integrationKeyInput = new TextInputBuilder()
-        .setCustomId("integrationKeyInput")
-        .setLabel("What is your Notion Integration Key?")
-        .setStyle(TextInputStyle.Short)
-        .setMaxLength(200) 
-        .setRequired(false);
-      
-    const databaseIdInput = new TextInputBuilder()
-        .setCustomId("databaseIdInput")
-        .setLabel("What is your Notion's Database ID?")
-        .setStyle(TextInputStyle.Short)
-        .setMaxLength(200) 
-        .setRequired(false);
+        const integrationKeyInput = new TextInputBuilder()
+            .setCustomId("integrationKeyInput")
+            .setLabel("What is your Notion Integration Key?")
+            .setStyle(TextInputStyle.Short)
+            .setMaxLength(200)
+            .setRequired(false);
 
-    const agreementInput = new TextInputBuilder()
-        .setCustomId("agreementInput")
-        .setLabel("Do you agree to store your data? (Type \"Agree\"")
-        .setStyle(TextInputStyle.Short)
-        .setMaxLength(8)
-        .setRequired(true);
+        const databaseIdInput = new TextInputBuilder()
+            .setCustomId("databaseIdInput")
+            .setLabel("What is your Notion's Database ID?")
+            .setStyle(TextInputStyle.Short)
+            .setMaxLength(200)
+            .setRequired(false);
 
-    const firstActionRow = new ActionRowBuilder().addComponents(clubNameInput);
-    const secondActionRow = new ActionRowBuilder().addComponents(clubDescriptionInput);
-    const thirdActionRow = new ActionRowBuilder().addComponents(integrationKeyInput);
-    const fourthActionRow = new ActionRowBuilder().addComponents(databaseIdInput);
-    const fifthActionRow = new ActionRowBuilder().addComponents(agreementInput);
+        const agreementInput = new TextInputBuilder()
+            .setCustomId("agreementInput")
+            .setLabel("Do you agree to store your data? (Type \"Agree\"")
+            .setStyle(TextInputStyle.Short)
+            .setMaxLength(8)
+            .setRequired(true);
 
-    initiateModal.addComponents([firstActionRow, secondActionRow, thirdActionRow, fourthActionRow, fifthActionRow]);
-    
-    await interaction.showModal(initiateModal);
-  }
+        const firstActionRow = new ActionRowBuilder().addComponents(clubNameInput);
+        const secondActionRow = new ActionRowBuilder().addComponents(clubDescriptionInput);
+        const thirdActionRow = new ActionRowBuilder().addComponents(integrationKeyInput);
+        const fourthActionRow = new ActionRowBuilder().addComponents(databaseIdInput);
+        const fifthActionRow = new ActionRowBuilder().addComponents(agreementInput);
+
+        initiateModal.addComponents([firstActionRow, secondActionRow, thirdActionRow, fourthActionRow, fifthActionRow]);
+
+        await interaction.showModal(initiateModal);
+    }
 });
 
 // Third Interaction Create, for Modals / Buttons
-client.on("interactionCreate", async (interaction) => {
-  // Check if interaction is Modal or Button
-  if (!(interaction.isModalSubmit() || interaction.isButton())) return;
+client.on("interactionCreate", async(interaction) => {
+    // Check if interaction is Modal or Button
+    if (!(interaction.isModalSubmit() || interaction.isButton())) return;
 
-  if (interaction.isModalSubmit()) {
-    console.log("Received a Modal: ", interaction.customId);
-    
-    // adduser Modal
-    if (interaction.customId == "initiateModal"){
-        
-    }
-    else if (interaction.customId == "adduserModal") {
-      const name = interaction.fields.getTextInputValue("nameInput");
-      const discord_uid = interaction.fields.getTextInputValue("discordInput");
-      const email = interaction.fields.getTextInputValue("emailInput");
+    if (interaction.isModalSubmit()) {
+        console.log("Received a Modal: ", interaction.customId);
+
+        // adduser Modal
+        if (interaction.customId == "initiateModal") {
+
+        } else if (interaction.customId == "adduserModal") {
+            const name = interaction.fields.getTextInputValue("nameInput");
+            const discord_uid = interaction.fields.getTextInputValue("discordInput");
+            const email = interaction.fields.getTextInputValue("emailInput");
 
             console.log("New User Info Received: ", name, " ", discord_uid, " ", email);
             interaction.reply({
@@ -312,60 +292,60 @@ client.on('interactionCreate', (interaction) => {
 
 
 client.on(Events.InteractionCreate, async interaction => {
-	if (!interaction.isChatInputCommand()) return;
-	if (interaction.commandName === 'help') {
-        
-		const row = new ActionRowBuilder()
-			.addComponents(
-				new SelectMenuBuilder()
-					.setCustomId('select')
-					.setPlaceholder('Select something for Help!')
-					.setMinValues(1)
-					.setMaxValues(1)
-					.addOptions([
-						{
-							label: 'Find your UID',
-							description: 'This is how to find your UID',
-							value: 'first_option',
-						},
-						{
-							label: 'Bot Setup',
-							description: 'This is how to setup the bot',
-							value: 'second_option',
-						},
-						{
-							label: 'Github Documentation',
-							description: 'Technical Documentation of Notion Bot',
-							value: 'third_option',
-						},
-					]),
-			);
-            
-		const embed = new EmbedBuilder()
-        .setColor("White")
-                .setTitle("This is a guide to for the Notion Deadline Reminder Bot")
-                .setURL("https://www.simple.ink/integrations/discord-in-notion")
-                .setAuthor({
-                    name: "Notion Deadline Reminder Bot",
-                    iconURL: "https://upload.wikimedia.org/wikipedia/commons/4/45/Notion_app_logo.png",
-                    url: "https://discord.js.org",
-                })
-                .setTimestamp()
-                .setFooter({
-                  text: "Courtesy of the GDSC Development Team",
-                  iconURL: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.Kg2FF2wpIK_HLyo8Q56ycAHaFj%26pid%3DApi&f=1&ipt=903b969ee37fcf7030b3b98b6b053ba7b2e31ca8f1478f60f135f1c5a5a5796a&ipo=images",
-                 });
-		await interaction.reply({ephemeral: true, embeds: [embed], components: [row] });
-	}
+    if (!interaction.isChatInputCommand()) return;
+    if (interaction.commandName === 'help') {
+
+        const row = new ActionRowBuilder()
+            .addComponents(
+                new SelectMenuBuilder()
+                .setCustomId('select')
+                .setPlaceholder('Select something for Help!')
+                .setMinValues(1)
+                .setMaxValues(1)
+                .addOptions([{
+                    label: 'Find your UID',
+                    description: 'This is how to find your UID',
+                    value: 'first_option',
+                }, {
+                    label: 'Bot Setup',
+                    description: 'This is how to setup the bot',
+                    value: 'second_option',
+                }, {
+                    label: 'Github Documentation',
+                    description: 'Technical Documentation of Notion Bot',
+                    value: 'third_option',
+                }, ]),
+            );
+
+        const embed = new EmbedBuilder()
+            .setColor("White")
+            .setTitle("This is a guide to for the Notion Deadline Reminder Bot")
+            .setURL("https://www.simple.ink/integrations/discord-in-notion")
+            .setAuthor({
+                name: "Notion Deadline Reminder Bot",
+                iconURL: "https://upload.wikimedia.org/wikipedia/commons/4/45/Notion_app_logo.png",
+                url: "https://discord.js.org",
+            })
+            .setTimestamp()
+            .setFooter({
+                text: "Courtesy of the GDSC Development Team",
+                iconURL: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.Kg2FF2wpIK_HLyo8Q56ycAHaFj%26pid%3DApi&f=1&ipt=903b969ee37fcf7030b3b98b6b053ba7b2e31ca8f1478f60f135f1c5a5a5796a&ipo=images",
+            });
+        await interaction.reply({
+            ephemeral: true,
+            embeds: [embed],
+            components: [row]
+        });
+    }
 });
 
 client.on(Events.InteractionCreate, async interaction => {
-	if (!interaction.isSelectMenu()) return;
+    if (!interaction.isSelectMenu()) return;
 
-	const selected = interaction.values[0];
+    const selected = interaction.values[0];
 
-	if (selected === 'first_option') {
-		const helpEmbed = new EmbedBuilder()
+    if (selected === 'first_option') {
+        const helpEmbed = new EmbedBuilder()
             .setColor("White")
             .setTitle("Finding your UID")
             .setAuthor({
@@ -388,15 +368,15 @@ client.on(Events.InteractionCreate, async interaction => {
                 text: "Courtesy of the GDSC Development Team",
                 iconURL: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.Kg2FF2wpIK_HLyo8Q56ycAHaFj%26pid%3DApi&f=1&ipt=903b969ee37fcf7030b3b98b6b053ba7b2e31ca8f1478f60f135f1c5a5a5796a&ipo=images",
             });
-            await interaction.reply({
-                        embeds: [helpEmbed]
-                    });
-	} else if (selected === 'second_option') {
-		const setupEmbed = new EmbedBuilder()
+        await interaction.reply({
+            embeds: [helpEmbed]
+        });
+    } else if (selected === 'second_option') {
+        const setupEmbed = new EmbedBuilder()
         await interaction.reply({
             embeds: [setupEmbed]
         });
-	} else if (selected === 'third_option') {
+    } else if (selected === 'third_option') {
         const githubEmbed = new EmbedBuilder()
             .setColor("White")
             .setTitle("The Notion Bot Project from the DVC's Google Developer Club.")
@@ -433,9 +413,9 @@ client.on(Events.InteractionCreate, async interaction => {
                 text: "Courtesy of the GDSC Development Team",
                 iconURL: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.Kg2FF2wpIK_HLyo8Q56ycAHaFj%26pid%3DApi&f=1&ipt=903b969ee37fcf7030b3b98b6b053ba7b2e31ca8f1478f60f135f1c5a5a5796a&ipo=images",
             });
-            await interaction.reply({
-                embeds: [githubEmbed]
-            });
+        await interaction.reply({
+            embeds: [githubEmbed]
+        });
     }
 
 });
