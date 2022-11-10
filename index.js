@@ -1,5 +1,9 @@
 require("dotenv").config();
 
+const { ClubInfo } = require("./mongodb/collections/ClubInfo/ClubInfo.js");
+const ClubInfoDatabase = new ClubInfo();
+ClubInfoDatabase.connect();
+
 const {
     Events,
     REST,
@@ -22,6 +26,7 @@ const {
     TextInputStyle,
     SelectMenuBuilder,
     SelectMenuOptionBuilder,
+    PermissionFlagsBits,
 } = require("discord.js");
 
 const wait = require("node:timers/promises").setTimeout;
@@ -76,6 +81,7 @@ const {
     Client,
     GatewayIntentBits
 } = require("discord.js");
+const { time } = require("node:console");
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
@@ -117,49 +123,10 @@ client.on("interactionCreate", async (interaction) => {
             content: 'Are you sure you want to update all users?',
             components: [row]
         });
- }
-     //else if (interaction.commandName == "help") {
-    //     const helpEmbed = new EmbedBuilder()
-    //         .setColor("White")
-    //         .setTitle("Help with Notion")
-    //         .setURL("https://www.simple.ink/integrations/discord-in-notion")
-    //         .setAuthor({
-    //             name: "This is a guide to using Notion with Discord",
-    //             iconURL: "https://upload.wikimedia.org/wikipedia/commons/4/45/Notion_app_logo.png",
-    //             url: "https://discord.js.org",
-    //         })
-    //         .setThumbnail(
-    //             "https://cdn.dribbble.com/users/153131/screenshots/10878981/notion_4x.png"
-    //         )
-    //         .addFields({
-    //             name: "Step 1: Find your Discord UID",
-    //             value: "Settings → Advanced → Enable Developer Mode",
-    //         })
-    //         .addFields({
-    //             name: "Step 2: Find your UID",
-    //             value: "Right click on your profile and select **Copy ID**",
-    //         })
-    //         .addFields({
-    //             name: "Step 3: Use /adduser",
-    //             value: "Input your name, UID, and Notion Email",
-    //         })
-    //         .addFields({
-    //             name: "Step 4: To be set",
-    //             value: ":)",
-    //         })
-    //         .setTimestamp()
-    //         .setFooter({
-    //             text: "Courtesy of the GDSC Development Team",
-    //             iconURL: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.Kg2FF2wpIK_HLyo8Q56ycAHaFj%26pid%3DApi&f=1&ipt=903b969ee37fcf7030b3b98b6b053ba7b2e31ca8f1478f60f135f1c5a5a5796a&ipo=images",
-    //         });
-
-    //     await interaction.reply({
-    //         embeds: [helpEmbed]
-    //     });
-     
+    }   
     else if (interaction.commandName == "credits") {
         const creditsEmbed = new EmbedBuilder()
-            .setColor(0x1099ff)
+            .setColor(0x1099ff) 
             .setTitle("Credits")
             .setAuthor({
                 name: "Google Developer Student Club",
@@ -231,7 +198,18 @@ client.on('interactionCreate', async(interaction) => {
 
         await interaction.showModal(modal);
         //await interaction.reply({c: 'Your submission was received successfully!'});
-    } else if (interaction.commandName == "getusers") {} else if (interaction.commandName == "initiate") {
+    } else if (interaction.commandName == "initiate") {
+        if (!interaction.member.permissions.has(PermissionFlagsBits.Administrator)){
+            rejectionEmbed = new EmbedBuilder()
+                .setTitle('⛔ Permissions Error!')
+                .setDescription(`You are not an \`Administrator\`!`)
+                .setColor("fc3c32")
+
+            interaction.reply({
+                embeds: [rejectionEmbed]
+            }) 
+            return;
+        }
         // TODO: Check if the server has not been initiated already
 
         const initiateModal = new ModalBuilder()
@@ -251,8 +229,8 @@ client.on('interactionCreate', async(interaction) => {
             .setMaxLength(280) // Same as twitter length lol
             .setRequired(false);
 
-        const integrationKeyInput = new TextInputBuilder()
-            .setCustomId("integrationKeyInput")
+        const notionIntegrationKeyInput = new TextInputBuilder()
+            .setCustomId("notionIntegrationKeyInput")
             .setLabel("What is your Notion Integration Key?")
             .setStyle(TextInputStyle.Short)
             .setMaxLength(200)
@@ -267,14 +245,14 @@ client.on('interactionCreate', async(interaction) => {
 
         const agreementInput = new TextInputBuilder()
             .setCustomId("agreementInput")
-            .setLabel("Do you agree to store your data? (Type \"Agree\"")
+            .setLabel("Do you agree? (Type \"Agree\")")
             .setStyle(TextInputStyle.Short)
             .setMaxLength(8)
             .setRequired(true);
 
         const firstActionRow = new ActionRowBuilder().addComponents(clubNameInput);
         const secondActionRow = new ActionRowBuilder().addComponents(clubDescriptionInput);
-        const thirdActionRow = new ActionRowBuilder().addComponents(integrationKeyInput);
+        const thirdActionRow = new ActionRowBuilder().addComponents(notionIntegrationKeyInput);
         const fourthActionRow = new ActionRowBuilder().addComponents(databaseIdInput);
         const fifthActionRow = new ActionRowBuilder().addComponents(agreementInput);
 
@@ -294,18 +272,63 @@ client.on("interactionCreate", async(interaction) => {
     
     // adduser Modal
     if (interaction.customId == "initiateModal"){
+        const clubNameInput = interaction.fields.getTextInputValue("clubNameInput");
+        const clubDescriptionInput = interaction.fields.getTextInputValue("clubDescriptionInput");
+        const notionIntegrationKeyInput = interaction.fields.getTextInputValue("notionIntegrationKeyInput");
+        const databaseIdInput = interaction.fields.getTextInputValue("databaseIdInput");
+        const agreementInput = interaction.fields.getTextInputValue("agreementInput");
+
+        console.log(agreementInput, agreementInput === "agree");
+        if (agreementInput.toLowerCase() === "agree" == false){
+            initiateEmbed = new EmbedBuilder()
+                .setTitle('⛔ No Agreement!')
+                .setDescription(`You did not type \`"Agree"\`! \n\n This is an **End User License Agreement** which legally gives us permission to store your data on our MongoDB Cloud Database managed by the Development Team.`)
+                .setColor("fc3c32")
+
+            interaction.reply({
+                embeds: [initiateEmbed]
+            }) 
+        }
+        // If they typed "agree":
+        else{
+            const today = new Date()
+            const date = `${today.getMonth()+1}/${today.getDay()}/${today.getFullYear()}`
+
+            const data = {
+                initiated_date: date,
+                club_name: clubNameInput,
+                club_description: clubDescriptionInput,
+                notion_integration_key: notionIntegrationKeyInput,
+                database_id: databaseIdInput,
+            }
+            const mongo_data_packet = {
+                server_id: interaction.guild.id, 
+                data: data
+            }
+            console.log(data);
+            ClubInfoDatabase.queries.create.club(mongo_data_packet);
+            
+            initiateEmbed = new EmbedBuilder()
+                .setTitle('✅ Success!')
+                .setDescription(`Your Club \`${clubNameInput}\` has been successfully initiated in the MongoDB Database!`)
+                .setColor("02f933")
+
+            interaction.reply({
+                embeds: [initiateEmbed]
+            }) 
+        }
         
     }
     else if (interaction.customId == "adduserModal") {
-      const name = interaction.fields.getTextInputValue("nameInput");
-      const discord_uid = interaction.fields.getTextInputValue("discordInput");
-      const email = interaction.fields.getTextInputValue("emailInput");
+        const name = interaction.fields.getTextInputValue("nameInput");
+        const discord_uid = interaction.fields.getTextInputValue("discordInput");
+        const email = interaction.fields.getTextInputValue("emailInput");
 
-            console.log("New User Info Received: ", name, " ", discord_uid, " ", email);
-            interaction.reply({
-                content: "Thank you for submitting your User Info! "
-            });
-        }
+        console.log("New User Info Received: ", name, " ", discord_uid, " ", email);
+        interaction.reply({
+            content: "Thank you for submitting your User Info! "
+        });
+    }
     }
 });
 

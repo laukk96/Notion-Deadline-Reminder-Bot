@@ -1,6 +1,6 @@
 const { MongoDBWrapper } = require("../../mongo");
 const { queries } = require("./queries");
-const COLLECTION_NAME = process.env.CLUB_INFO_COLLECTION_NAME; //This ought to be defined in an .env file;
+const COLLECTION_NAME = process.env.CLUB_INFO_COLLECTION_NAME; // This ought to be defined in an .env file;
 let MongoDBClient = null;
 let Collection = null;
 let Dependencies = {};

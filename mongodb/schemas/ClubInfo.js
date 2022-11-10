@@ -2,20 +2,13 @@ const { Schema } = require("../lib/Schema");
 const CLUB_DESCRIPTION_LENGTH = null;
 
 const Club = {
-  guild_id: null,
   club_name: null,
   club_description: null,
   initiated_date: null,
   notion_integration_key: null,
+  database_id: null,
 };
 
-Club.guild_id = (guild_id) => {
-  if (typeof guild_id === "string") {
-    return guild_id;
-  } else {
-    throw "guild_id has to be a string.";
-  }
-};
 
 Club.club_name = (club_name) => {
   if (typeof club_name === "string") {
@@ -43,11 +36,20 @@ Club.initiated_date = (initiated_date) => {
     throw "initiated_date has to be a string.";
   }
 };
+
 Club.notion_integration_key = (notion_integration_key) => {
   if (typeof notion_integration_key === "string") {
     return notion_integration_key;
   } else {
     throw "notion_integration_key has to be a string.";
+  }
+};
+
+Club.database_id = (database_id) => {
+  if (typeof database_id === "string") {
+    return database_id;
+  } else {
+    throw "database_id has to be a string.";
   }
 };
 
