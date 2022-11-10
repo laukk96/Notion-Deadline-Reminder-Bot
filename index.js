@@ -32,28 +32,26 @@ const TOKEN = process.env.DISCORD_TOKEN;
 
 const commands = [
     new SlashCommandBuilder()
-    .setName("update")
-    .setDescription("Send a manual notification to officers!"),
+        .setName("update")
+        .setDescription("Send a manual notification to officers!"),
     new SlashCommandBuilder()
-    .setName("help")
-    .setDescription("If you need help to link your notion to discord!"),
+        .setName("help")
+        .setDescription("If you need help to link your notion to discord!"),
     new SlashCommandBuilder()
-    .setName("credits")
-    .setDescription("The original authors of the bot"),
+        .setName("credits")
+        .setDescription("The original authors of the bot"),
     new SlashCommandBuilder()
-    .setName("adduser")
-    .setDescription("Add a User to the Database"),
+        .setName("adduser")
+        .setDescription("Add a User to the Database"),  
     new SlashCommandBuilder()
-    .setName("getusers")
-    .setDescription("Get a list of the users in the database"),
-
-  new SlashCommandBuilder()
-    .setName("initiate")
-    .setDescription("initiate the server for Notion Deadline Reminders."),
-
+        .setName("getusers")
+        .setDescription("Get a list of the users in the database"),
     new SlashCommandBuilder()
-    .setName("removeusers")
-    .setDescription("Use this to remove users from the database!"),
+        .setName("initiate")
+        .setDescription("initiate the server for Notion Deadline Reminders."),
+    new SlashCommandBuilder()
+        .setName("removeusers")
+        .setDescription("Use this to remove users from the database!"),
 ];
 
 const rest = new REST({
