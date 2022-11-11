@@ -5,12 +5,15 @@ const { getDatabase } = require('@notionhq/client/build/src/api-endpoints');
 // const databaseId = process.env.NOTION_DATABASE_ID;
 // How to share a database with an notion integration/connection? 
 const TABLE_DEADLINES_ID = "f944e134b0584cc289d0a97775384d76";
+
 //GDSC f944e134b0584cc289d0a97775384d76
 //NOTION DEV TEAM 0f201482f6f1407899e8f7c8ae7dea28
 
 const notion = new Client({
     auth: process.env.NOTION_KEY,
 })
+
+const all_connections = []
 
 //just to check the objects in the properties
 const checkDataBase = async () => {
@@ -38,12 +41,13 @@ const checkDataBase = async () => {
     }
 }
 
+
+
 class NotionDatabase 
 {
     constructor (connectDatabase)
     {
         this.connectDatabase = connectDatabase;
-        console.log("The NotionDatabase is being created!");
         (async () => {
             const response = await notion.databases.query({
                 database_id: connectDatabase

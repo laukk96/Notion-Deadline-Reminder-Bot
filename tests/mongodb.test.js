@@ -19,6 +19,8 @@ async function UserRegistryDatabase() {
     const payload = await USER_REGISTRY_DATABASE.connect();
     console.log("TEST_MONGODB_CONNECT:", payload);
   }
+
+  // Just for Notion
   async function create(USER_REGISTRY_DATABASE) {
     const data = {
       name: "John",
@@ -31,6 +33,7 @@ async function UserRegistryDatabase() {
     });
     console.log("TEST_MONGODB_STORE:", result);
   }
+  
   async function get(USER_REGISTRY_DATABASE) {
     const data = {
       email: "epidemeus@gmail.com",

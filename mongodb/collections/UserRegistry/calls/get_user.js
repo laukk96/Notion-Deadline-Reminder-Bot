@@ -5,7 +5,7 @@ const get_user = ({ UserRegistry }) =>
       status: null,
       error: null,
       payload: null,
-    }; //This object will notify the end user the result of their query
+    }; //This object will notify the end user the result of their query.
     const user_data = UserSchema.intersect(data); //Only allow properties that are also in UserSchema and are not null.
     //TODO: Validate Strings
     //Put Precedence in checking by id.
