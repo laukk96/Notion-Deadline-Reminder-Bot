@@ -142,7 +142,7 @@ client.on("interactionCreate", async(interaction) => {
                 name: "Notion Api",
                 value: "Kiaran L, Richard A "
             }, {
-                name: "Mongo Wrapper",
+                name: "MongoDB",
                 value: "Konstantin V"
             })
             .setFooter({
@@ -371,12 +371,8 @@ client.on(Events.InteractionCreate, async interaction => {
         await interaction.reply({
             embeds: [helpEmbed]
         });
-    } else if (selected === 'second_option') {
-        const setupEmbed = new EmbedBuilder()
-        await interaction.reply({
-            embeds: [setupEmbed]
-        });
-    } else if (selected === 'third_option') {
+    } 
+     else if (selected === 'third_option') {
         const githubEmbed = new EmbedBuilder()
             .setColor("White")
             .setTitle("The Notion Bot Project from the DVC's Google Developer Club.")
