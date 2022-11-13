@@ -1,7 +1,6 @@
 const { ClubSchema } = require("../../../schemas/ClubInfo");
 const create_guild_key = ({ ClubInfo }) =>
   async function ({ server_id, data }) {
-    console.log("yo")
     let result = {
       status: null,
       error: null,
