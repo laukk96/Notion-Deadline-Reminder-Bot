@@ -1,8 +1,14 @@
 require("dotenv").config();
 
 const { ClubInfo } = require("./mongodb/collections/ClubInfo/ClubInfo.js");
+const { UserRegistry } = require("./mongodb/collections/UserRegistry/UserRegistry.js");
+const { DeadlineHistory } = require("./mongodb/collections/DeadlineHistory/DeadlineHistory.js");
 const ClubInfoDatabase = new ClubInfo();
+const UserRegistryDatabase = new UserRegistry();
+const DeadlineHistoryDatabase = new DeadlineHistory();
 ClubInfoDatabase.connect();
+UserRegistryDatabase.connect();
+DeadlineHistoryDatabase.connect();
 
 const {
     Events,
@@ -307,6 +313,9 @@ client.on("interactionCreate", async(interaction) => {
             }
             console.log(data);
             ClubInfoDatabase.queries.create.club(mongo_data_packet);
+            // Send in the data packet with the server_id, data will be ignored by TemplateSchema
+            UserRegistryDatabase.queries.create.user_registry(mongo_data_packet);
+            DeadlineHistoryDatabase.queries.create.deadline_history(mongo_data_packet);
             
             initiateEmbed = new EmbedBuilder()
                 .setTitle('✅ Success!')

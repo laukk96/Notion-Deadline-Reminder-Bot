@@ -1,5 +1,5 @@
-const { ClubSchema } = require("../../../schemas/ClubInfo");
-const create_guild_key = ({ ClubInfo }) =>
+const { TemplateSchema } = require("../../../schemas/Template");
+const create_guild_key = ({ UserRegistry }) =>
   async function ({ server_id, data }) {
     let result = {
       status: null,
@@ -7,23 +7,20 @@ const create_guild_key = ({ ClubInfo }) =>
       payload: null,
     };
     try {
-      let Club_Data = ClubSchema.exclude(data);
-      console.log("yo")
-      const guild_key = await ClubInfo.findOne({ _id: server_id });
-      console.log("yo")             
-      Club_Data._id = server_id;
-      console.log(Club_Data);
+      let Template = TemplateSchema.exclude(data);
+      const guild_key = await UserRegistry.findOne({ _id: server_id });
+      Template._id = server_id;
       // Initiate command starts
       if (!guild_key) {
-        const payload = await ClubInfo.insertOne(
-           Club_Data
+        const payload = await UserRegistry.insertOne(
+           Template
         );
         result.payload = payload;
       // If they run the initiate command AGAIN (test)
       } else { 
-        const payload = await ClubInfo.updateOne(
+        const payload = await UserRegistry.updateOne(
           { _id: server_id },
-          { $set: Club_Data }
+          { $set: Template }
         );
         result.payload = payload;
       }
