@@ -307,15 +307,15 @@ client.on("interactionCreate", async(interaction) => {
                 notion_integration_key: notionIntegrationKeyInput,
                 database_id: databaseIdInput,
             }
-            const mongo_data_packet = {
+            const mongo_packet = {
                 server_id: interaction.guild.id, 
                 data: data
             }
             console.log(data);
-            ClubInfoDatabase.queries.create.club(mongo_data_packet);
+            ClubInfoDatabase.queries.create.club(mongo_packet);
             // Send in the data packet with the server_id, data will be ignored by TemplateSchema
-            UserRegistryDatabase.queries.create.user_registry(mongo_data_packet);
-            DeadlineHistoryDatabase.queries.create.deadline_history(mongo_data_packet);
+            UserRegistryDatabase.queries.create.user_registry(mongo_packet);
+            DeadlineHistoryDatabase.queries.create.deadline_history(mongo_packet);
             
             initiateEmbed = new EmbedBuilder()
                 .setTitle('✅ Success!')
@@ -330,13 +330,27 @@ client.on("interactionCreate", async(interaction) => {
     }
     else if (interaction.customId == "adduserModal") {
         const name = interaction.fields.getTextInputValue("nameInput");
-        const discord_uid = interaction.fields.getTextInputValue("discordInput");
+        const discord_id = interaction.fields.getTextInputValue("discordInput");
         const email = interaction.fields.getTextInputValue("emailInput");
 
-        console.log("New User Info Received: ", name, " ", discord_uid, " ", email);
+        // Has to match the Schema provided in UserSchema
+        const data = {
+            name: name,
+            email: email,
+            discord_id: discord_id,
+            notion_id: null,
+        };
+        const mongo_packet = {
+            server_id: interaction.guild.id,
+            data: data
+        }
+        // TODO: Get the Notion ID from NotionClient.parseNotionId()
+
+        console.log("New User Info Received: ", data);
         interaction.reply({
-            content: "Thank you for submitting your User Info! "
+            content: "Thank you for submitting your User Info!"
         });
+        // TODO: Add the user to the UserRegistry and DeadlineHistory
     }
     }
 });
