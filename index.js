@@ -1,5 +1,8 @@
 require("dotenv").config();
 
+const { NotionDatabase } = require("./notion.js")
+const tempNotionDatabase = new NotionDatabase();
+
 const { ClubInfo } = require("./mongodb/collections/ClubInfo/ClubInfo.js");
 const { UserRegistry } = require("./mongodb/collections/UserRegistry/UserRegistry.js");
 const { DeadlineHistory } = require("./mongodb/collections/DeadlineHistory/DeadlineHistory.js");
@@ -340,6 +343,10 @@ client.on("interactionCreate", async(interaction) => {
             discord_id: discord_id,
             notion_id: null,
         };
+        // parse the Notion ID from the dashboard
+        data[notion_id] = tempNotionDatabase.parseNotionId(email);
+        // TODO 3:
+
         const mongo_packet = {
             server_id: interaction.guild.id,
             data: data
@@ -351,6 +358,7 @@ client.on("interactionCreate", async(interaction) => {
             content: "Thank you for submitting your User Info!"
         });
         // TODO: Add the user to the UserRegistry and DeadlineHistory
+        UserRegistryDatabase.queries.create.user(mongo_packet);
     }
     }
 });
