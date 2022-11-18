@@ -3,16 +3,18 @@
 
 const { rate_limiter } = require("../../lib/ratelimiter");
 const { create_guild_key } = require("./calls/create_guild_key");
+
+
 const queries = (Dependencies) => {
   return {
     get: {
       // deadline: rate_limiter(() => get_deadline(Dependencies)),
-
+      notion_integration_key: rate_limiter(),
     },
     create: {
       // deadline: rate_limiter(() => create_deadline(Dependencies)),
       club: rate_limiter(() => create_guild_key(Dependencies)),
-    },
+    },  
     update: {},
   };
 };

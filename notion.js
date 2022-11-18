@@ -3,16 +3,31 @@ const { Client } = require("@notionhq/client");
 const { getDatabase } = require('@notionhq/client/build/src/api-endpoints');
 const { ThreadAutoArchiveDuration } = require('discord.js');
 
+const { ClubInfo } = require("./mongodb/collections/ClubInfo/ClubInfo.js")
+const ClubInfoDatabase = new ClubInfo();
+ClubInfoDatabase.connect();
+
 // const databaseId = process.env.NOTION_DATABASE_ID;
 // How to share a database with an notion integration/connection? 
-const TABLE_DEADLINES_ID = "f944e134b0584cc289d0a97775384d76";
+const TABLE_DEADLINES_ID = "beb4f1b15ec1443c87e16bd138832d06";
+
+// Old: f944e134b0584cc289d0a97775384d76
+// New: beb4f1b15ec1443c87e16bd138832d06
 
 //GDSC f944e134b0584cc289d0a97775384d76
 //NOTION DEV TEAM 0f201482f6f1407899e8f7c8ae7dea28
 
+// TODO: Change the Notion Variable to be compatible with different servers
 notion = new Client({
     auth: process.env.NOTION_KEY,
 });
+
+active_notion_connections = {
+    "1019361421642965013": new Client({
+        auth: 
+    })
+}
+
 // const all_connections = []
 
 //just to check the objects in the properties

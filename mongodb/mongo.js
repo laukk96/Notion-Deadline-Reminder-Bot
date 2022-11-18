@@ -5,7 +5,7 @@ const {
   MONGODB_PASSWORD,
   MONGODB_CLUSTER,
   MONGODB_DATABASE_NAME,
-} = process.env;
+} = process.env; 
 const URI = `mongodb+srv://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@${MONGODB_CLUSTER}/?retryWrites=true&w=majority`;
 const MONGODB_CONFIG = {
   useNewUrlParser: true,
