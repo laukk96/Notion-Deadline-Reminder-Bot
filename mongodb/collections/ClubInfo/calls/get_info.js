@@ -1,5 +1,5 @@
 const { ClubSchema } = require("../../../schemas/ClubInfo");
-const get_notion_integration_key = ({ ClubInfo }) =>
+const get_info = ({ ClubInfo }) =>
   async function ({ server_id, data }) {
     let result = {
       status: null,
@@ -8,19 +8,18 @@ const get_notion_integration_key = ({ ClubInfo }) =>
     };
     try {
       let Club_Data = ClubSchema.exclude(data);
-      const guild_key = await ClubInfo.findOne({ _id: server_id });     
+      const guild_data = await ClubInfo.findOne({ _id: server_id });
+
       Club_Data._id = server_id;
-      // Initiate command starts
-      if (!guild_key) {
+      // Club not found:
+      if (!guild_data) {
         result.status = "Could not find the server inside the ClubInfo Collection";
         result.payload = payload;
-      // If they run the initiate command AGAIN (test)
+      // Club found, returning all info from ClubInfo
       } else { 
-        const payload = await ClubInfo.updateOne(
-          { _id: server_id },
-          { $set: Club_Data }
-        );
-        result.payload = payload;
+        result.payload = guild_data
+        console.log("result payload (guild_data):", result.payload);
+        console.log("result:" + result);
       }
 
       result.status = 1;
@@ -32,4 +31,4 @@ const get_notion_integration_key = ({ ClubInfo }) =>
     }
     //TODO: Validate Strings
   };
-module.exports = { get_notion_integration_key };
+module.exports = { get_info };

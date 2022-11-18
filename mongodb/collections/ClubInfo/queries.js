@@ -3,13 +3,14 @@
 
 const { rate_limiter } = require("../../lib/ratelimiter");
 const { create_guild_key } = require("./calls/create_guild_key");
+const { get_info } = require("./calls/get_info");
 
 
 const queries = (Dependencies) => {
   return {
     get: {
       // deadline: rate_limiter(() => get_deadline(Dependencies)),
-      notion_integration_key: rate_limiter(),
+      info: async function(){ rate_limiter(() => get_info(Dependencies)) },
     },
     create: {
       // deadline: rate_limiter(() => create_deadline(Dependencies)),

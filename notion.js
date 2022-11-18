@@ -1,11 +1,19 @@
 require('dotenv').config('/.env');
 const { Client } = require("@notionhq/client");
 const { getDatabase } = require('@notionhq/client/build/src/api-endpoints');
-const { ThreadAutoArchiveDuration } = require('discord.js');
+const { ThreadAutoArchiveDuration, time } = require('discord.js');
 
 const { ClubInfo } = require("./mongodb/collections/ClubInfo/ClubInfo.js")
 const ClubInfoDatabase = new ClubInfo();
 ClubInfoDatabase.connect();
+console.log("AFTER connect()");
+
+setTimeout(() => {
+    // TODO: Add await for testing get_info() in notion.js
+    const result = ClubInfoDatabase.queries.get.info({"server_id": "1019361421642965013"});
+    console.log(result.payload);
+    // console.log(result.payload["notion_integration_key"]);
+}, 3000);
 
 // const databaseId = process.env.NOTION_DATABASE_ID;
 // How to share a database with an notion integration/connection? 
@@ -24,7 +32,7 @@ notion = new Client({
 
 active_notion_connections = {
     "1019361421642965013": new Client({
-        auth: 
+        auth: ClubInfoDatabase.queries
     })
 }
 
@@ -193,12 +201,6 @@ class NotionDatabase
     }
 
 }
-
-
-
-
-
-
 
 
 //ALL CODE BELOW IS FOR TESTING:

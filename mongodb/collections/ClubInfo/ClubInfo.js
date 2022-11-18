@@ -19,6 +19,7 @@ class ClubInfo {
       Collection = await MongoDBClient.connect(COLLECTION_NAME);
       Dependencies.ClubInfo = Collection;
       this.queries = queries(Dependencies);
+
       result.status = 1;
     } catch (error) {
       result.status = 0;
