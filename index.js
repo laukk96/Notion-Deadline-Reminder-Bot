@@ -117,6 +117,17 @@ client.on("interactionCreate", async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
 
     if (interaction.commandName === 'update') {
+        if (!interaction.member.permissions.has(PermissionFlagsBits.Administrator)){
+            rejectionEmbed = new EmbedBuilder()
+                .setTitle('⛔ Permissions Error!')
+                .setDescription(`You are not an \`Administrator\`!`)
+                .setColor("Blue")
+
+            interaction.reply({
+                embeds: [rejectionEmbed]
+            }) 
+            return;
+        }
         const row = new ActionRowBuilder()
             .addComponents(
                 new ButtonBuilder()
@@ -317,7 +328,7 @@ client.on("interactionCreate", async(interaction) => {
             UserRegistryDatabase.queries.create.user_registry(mongo_data_packet);
             DeadlineHistoryDatabase.queries.create.deadline_history(mongo_data_packet);
             
-            initiateEmbed = new EmbedBuilder()
+            initiateEmbed = new EmbedBuilder()      
                 .setTitle('✅ Success!')
                 .setDescription(`Your Club \`${clubNameInput}\` has been successfully initiated in the MongoDB Database!`)
                 .setColor("02f933")
