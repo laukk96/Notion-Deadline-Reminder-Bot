@@ -10,7 +10,7 @@ const queries = (Dependencies) => {
   return {
     get: {
       // deadline: rate_limiter(() => get_deadline(Dependencies)),
-      info: async function(){ rate_limiter(() => get_info(Dependencies)) },
+      info: rate_limiter(() => get_info(Dependencies)),
     },
     create: {
       // deadline: rate_limiter(() => create_deadline(Dependencies)),

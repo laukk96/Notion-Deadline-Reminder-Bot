@@ -1,4 +1,5 @@
 const { ClubSchema } = require("../../../schemas/ClubInfo");
+
 const get_info = ({ ClubInfo }) =>
   async function ({ server_id, data }) {
     let result = {
