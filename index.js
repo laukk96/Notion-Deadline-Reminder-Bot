@@ -88,6 +88,7 @@ const {
     GatewayIntentBits
 } = require("discord.js");
 const { time } = require("node:console");
+const { executionAsyncResource } = require("node:async_hooks");
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
@@ -114,34 +115,7 @@ client.on("guildDelete", (guild) => {
 });
 
 client.on("interactionCreate", async (interaction) => {
-  if (!interaction.isChatInputCommand()) return;
-
-    if (interaction.commandName === 'update') {
-        if (!interaction.member.permissions.has(PermissionFlagsBits.Administrator)){
-            rejectionEmbed = new EmbedBuilder()
-                .setTitle('⛔ Permissions Error!')
-                .setDescription(`You are not an \`Administrator\`!`)
-                .setColor("Blue")
-
-            interaction.reply({
-                embeds: [rejectionEmbed]
-            }) 
-            return;
-        }
-        const row = new ActionRowBuilder()
-            .addComponents(
-                new ButtonBuilder()
-                .setCustomId('primary')
-                .setLabel('Notification Update!')
-                .setStyle(ButtonStyle.Primary),
-            );
-
-        await interaction.reply({
-            content: 'Are you sure you want to update all users?',
-            components: [row]
-        });
-    }   
-    else if (interaction.commandName == "credits") {
+     if (interaction.commandName == "credits") {
         const creditsEmbed = new EmbedBuilder()
             .setColor(0x1099ff) 
             .setTitle("Credits")
@@ -462,29 +436,8 @@ client.on(Events.InteractionCreate, async interaction => {
                 name: "This it the GitHub documentation",
             })
             .addFields({
-                name: "Create a Discord Bot in Discord's Developer Portal",
-                value: "N/A",
-            })
-            .addFields({
-                name: "Create a Notion Integration in Notion's Developer Portal",
-                value: "N/A",
-            })
-            .addFields({
-                name: "Turn on Discord Developer mode in Discord settings",
-                value: "?",
-            })
-            .addFields({
-                name: "Connect your Notion Integration to your Dashboard (Otherwise you'll find yourself having **database_id not found** errors)",
-                value: "?",
-            })
-            .addFields({
-                name: "Create a free MongoDB Atlas database with USER-REGISTRY and DEADLINE-HISTORY collections",
-                value: "?",
-            })
-            .addFields({
-                name: "Create a .env file with 3 variables:",
-                value: "DISCORD_CLIENT_ID",
-                value: "DISCORD_TOKEN"
+                name: "This link will take you to our documentation",
+                value: "https://github.com/pluffpenguin/Notion-Deadline-Reminder-Bot",
             })
             .setTimestamp()
             .setFooter({
@@ -497,4 +450,15 @@ client.on(Events.InteractionCreate, async interaction => {
     }
 
 });
+
+
+
+  client.on('interactionCreate', (message) => {       
+    if (!interaction.isChatInputCommand()) return;
+    if (message.author.id == '1018596435320639539'){ return; } {
+    if (interaction.commandName === 'update') {
+        message.author.send("Have you done your task?");   
+    } } 
+})
+
 client.login(TOKEN);
