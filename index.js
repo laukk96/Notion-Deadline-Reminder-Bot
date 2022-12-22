@@ -1,108 +1,87 @@
 require("dotenv").config();
 
-const { NotionDatabase } = require("./notion.js")
+const { NotionDatabase } = require("./notion.js");
 const tempNotionDatabase = new NotionDatabase();
 
-const { ClubInfo } = require("./mongodb/collections/ClubInfo/ClubInfo.js");
-const { UserRegistry } = require("./mongodb/collections/UserRegistry/UserRegistry.js");
-const { DeadlineHistory } = require("./mongodb/collections/DeadlineHistory/DeadlineHistory.js");
+const {
+  ClubInfo,
+  UserRegistry,
+  DeadlineHistory,
+} = require("./mongodb/collections");
+const CLIENT_ID = process.env.DISCORD_CLIENT_ID;
+const TOKEN = process.env.DISCORD_TOKEN;
 const ClubInfoDatabase = new ClubInfo();
 const UserRegistryDatabase = new UserRegistry();
 const DeadlineHistoryDatabase = new DeadlineHistory();
+
 ClubInfoDatabase.connect();
 UserRegistryDatabase.connect();
 DeadlineHistoryDatabase.connect();
 
 const {
-    Events,
-    REST,
-    Routes,
-    DiscordjsError,
-    IntegrationApplication,
-    Embed,
-    EmbedBuilder,
-    ActionRowBuilder,
-    SlashCommandBuilder,
-    ButtonBuilder,
-    ButtonStyle,
-    ButtonInteraction,
-    MessageComponentInteraction,
-    CommandInteractionOptionResolver,
-    ChatInputCommandInteraction,
-    InteractionResponse,
-    ModalBuilder,
-    TextInputBuilder,
-    TextInputStyle,
-    SelectMenuBuilder,
-    SelectMenuOptionBuilder,
-    PermissionFlagsBits,
+  Events,
+  REST,
+  Routes,
+  DiscordjsError,
+  IntegrationApplication,
+  Embed,
+  EmbedBuilder,
+  ActionRowBuilder,
+  SlashCommandBuilder,
+  ButtonBuilder,
+  ButtonStyle,
+  ButtonInteraction,
+  MessageComponentInteraction,
+  CommandInteractionOptionResolver,
+  ChatInputCommandInteraction,
+  InteractionResponse,
+  ModalBuilder,
+  TextInputBuilder,
+  TextInputStyle,
+  SelectMenuBuilder,
+  SelectMenuOptionBuilder,
+  PermissionFlagsBits,
+  Client,
+  GatewayIntentBits,
 } = require("discord.js");
 
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent,
+    GatewayIntentBits.DirectMessages,
+  ],
+});
+
+const commands = require("./discord/command_list");
+
+const rest = new REST({
+  version: "10",
+}).setToken(TOKEN);
+
+const { time } = require("node:console");
 const wait = require("node:timers/promises").setTimeout;
 
 // How to setup .env variables for confidential discord token information
-const CLIENT_ID = process.env.DISCORD_CLIENT_ID;
-const TOKEN = process.env.DISCORD_TOKEN;
 
-const commands = [
-    new SlashCommandBuilder()
-        .setName("update")
-        .setDescription("Send a manual notification to officers!"),
-    new SlashCommandBuilder()
-        .setName("help")
-        .setDescription("If you need help to link your notion to discord!"),
-    new SlashCommandBuilder()
-        .setName("credits")
-        .setDescription("The original authors of the bot"),
-    new SlashCommandBuilder()
-        .setName("adduser")
-        .setDescription("Add a User to the Database"),  
-    new SlashCommandBuilder()
-        .setName("getusers")
-        .setDescription("Get a list of the users in the database"),
-    new SlashCommandBuilder()
-        .setName("initiate")
-        .setDescription("initiate the server for Notion Deadline Reminders."),
-    new SlashCommandBuilder()
-        .setName("removeusers")
-        .setDescription("Use this to remove users from the database!"),
-];
+(async () => {
+  try {
+    console.log("Started refreshing application (/) commands.");
 
-const rest = new REST({
-    version: "10"
-}).setToken(TOKEN);
+    await rest.put(Routes.applicationCommands(CLIENT_ID), {
+      body: commands,
+    });
 
-(async() => {
-    try {
-        console.log("Started refreshing application (/) commands.");
-
-        await rest.put(Routes.applicationCommands(CLIENT_ID), {
-            body: commands
-        });
-
-        console.log("Successfully reloaded application (/) commands.");
-    } catch (error) {
-        console.error(error);
-    }
+    console.log("Successfully reloaded application (/) commands.");
+  } catch (error) {
+    console.error(error);
+  }
 })();
 
-const {
-    Client,
-    GatewayIntentBits
-} = require("discord.js");
-const { time } = require("node:console");
-const client = new Client({
-    intents: [
-        GatewayIntentBits.Guilds,
-        GatewayIntentBits.GuildMessages,
-        GatewayIntentBits.MessageContent,
-        GatewayIntentBits.DirectMessages,
-    ],
-});
-
 client.on("ready", () => {
-    console.log(`Logged in as ${client.user.tag}!`);
-    client.user.setActivity("Project Notion 2");
+  console.log(`Logged in as ${client.user.tag}!`);
+  client.user.setActivity("Project Notion 2");
 });
 
 // Bot joins a server
@@ -119,397 +98,434 @@ client.on("guildDelete", (guild) => {
 client.on("interactionCreate", async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
 
-    if (interaction.commandName === 'update') {
-        const row = new ActionRowBuilder()
-            .addComponents(
-                new ButtonBuilder()
-                .setCustomId('primary')
-                .setLabel('Notification Update!')
-                .setStyle(ButtonStyle.Primary),
-            );
+  if (interaction.commandName === "update") {
+    const row = new ActionRowBuilder().addComponents(
+      new ButtonBuilder()
+        .setCustomId("primary")
+        .setLabel("Notification Update!")
+        .setStyle(ButtonStyle.Primary)
+    );
 
-        await interaction.reply({
-            content: 'Are you sure you want to update all users?',
-            components: [row]
-        });
-    }   
-    else if (interaction.commandName == "credits") {
-        const creditsEmbed = new EmbedBuilder()
-            .setColor(0x1099ff) 
-            .setTitle("Credits")
-            .setAuthor({
-                name: "Google Developer Student Club",
-                iconURL: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%3Fid%3DOIP.g1-tsdPVN-SCgajIwi75MQHaC5%26pid%3DApi&f=1&ipt=8bd00114b7cc9f8ccc54c9b084bb19abf05f20acd2b6f8831f285f3a4c789218&ipo=images",
-                url: "https://discord.gg/nxKfjYKFby",
-            })
-            .setDescription("Credits to the authors!")
-            .setThumbnail(
-                "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%3Fid%3DOIP.g1-tsdPVN-SCgajIwi75MQHaC5%26pid%3DApi&f=1&ipt=8bd00114b7cc9f8ccc54c9b084bb19abf05f20acd2b6f8831f285f3a4c789218&ipo=images"
-            )
-            .addFields({
-                name: "Project Leads",
-                value: "Kiaran L, Konstantin V"
-            }, {
-                name: "Discord JS",
-                value: "Jay C, Kiaran L"
-            }, {
-                name: "Notion Api",
-                value: "Kiaran L, Richard A "
-            }, {
-                name: "Mongo Wrapper",
-                value: "Konstantin V"
-            })
-            .setFooter({
-                text: "Courtesy of the GDSC Development Team",
-                iconURL: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.Kg2FF2wpIK_HLyo8Q56ycAHaFj%26pid%3DApi&f=1&ipt=903b969ee37fcf7030b3b98b6b053ba7b2e31ca8f1478f60f135f1c5a5a5796a&ipo=images",
-            });
+    await interaction.reply({
+      content: "Are you sure you want to update all users?",
+      components: [row],
+    });
+  } else if (interaction.commandName == "credits") {
+    const creditsEmbed = new EmbedBuilder()
+      .setColor(0x1099ff)
+      .setTitle("Credits")
+      .setAuthor({
+        name: "Google Developer Student Club",
+        iconURL:
+          "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%3Fid%3DOIP.g1-tsdPVN-SCgajIwi75MQHaC5%26pid%3DApi&f=1&ipt=8bd00114b7cc9f8ccc54c9b084bb19abf05f20acd2b6f8831f285f3a4c789218&ipo=images",
+        url: "https://discord.gg/nxKfjYKFby",
+      })
+      .setDescription("Credits to the authors!")
+      .setThumbnail(
+        "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%3Fid%3DOIP.g1-tsdPVN-SCgajIwi75MQHaC5%26pid%3DApi&f=1&ipt=8bd00114b7cc9f8ccc54c9b084bb19abf05f20acd2b6f8831f285f3a4c789218&ipo=images"
+      )
+      .addFields(
+        {
+          name: "Project Leads",
+          value: "Kiaran L, Konstantin V",
+        },
+        {
+          name: "Discord JS",
+          value: "Jay C, Kiaran L",
+        },
+        {
+          name: "Notion Api",
+          value: "Kiaran L, Richard A ",
+        },
+        {
+          name: "Mongo Wrapper",
+          value: "Konstantin V",
+        }
+      )
+      .setFooter({
+        text: "Courtesy of the GDSC Development Team",
+        iconURL:
+          "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.Kg2FF2wpIK_HLyo8Q56ycAHaFj%26pid%3DApi&f=1&ipt=903b969ee37fcf7030b3b98b6b053ba7b2e31ca8f1478f60f135f1c5a5a5796a&ipo=images",
+      });
 
-        await interaction.reply({
-            embeds: [creditsEmbed]
-        });
-    }
+    await interaction.reply({
+      embeds: [creditsEmbed],
+    });
+  }
 });
 
 // Second 'interactionCreate' function, I guess?
-client.on('interactionCreate', async(interaction) => {
-    if (!interaction.isChatInputCommand()) return;
+client.on("interactionCreate", async (interaction) => {
+  if (!interaction.isChatInputCommand()) return;
 
-    if (interaction.commandName === "adduser") {
-        // Create the modal
-        const modal = new ModalBuilder()
-            .setCustomId("addUserModal")
-            .setTitle("Add User");
+  if (interaction.commandName === "adduser") {
+    // Create the modal
+    const modal = new ModalBuilder()
+      .setCustomId("addUserModal")
+      .setTitle("Add User");
 
-        // Create the text input components
-        const nameInput = new TextInputBuilder()
-            .setCustomId("nameInput")
-            .setLabel("What is the user's Name?")
-            .setStyle(TextInputStyle.Short)
-            .setRequired(true);
+    // Create the text input components
+    const nameInput = new TextInputBuilder()
+      .setCustomId("nameInput")
+      .setLabel("What is the user's Name?")
+      .setStyle(TextInputStyle.Short)
+      .setRequired(true);
 
-        const discordInput = new TextInputBuilder()
-            .setCustomId("discordInput")
-            .setLabel("What is this user's Discord UID?")
-            .setStyle(TextInputStyle.Short)
-            .setRequired(true);
+    const discordInput = new TextInputBuilder()
+      .setCustomId("discordInput")
+      .setLabel("What is this user's Discord UID?")
+      .setStyle(TextInputStyle.Short)
+      .setRequired(true);
 
-        const emailInput = new TextInputBuilder()
-            .setCustomId("emailInput")
-            .setLabel("What is the user's Email on the Notion page?")
-            .setStyle(TextInputStyle.Short)
-            .setRequired(true);
+    const emailInput = new TextInputBuilder()
+      .setCustomId("emailInput")
+      .setLabel("What is the user's Email on the Notion page?")
+      .setStyle(TextInputStyle.Short)
+      .setRequired(true);
 
-        const firstActionRow = new ActionRowBuilder().addComponents(nameInput);
-        const secondActionRow = new ActionRowBuilder().addComponents(discordInput);
-        const thirdActionRow = new ActionRowBuilder().addComponents(emailInput);
+    const firstActionRow = new ActionRowBuilder().addComponents(nameInput);
+    const secondActionRow = new ActionRowBuilder().addComponents(discordInput);
+    const thirdActionRow = new ActionRowBuilder().addComponents(emailInput);
 
-        modal.addComponents(firstActionRow, secondActionRow, thirdActionRow);
+    modal.addComponents(firstActionRow, secondActionRow, thirdActionRow);
 
-        await interaction.showModal(modal);
-        //await interaction.reply({c: 'Your submission was received successfully!'});
-    } else if (interaction.commandName == "initiate") {
-        if (!interaction.member.permissions.has(PermissionFlagsBits.Administrator)){
-            rejectionEmbed = new EmbedBuilder()
-                .setTitle('⛔ Permissions Error!')
-                .setDescription(`You are not an \`Administrator\`!`)
-                .setColor("fc3c32")
+    await interaction.showModal(modal);
+    //await interaction.reply({c: 'Your submission was received successfully!'});
+  } else if (interaction.commandName == "initiate") {
+    if (
+      !interaction.member.permissions.has(PermissionFlagsBits.Administrator)
+    ) {
+      rejectionEmbed = new EmbedBuilder()
+        .setTitle("⛔ Permissions Error!")
+        .setDescription(`You are not an \`Administrator\`!`)
+        .setColor("fc3c32");
 
-            interaction.reply({
-                embeds: [rejectionEmbed]
-            }) 
-            return;
-        }
-        // TODO: Check if the server has not been initiated already
-
-        const initiateModal = new ModalBuilder()
-            .setCustomId("initiateModal")
-            .setTitle("Initiate your Server");
-
-        const clubNameInput = new TextInputBuilder()
-            .setCustomId("clubNameInput")
-            .setLabel("What is your club name?")
-            .setStyle(TextInputStyle.Short)
-            .setRequired(true);
-
-        const clubDescriptionInput = new TextInputBuilder()
-            .setCustomId("clubDescriptionInput")
-            .setLabel("Tell us a brief description about your club!")
-            .setStyle(TextInputStyle.Paragraph)
-            .setMaxLength(280) // Same as twitter length lol
-            .setRequired(false);
-
-        const notionIntegrationKeyInput = new TextInputBuilder()
-            .setCustomId("notionIntegrationKeyInput")
-            .setLabel("What is your Notion Integration Key?")
-            .setStyle(TextInputStyle.Short)
-            .setMaxLength(200)
-            .setRequired(false);
-
-        const databaseIdInput = new TextInputBuilder()
-            .setCustomId("databaseIdInput")
-            .setLabel("What is your Notion's Database ID?")
-            .setStyle(TextInputStyle.Short)
-            .setMaxLength(200)
-            .setRequired(false);
-
-        const agreementInput = new TextInputBuilder()
-            .setCustomId("agreementInput")
-            .setLabel("Do you agree? (Type \"Agree\")")
-            .setStyle(TextInputStyle.Short)
-            .setMaxLength(8)
-            .setRequired(true);
-
-        const firstActionRow = new ActionRowBuilder().addComponents(clubNameInput);
-        const secondActionRow = new ActionRowBuilder().addComponents(clubDescriptionInput);
-        const thirdActionRow = new ActionRowBuilder().addComponents(notionIntegrationKeyInput);
-        const fourthActionRow = new ActionRowBuilder().addComponents(databaseIdInput);
-        const fifthActionRow = new ActionRowBuilder().addComponents(agreementInput);
-
-        initiateModal.addComponents([firstActionRow, secondActionRow, thirdActionRow, fourthActionRow, fifthActionRow]);
-
-        await interaction.showModal(initiateModal);
+      interaction.reply({
+        embeds: [rejectionEmbed],
+      });
+      return;
     }
+    // TODO: Check if the server has not been initiated already
+
+    const initiateModal = new ModalBuilder()
+      .setCustomId("initiateModal")
+      .setTitle("Initiate your Server");
+
+    const clubNameInput = new TextInputBuilder()
+      .setCustomId("clubNameInput")
+      .setLabel("What is your club name?")
+      .setStyle(TextInputStyle.Short)
+      .setRequired(true);
+
+    const clubDescriptionInput = new TextInputBuilder()
+      .setCustomId("clubDescriptionInput")
+      .setLabel("Tell us a brief description about your club!")
+      .setStyle(TextInputStyle.Paragraph)
+      .setMaxLength(280) // Same as twitter length lol
+      .setRequired(false);
+
+    const notionIntegrationKeyInput = new TextInputBuilder()
+      .setCustomId("notionIntegrationKeyInput")
+      .setLabel("What is your Notion Integration Key?")
+      .setStyle(TextInputStyle.Short)
+      .setMaxLength(200)
+      .setRequired(false);
+
+    const databaseIdInput = new TextInputBuilder()
+      .setCustomId("databaseIdInput")
+      .setLabel("What is your Notion's Database ID?")
+      .setStyle(TextInputStyle.Short)
+      .setMaxLength(200)
+      .setRequired(false);
+
+    const agreementInput = new TextInputBuilder()
+      .setCustomId("agreementInput")
+      .setLabel('Do you agree? (Type "Agree")')
+      .setStyle(TextInputStyle.Short)
+      .setMaxLength(8)
+      .setRequired(true);
+
+    const firstActionRow = new ActionRowBuilder().addComponents(clubNameInput);
+    const secondActionRow = new ActionRowBuilder().addComponents(
+      clubDescriptionInput
+    );
+    const thirdActionRow = new ActionRowBuilder().addComponents(
+      notionIntegrationKeyInput
+    );
+    const fourthActionRow = new ActionRowBuilder().addComponents(
+      databaseIdInput
+    );
+    const fifthActionRow = new ActionRowBuilder().addComponents(agreementInput);
+
+    initiateModal.addComponents([
+      firstActionRow,
+      secondActionRow,
+      thirdActionRow,
+      fourthActionRow,
+      fifthActionRow,
+    ]);
+
+    await interaction.showModal(initiateModal);
+  }
 });
 
 // Third Interaction Create, for Modals / Buttons
-client.on("interactionCreate", async(interaction) => {
-    // Check if interaction is Modal or Button
-    if (!(interaction.isModalSubmit() || interaction.isButton())) return;
+client.on("interactionCreate", async (interaction) => {
+  // Check if interaction is Modal or Button
+  if (!(interaction.isModalSubmit() || interaction.isButton())) return;
 
   if (interaction.isModalSubmit()) {
     console.log("Received a Modal: ", interaction.customId);
-    
+
     // adduser Modal
-    if (interaction.customId == "initiateModal"){
-        const clubNameInput = interaction.fields.getTextInputValue("clubNameInput");
-        const clubDescriptionInput = interaction.fields.getTextInputValue("clubDescriptionInput");
-        const notionIntegrationKeyInput = interaction.fields.getTextInputValue("notionIntegrationKeyInput");
-        const databaseIdInput = interaction.fields.getTextInputValue("databaseIdInput");
-        const agreementInput = interaction.fields.getTextInputValue("agreementInput");
+    if (interaction.customId == "initiateModal") {
+      const clubNameInput =
+        interaction.fields.getTextInputValue("clubNameInput");
+      const clubDescriptionInput = interaction.fields.getTextInputValue(
+        "clubDescriptionInput"
+      );
+      const notionIntegrationKeyInput = interaction.fields.getTextInputValue(
+        "notionIntegrationKeyInput"
+      );
+      const databaseIdInput =
+        interaction.fields.getTextInputValue("databaseIdInput");
+      const agreementInput =
+        interaction.fields.getTextInputValue("agreementInput");
 
-        console.log(agreementInput, agreementInput === "agree");
-        if (agreementInput.toLowerCase() === "agree" == false){
-            initiateEmbed = new EmbedBuilder()
-                .setTitle('⛔ No Agreement!')
-                .setDescription(`You did not type \`"Agree"\`! \n\n This is an **End User License Agreement** which legally gives us permission to store your data on our MongoDB Cloud Database managed by the Development Team.`)
-                .setColor("fc3c32")
+      console.log(agreementInput, agreementInput === "agree");
+      if ((agreementInput.toLowerCase() === "agree") == false) {
+        initiateEmbed = new EmbedBuilder()
+          .setTitle("⛔ No Agreement!")
+          .setDescription(
+            `You did not type \`"Agree"\`! \n\n This is an **End User License Agreement** which legally gives us permission to store your data on our MongoDB Cloud Database managed by the Development Team.`
+          )
+          .setColor("fc3c32");
 
-            interaction.reply({
-                embeds: [initiateEmbed]
-            }) 
-        }
-        // If they typed "agree":
-        else{
-            const today = new Date()
-            const date = `${today.getMonth()+1}/${today.getDay()}/${today.getFullYear()}`
-
-            const data = {
-                initiated_date: date,
-                club_name: clubNameInput,
-                club_description: clubDescriptionInput,
-                notion_integration_key: notionIntegrationKeyInput,
-                database_id: databaseIdInput,
-            }
-            const mongo_packet = {
-                server_id: interaction.guild.id, 
-                data: data
-            }
-            console.log(data);
-            ClubInfoDatabase.queries.create.club(mongo_packet);
-            // Send in the data packet with the server_id, data will be ignored by TemplateSchema
-            UserRegistryDatabase.queries.create.user_registry(mongo_packet);
-            DeadlineHistoryDatabase.queries.create.deadline_history(mongo_packet);
-            
-            initiateEmbed = new EmbedBuilder()
-                .setTitle('✅ Success!')
-                .setDescription(`Your Club \`${clubNameInput}\` has been successfully initiated in the MongoDB Database!`)
-                .setColor("02f933")
-
-            interaction.reply({
-                embeds: [initiateEmbed]
-            }) 
-        }
-        
-    }
-    else if (interaction.customId == "adduserModal") {
-        const name = interaction.fields.getTextInputValue("nameInput");
-        const discord_id = interaction.fields.getTextInputValue("discordInput");
-        const email = interaction.fields.getTextInputValue("emailInput");
-
-        // Has to match the Schema provided in UserSchema
-        const data = {
-            name: name,
-            email: email,
-            discord_id: discord_id,
-            notion_id: null,
-        };
-        // parse the Notion ID from the dashboard
-        data[notion_id] = tempNotionDatabase.parseNotionId(email);
-        // TODO 3:
-
-        const mongo_packet = {
-            server_id: interaction.guild.id,
-            data: data
-        }
-        // TODO: Get the Notion ID from NotionClient.parseNotionId()
-
-        console.log("New User Info Received: ", data);
         interaction.reply({
-            content: "Thank you for submitting your User Info!"
+          embeds: [initiateEmbed],
         });
-        // TODO: Add the user to the UserRegistry and DeadlineHistory
-        UserRegistryDatabase.queries.create.user(mongo_packet);
+      }
+      // If they typed "agree":
+      else {
+        const today = new Date();
+        const date = `${
+          today.getMonth() + 1
+        }/${today.getDay()}/${today.getFullYear()}`;
+
+        const data = {
+          initiated_date: date,
+          club_name: clubNameInput,
+          club_description: clubDescriptionInput,
+          notion_integration_key: notionIntegrationKeyInput,
+          database_id: databaseIdInput,
+        };
+        const mongo_packet = {
+          server_id: interaction.guild.id,
+          data: data,
+        };
+        console.log(data);
+        ClubInfoDatabase.queries.create.club(mongo_packet);
+        // Send in the data packet with the server_id, data will be ignored by TemplateSchema
+        UserRegistryDatabase.queries.create.user_registry(mongo_packet);
+        DeadlineHistoryDatabase.queries.create.deadline_history(mongo_packet);
+
+        initiateEmbed = new EmbedBuilder()
+          .setTitle("✅ Success!")
+          .setDescription(
+            `Your Club \`${clubNameInput}\` has been successfully initiated in the MongoDB Database!`
+          )
+          .setColor("02f933");
+
+        interaction.reply({
+          embeds: [initiateEmbed],
+        });
+      }
+    } else if (interaction.customId == "adduserModal") {
+      const name = interaction.fields.getTextInputValue("nameInput");
+      const discord_id = interaction.fields.getTextInputValue("discordInput");
+      const email = interaction.fields.getTextInputValue("emailInput");
+
+      // Has to match the Schema provided in UserSchema
+      const data = {
+        name: name,
+        email: email,
+        discord_id: discord_id,
+        notion_id: null,
+      };
+      // parse the Notion ID from the dashboard
+      data[notion_id] = tempNotionDatabase.parseNotionId(email);
+      // TODO 3:
+
+      const mongo_packet = {
+        server_id: interaction.guild.id,
+        data: data,
+      };
+      // TODO: Get the Notion ID from NotionClient.parseNotionId()
+
+      console.log("New User Info Received: ", data);
+      interaction.reply({
+        content: "Thank you for submitting your User Info!",
+      });
+      // TODO: Add the user to the UserRegistry and DeadlineHistory
+      UserRegistryDatabase.queries.create.user(mongo_packet);
     }
-    }
+  }
 });
 
 // Removeusers selection menu
-client.on('interactionCreate', (interaction) => {
-    if (interaction.isChatInputCommand()) {
-        if (interaction.commandName == "removeusers") {
-            const actionRowComponent = new ActionRowBuilder().setComponents(
-                new SelectMenuBuilder().setCustomId('removeme').setOptions([{
-                    label: 'removeName',
-                    value: 'name'
-                }, {
-                    label: 'removeEmail',
-                    value: 'email'
-                }, ])
-            );
-            interaction.reply({
-                components: [actionRowComponent.toJSON()],
-            })
-        }
+client.on("interactionCreate", (interaction) => {
+  if (interaction.isChatInputCommand()) {
+    if (interaction.commandName == "removeusers") {
+      const actionRowComponent = new ActionRowBuilder().setComponents(
+        new SelectMenuBuilder().setCustomId("removeme").setOptions([
+          {
+            label: "removeName",
+            value: "name",
+          },
+          {
+            label: "removeEmail",
+            value: "email",
+          },
+        ])
+      );
+      interaction.reply({
+        components: [actionRowComponent.toJSON()],
+      });
     }
-})
-
-
-client.on(Events.InteractionCreate, async interaction => {
-    if (!interaction.isChatInputCommand()) return;
-    if (interaction.commandName === 'help') {
-
-        const row = new ActionRowBuilder()
-            .addComponents(
-                new SelectMenuBuilder()
-                .setCustomId('select')
-                .setPlaceholder('Select something for Help!')
-                .setMinValues(1)
-                .setMaxValues(1)
-                .addOptions([{
-                    label: 'Find your UID',
-                    description: 'This is how to find your UID',
-                    value: 'first_option',
-                }, {
-                    label: 'Bot Setup',
-                    description: 'This is how to setup the bot',
-                    value: 'second_option',
-                }, {
-                    label: 'Github Documentation',
-                    description: 'Technical Documentation of Notion Bot',
-                    value: 'third_option',
-                }, ]),
-            );
-
-        const embed = new EmbedBuilder()
-            .setColor("White")
-            .setTitle("This is a guide to for the Notion Deadline Reminder Bot")
-            .setURL("https://www.simple.ink/integrations/discord-in-notion")
-            .setAuthor({
-                name: "Notion Deadline Reminder Bot",
-                iconURL: "https://upload.wikimedia.org/wikipedia/commons/4/45/Notion_app_logo.png",
-                url: "https://discord.js.org",
-            })
-            .setTimestamp()
-            .setFooter({
-                text: "Courtesy of the GDSC Development Team",
-                iconURL: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.Kg2FF2wpIK_HLyo8Q56ycAHaFj%26pid%3DApi&f=1&ipt=903b969ee37fcf7030b3b98b6b053ba7b2e31ca8f1478f60f135f1c5a5a5796a&ipo=images",
-            });
-        await interaction.reply({
-            ephemeral: true,
-            embeds: [embed],
-            components: [row]
-        });
-    }
+  }
 });
 
-client.on(Events.InteractionCreate, async interaction => {
-    if (!interaction.isSelectMenu()) return;
+client.on(Events.InteractionCreate, async (interaction) => {
+  if (!interaction.isChatInputCommand()) return;
+  if (interaction.commandName === "help") {
+    const row = new ActionRowBuilder().addComponents(
+      new SelectMenuBuilder()
+        .setCustomId("select")
+        .setPlaceholder("Select something for Help!")
+        .setMinValues(1)
+        .setMaxValues(1)
+        .addOptions([
+          {
+            label: "Find your UID",
+            description: "This is how to find your UID",
+            value: "first_option",
+          },
+          {
+            label: "Bot Setup",
+            description: "This is how to setup the bot",
+            value: "second_option",
+          },
+          {
+            label: "Github Documentation",
+            description: "Technical Documentation of Notion Bot",
+            value: "third_option",
+          },
+        ])
+    );
 
-    const selected = interaction.values[0];
+    const embed = new EmbedBuilder()
+      .setColor("White")
+      .setTitle("This is a guide to for the Notion Deadline Reminder Bot")
+      .setURL("https://www.simple.ink/integrations/discord-in-notion")
+      .setAuthor({
+        name: "Notion Deadline Reminder Bot",
+        iconURL:
+          "https://upload.wikimedia.org/wikipedia/commons/4/45/Notion_app_logo.png",
+        url: "https://discord.js.org",
+      })
+      .setTimestamp()
+      .setFooter({
+        text: "Courtesy of the GDSC Development Team",
+        iconURL:
+          "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.Kg2FF2wpIK_HLyo8Q56ycAHaFj%26pid%3DApi&f=1&ipt=903b969ee37fcf7030b3b98b6b053ba7b2e31ca8f1478f60f135f1c5a5a5796a&ipo=images",
+      });
+    await interaction.reply({
+      ephemeral: true,
+      embeds: [embed],
+      components: [row],
+    });
+  }
+});
 
-    if (selected === 'first_option') {
-        const helpEmbed = new EmbedBuilder()
-            .setColor("White")
-            .setTitle("Finding your UID")
-            .setAuthor({
-                name: "This is a guide to finding your UID",
-            })
-            .addFields({
-                name: "Step 1: Find your Discord UID",
-                value: "Settings → Advanced → Enable Developer Mode",
-            })
-            .addFields({
-                name: "Step 2: Find your UID",
-                value: "Right click on your profile and select **Copy ID**",
-            })
-            .addFields({
-                name: "Step 3: Use /adduser",
-                value: "Input your name, UID, and Notion Email",
-            })
-            .setTimestamp()
-            .setFooter({
-                text: "Courtesy of the GDSC Development Team",
-                iconURL: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.Kg2FF2wpIK_HLyo8Q56ycAHaFj%26pid%3DApi&f=1&ipt=903b969ee37fcf7030b3b98b6b053ba7b2e31ca8f1478f60f135f1c5a5a5796a&ipo=images",
-            });
-        await interaction.reply({
-            embeds: [helpEmbed]
-        });
-    } else if (selected === 'second_option') {
-        const setupEmbed = new EmbedBuilder()
-        await interaction.reply({
-            embeds: [setupEmbed]
-        });
-    } else if (selected === 'third_option') {
-        const githubEmbed = new EmbedBuilder()
-            .setColor("White")
-            .setTitle("The Notion Bot Project from the DVC's Google Developer Club.")
-            .setAuthor({
-                name: "This it the GitHub documentation",
-            })
-            .addFields({
-                name: "Create a Discord Bot in Discord's Developer Portal",
-                value: "N/A",
-            })
-            .addFields({
-                name: "Create a Notion Integration in Notion's Developer Portal",
-                value: "N/A",
-            })
-            .addFields({
-                name: "Turn on Discord Developer mode in Discord settings",
-                value: "?",
-            })
-            .addFields({
-                name: "Connect your Notion Integration to your Dashboard (Otherwise you'll find yourself having **database_id not found** errors)",
-                value: "?",
-            })
-            .addFields({
-                name: "Create a free MongoDB Atlas database with USER-REGISTRY and DEADLINE-HISTORY collections",
-                value: "?",
-            })
-            .addFields({
-                name: "Create a .env file with 3 variables:",
-                value: "DISCORD_CLIENT_ID",
-                value: "DISCORD_TOKEN"
-            })
-            .setTimestamp()
-            .setFooter({
-                text: "Courtesy of the GDSC Development Team",
-                iconURL: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.Kg2FF2wpIK_HLyo8Q56ycAHaFj%26pid%3DApi&f=1&ipt=903b969ee37fcf7030b3b98b6b053ba7b2e31ca8f1478f60f135f1c5a5a5796a&ipo=images",
-            });
-        await interaction.reply({
-            embeds: [githubEmbed]
-        });
-    }
+client.on(Events.InteractionCreate, async (interaction) => {
+  if (!interaction.isSelectMenu()) return;
 
+  const selected = interaction.values[0];
+
+  if (selected === "first_option") {
+    const helpEmbed = new EmbedBuilder()
+      .setColor("White")
+      .setTitle("Finding your UID")
+      .setAuthor({
+        name: "This is a guide to finding your UID",
+      })
+      .addFields({
+        name: "Step 1: Find your Discord UID",
+        value: "Settings → Advanced → Enable Developer Mode",
+      })
+      .addFields({
+        name: "Step 2: Find your UID",
+        value: "Right click on your profile and select **Copy ID**",
+      })
+      .addFields({
+        name: "Step 3: Use /adduser",
+        value: "Input your name, UID, and Notion Email",
+      })
+      .setTimestamp()
+      .setFooter({
+        text: "Courtesy of the GDSC Development Team",
+        iconURL:
+          "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.Kg2FF2wpIK_HLyo8Q56ycAHaFj%26pid%3DApi&f=1&ipt=903b969ee37fcf7030b3b98b6b053ba7b2e31ca8f1478f60f135f1c5a5a5796a&ipo=images",
+      });
+    await interaction.reply({
+      embeds: [helpEmbed],
+    });
+  } else if (selected === "second_option") {
+    const setupEmbed = new EmbedBuilder();
+    await interaction.reply({
+      embeds: [setupEmbed],
+    });
+  } else if (selected === "third_option") {
+    const githubEmbed = new EmbedBuilder()
+      .setColor("White")
+      .setTitle("The Notion Bot Project from the DVC's Google Developer Club.")
+      .setAuthor({
+        name: "This it the GitHub documentation",
+      })
+      .addFields({
+        name: "Create a Discord Bot in Discord's Developer Portal",
+        value: "N/A",
+      })
+      .addFields({
+        name: "Create a Notion Integration in Notion's Developer Portal",
+        value: "N/A",
+      })
+      .addFields({
+        name: "Turn on Discord Developer mode in Discord settings",
+        value: "?",
+      })
+      .addFields({
+        name: "Connect your Notion Integration to your Dashboard (Otherwise you'll find yourself having **database_id not found** errors)",
+        value: "?",
+      })
+      .addFields({
+        name: "Create a free MongoDB Atlas database with USER-REGISTRY and DEADLINE-HISTORY collections",
+        value: "?",
+      })
+      .addFields({
+        name: "Create a .env file with 3 variables:",
+        value: "DISCORD_CLIENT_ID",
+        value: "DISCORD_TOKEN",
+      })
+      .setTimestamp()
+      .setFooter({
+        text: "Courtesy of the GDSC Development Team",
+        iconURL:
+          "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.Kg2FF2wpIK_HLyo8Q56ycAHaFj%26pid%3DApi&f=1&ipt=903b969ee37fcf7030b3b98b6b053ba7b2e31ca8f1478f60f135f1c5a5a5796a&ipo=images",
+      });
+    await interaction.reply({
+      embeds: [githubEmbed],
+    });
+  }
 });
 client.login(TOKEN);
