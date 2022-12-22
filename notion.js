@@ -1,24 +1,47 @@
 require('dotenv').config('/.env');
 const { Client } = require("@notionhq/client");
 const { getDatabase } = require('@notionhq/client/build/src/api-endpoints');
+const { ThreadAutoArchiveDuration, time } = require('discord.js');
+
+const { ClubInfo } = require("./mongodb/collections/ClubInfo/ClubInfo.js")
+const ClubInfoDatabase = new ClubInfo();
+ClubInfoDatabase.connect();
+console.log("AFTER connect()");
+
+setTimeout(() => {
+    // TODO: Add await for testing get_info() in notion.js
+    const result = ClubInfoDatabase.queries.get.info({"server_id": "1019361421642965013"});
+    console.log(result.payload);
+    // console.log(result.payload["notion_integration_key"]);
+}, 3000);
 
 // const databaseId = process.env.NOTION_DATABASE_ID;
 // How to share a database with an notion integration/connection? 
 const TABLE_DEADLINES_ID = "f944e134b0584cc289d0a97775384d76";
 
+// Old: f944e134b0584cc289d0a97775384d76
+// New: beb4f1b15ec1443c87e16bd138832d06
+
 //GDSC f944e134b0584cc289d0a97775384d76
 //NOTION DEV TEAM 0f201482f6f1407899e8f7c8ae7dea28
 
-const notion = new Client({
+// TODO: Change the Notion Variable to be compatible with different servers
+notion = new Client({
     auth: process.env.NOTION_KEY,
-})
+});
 
-const all_connections = []
+active_notion_connections = {
+    "1019361421642965013": new Client({
+        auth: ClubInfoDatabase.queries
+    })
+}
+
+// const all_connections = []
 
 //just to check the objects in the properties
 const checkDataBase = async () => {
     const response = await notion.databases.query({
-        database_id: TABLE_DEADLINES_ID
+        database_id: this.connectDatabase
     });
 
     for (let i = 0; i < response.results.length; i++){
@@ -47,10 +70,17 @@ class NotionDatabase
 {
     constructor (connectDatabase)
     {
-        this.connectDatabase = connectDatabase;
+        this.notion = new Client({
+            auth: process.env.NOTION_KEY,
+        })
+
+        // this.connectDatabase = connectDatabase;
+        this.connectDatabase = TABLE_DEADLINES_ID;
+        // TODO: Fix this so that it is scaleable with other servers
+
         (async () => {
-            const response = await notion.databases.query({
-                database_id: connectDatabase
+            const response = await this.notion.databases.query({
+                database_id: this.connectDatabase
             });
         })();
     }
@@ -65,11 +95,11 @@ class NotionDatabase
 
     }
     
-    //hi
+    
     parseNotionId = async (email) =>
     {
         const response = await notion.databases.query({
-            database_id: TABLE_DEADLINES_ID
+            database_id: this.connectDatabase
         });
         console.log("Getting " + email + "'s Notion ID...");
         outerloop: for (let i = 0; i < response.results.length; i++){
@@ -96,7 +126,7 @@ class NotionDatabase
 
     getPerson = async (deadline) => {
         const response = await notion.databases.query({
-            database_id: TABLE_DEADLINES_ID
+            database_id: this.connectDatabase
         });
 
         for (let i = 0; i < response.results.length; i++){
@@ -126,7 +156,7 @@ class NotionDatabase
         console.log("Searching for " + name + "'s task...");
         
         const response = await notion.databases.query({
-            database_id: TABLE_DEADLINES_ID
+            database_id: this.connectDatabase
         });
     
         for (let i = 0; i < response.results.length; i++){
@@ -154,7 +184,7 @@ class NotionDatabase
     getDueDate = async (deadline) => 
     {
         const response = await notion.databases.query({
-            database_id: TABLE_DEADLINES_ID
+            database_id: this.connectDatabase
         });
     
         for (let i = 0; i < response.results.length; i++)
@@ -173,29 +203,13 @@ class NotionDatabase
 }
 
 
-
-
-
-
-
-
 //ALL CODE BELOW IS FOR TESTING:
 
-database1 = new NotionDatabase(TABLE_DEADLINES_ID);
+// database1 = new NotionDatabase(TABLE_DEADLINES_ID);
 
 //database1.getTask("Afraz");
-database1.parseNotionId("jsaleh849@insite.4cd.edu");
+// database1.parseNotionId("jsaleh849@insite.4cd.edu");
+
+module.exports = { NotionDatabase };
 
 //jsaleh849@insite.4cd.edu
-
-/*
-(async() => {
-    const response = await notion.databases.query({
-        database_id: TABLE_DEADLINES_ID
-    });
-    console.log(response.results[0]['properties']['Taskee']['people'][1]['id']);
-    
-})();
-*/
-
-//checkDataBase();
