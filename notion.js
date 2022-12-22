@@ -17,7 +17,7 @@ setTimeout(() => {
 
 // const databaseId = process.env.NOTION_DATABASE_ID;
 // How to share a database with an notion integration/connection? 
-const TABLE_DEADLINES_ID = "beb4f1b15ec1443c87e16bd138832d06";
+const TABLE_DEADLINES_ID = "f944e134b0584cc289d0a97775384d76";
 
 // Old: f944e134b0584cc289d0a97775384d76
 // New: beb4f1b15ec1443c87e16bd138832d06
