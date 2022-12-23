@@ -1,0 +1,576 @@
+{
+  "_root": {
+    "discord": {
+      "command_list.js": {
+        "file_type": ".js",
+        "functions": {
+          "update": {
+            "description": "Send a manual notification to officers!"
+          },
+          "help": {
+            "description": "If you need help to link your notion to discord!"
+          },
+          "credits": { "description": "The original authors of the bot" },
+          "adduser": { "description": "Add a User to the Database" },
+          "getusers": {
+            "description": "Get a list of the users in the database"
+          },
+          "initiate": {
+            "description": "Initiate the server for Notion Deadline Reminders."
+          },
+          "removeusers": {
+            "description": "Use this to remove users from the database!"
+          },
+          "generate_commands": {
+            "function": "Generates a list of commands from a given object of commands and their descriptions",
+            "parameters": ["commands_object"]
+          }
+        }
+      },
+      "config.js": {
+        "file_type": ".js",
+        "functions": {
+          "require_dotenv": {
+            "function": "Require the dotenv module and configure it to the .env file in the parent directory",
+            "parameters": []
+          },
+          "create_client_id_constant": {
+            "function": "Create a constant for the Discord client ID and set it to the value of the DISCORD_CLIENT_ID key in the .env file",
+            "parameters": []
+          },
+          "create_token_constant": {
+            "function": "Create a constant for the Discord token and set it to the value of the DISCORD_TOKEN key in the .env file",
+            "parameters": []
+          },
+          "export_constants": {
+            "function": "Export the CLIENT_ID and TOKEN constants so they can be accessed outside this file",
+            "parameters": []
+          }
+        }
+      },
+      "events": {
+        "guildCreate.js": {
+          "file_type": ".js",
+          "functions": {
+            "guildCreate": {
+              "function": "Logs the ID of the guild the client has joined",
+              "parameters": ["guild"]
+            }
+          }
+        },
+        "guildDelete.js": {
+          "file_type": ".js",
+          "functions": {
+            "guildDelete": {
+              "function": "Removes a guild from the Database",
+              "parameters": ["guild"]
+            }
+          }
+        },
+        "index.js": {
+          "file_type": ".js",
+          "functions": {
+            "interactionCreate": {
+              "function": "Handles user interactions with the bot",
+              "parameters": []
+            },
+            "ready": {
+              "function": "Handles the bot's ready state",
+              "parameters": []
+            },
+            "guildCreate": {
+              "function": "Handles the bot's joining of a guild",
+              "parameters": []
+            },
+            "guildDelete": {
+              "function": "Handles the bot's leaving of a guild",
+              "parameters": []
+            }
+          }
+        },
+        "interactionCreate.js": {
+          "file_type": ".js",
+          "functions": {
+            "interactionCreate": {
+              "function": "Handles interactions from the user, such as chat input commands, modal submissions, and select menus",
+              "parameters": ["interaction"]
+            }
+          }
+        },
+        "ready.js": {
+          "file_type": ".js",
+          "functions": {
+            "ready": {
+              "function": "Logs in the client and sets the activity to 'Project Notion 2'",
+              "parameters": ["client"]
+            }
+          }
+        }
+      },
+      "index.js": { "file_type": ".js", "functions": {} },
+      "interactions": {
+        "commands": {
+          "adduser.js": {
+            "file_type": ".js",
+            "functions": {
+              "addusers": {
+                "function": "Adds users to a Notion page",
+                "parameters": ["interaction"]
+              }
+            }
+          },
+          "credits.js": {
+            "file_type": ".js",
+            "functions": {
+              "credits": {
+                "function": "Generates a credits embed",
+                "parameters": ["interaction"]
+              }
+            }
+          },
+          "getusers.js": {
+            "file_type": ".js",
+            "functions": {
+              "getusers": {
+                "function": "Retrieves a list of users from a given interaction",
+                "parameters": ["interaction"]
+              }
+            }
+          },
+          "help.js": {
+            "file_type": ".js",
+            "functions": {
+              "help": {
+                "function": "Provides help for the Notion Deadline Reminder Bot",
+                "parameters": ["interaction"]
+              }
+            }
+          },
+          "initiate.js": {
+            "file_type": ".js",
+            "functions": {
+              "initiate": {
+                "function": "Checks if the user has administrator permissions and if so, creates a modal with text input builders and action rows for the user to fill out and agree to",
+                "parameters": ["interaction"]
+              }
+            }
+          },
+          "removeusers.js": {
+            "file_type": ".js",
+            "functions": {
+              "removeusers": {
+                "function": "Takes in an interaction parameter and creates a new ActionRowBuilder, sets the components of the ActionRowBuilder to a SelectMenuBuilder, sets the customId of the SelectMenuBuilder to 'removeme', and sets the options of the SelectMenuBuilder to a list of label/value pairs. The interaction is then replied with the ActionRowBuilder component.",
+                "parameters": ["interaction"]
+              }
+            }
+          },
+          "update.js": {
+            "file_type": ".js",
+            "functions": {
+              "update": {
+                "function": "Sends a reply to the interaction with a content and the button component",
+                "parameters": ["interaction"]
+              }
+            }
+          }
+        },
+        "menu": { "selectMenu.js": { "file_type": ".js", "functions": {} } },
+        "modals": { "submitModal.js": { "file_type": ".js", "functions": {} } }
+      },
+      "library": {
+        "Commands.js": {
+          "file_type": ".js",
+          "functions": {
+            "generate_commands": {
+              "function": "Generates commands from the given commands object",
+              "parameters": ["Commands"]
+            }
+          }
+        },
+        "Discord.js": {
+          "file_type": ".js",
+          "functions": {
+            "initialize": {
+              "function": "Initializes the application commands",
+              "parameters": ["TOKEN", "CLIENT_ID"]
+            }
+          }
+        }
+      }
+    },
+    "index.js": { "file_type": ".js", "functions": {} },
+    "mongodb": {
+      "collections": {
+        "ClubInfo": {
+          "calls": {
+            "create_guild_key.js": {
+              "file_type": ".js",
+              "functions": {
+                "create_guild_key": {
+                  "function": "Creates a guild key for a given server_id and data",
+                  "parameters": ["server_id", "data"]
+                }
+              }
+            },
+            "get_info.js": {
+              "file_type": ".js",
+              "functions": {
+                "get_info": {
+                  "function": "Retrieves the information from the ClubInfo collection based on the server_id",
+                  "parameters": ["server_id", "data"]
+                }
+              }
+            }
+          },
+          "ClubInfo.js": {
+            "file_type": ".js",
+            "functions": {
+              "connect": {
+                "function": "Connects to the MongoDB database and sets the Collection and Dependencies objects",
+                "parameters": []
+              }
+            }
+          },
+          "queries.js": {
+            "file_type": ".js",
+            "functions": {
+              "get": { "info": "Gets the info of the guild" },
+              "create": { "club": "Creates a guild key" },
+              "update": {}
+            }
+          }
+        },
+        "DeadlineHistory": {
+          "calls": {
+            "create_deadline.js": {
+              "file_type": ".js",
+              "functions": {
+                "create_deadline": {
+                  "function": "Creates a deadline object in the deadline history collection",
+                  "parameters": ["data", "server_id"]
+                }
+              }
+            },
+            "create_guild_key.js": {
+              "file_type": ".js",
+              "functions": {
+                "create_guild_key": {
+                  "function": "Creates a guild key in the DeadlineHistory collection with the given data",
+                  "parameters": ["server_id", "data"]
+                }
+              }
+            },
+            "get_deadline.js": {
+              "file_type": ".js",
+              "functions": {
+                "get_deadline": {
+                  "function": "Retrieves a deadline from the DeadlineHistory collection based on the given parameters",
+                  "parameters": ["Deadline"]
+                }
+              }
+            },
+            "get_deadlines.js": {
+              "file_type": ".js",
+              "functions": {
+                "get_deadline": {
+                  "function": "Retrieves a deadline from the database based on the given parameters",
+                  "parameters": ["Deadline"]
+                }
+              }
+            }
+          },
+          "DeadlineHistory.js": {
+            "file_type": ".js",
+            "functions": {
+              "connect": {
+                "function": "Connects to the MongoDB database and creates the collection to store the deadline history",
+                "parameters": []
+              }
+            }
+          },
+          "queries.js": {
+            "file_type": ".js",
+            "functions": {
+              "get": {
+                "deadline": {
+                  "function": "Gets the deadline for the given guild",
+                  "parameters": ["Dependencies"]
+                }
+              },
+              "create": {
+                "deadline": {
+                  "function": "Creates a deadline for the given guild",
+                  "parameters": ["Dependencies"]
+                },
+                "deadline_history": {
+                  "function": "Creates a guild key for the given guild",
+                  "parameters": ["Dependencies"]
+                }
+              },
+              "update": {
+                "function": "No functions",
+                "parameters": "No parameters"
+              }
+            }
+          }
+        },
+        "UserRegistry": {
+          "calls": {
+            "create_guild_key.js": {
+              "file_type": ".js",
+              "functions": {
+                "create_guild_key": {
+                  "function": "Creates a guild key in the UserRegistry database with the given data",
+                  "parameters": ["server_id", "data"]
+                }
+              }
+            },
+            "create_user.js": {
+              "file_type": ".js",
+              "functions": {
+                "create_user": {
+                  "function": "Creates a user in a server registry or updates an existing user in a server registry",
+                  "parameters": ["server_id", "data"]
+                }
+              }
+            },
+            "get_user.js": {
+              "file_type": ".js",
+              "functions": {
+                "get_user": {
+                  "function": "Retrieves a user from the UserRegistry based on the given user data",
+                  "parameters": ["user_data"]
+                }
+              }
+            },
+            "remove_user.js": {
+              "file_type": ".js",
+              "functions": {
+                "remove_user": {
+                  "function": "Removes a user from a given server_id using a user query data from a given user object",
+                  "parameters": ["user", "server_id"]
+                }
+              }
+            }
+          },
+          "queries.js": {
+            "file_type": ".js",
+            "functions": {
+              "get": { "user": "Retrieves a user from the database" },
+              "create": {
+                "user": "Creates a user in the database",
+                "user_registry": "Creates a guild key in the database"
+              },
+              "update": {
+                "remove": { "user": "Removes a user from the database" }
+              }
+            }
+          },
+          "UserRegistry.js": {
+            "file_type": ".js",
+            "functions": {
+              "UserRegistry": {
+                "function": "Connects to the MongoDB database and creates the UserRegistry collection",
+                "parameters": ["COLLECTION_NAME"]
+              }
+            }
+          }
+        }
+      },
+      "collections.js": {
+        "file_type": ".js",
+        "functions": {
+          "UserRegistry": {
+            "function": "Registers users and stores their information",
+            "parameters": ["username", "password", "email", "phone", "address"]
+          },
+          "ClubInfo": {
+            "function": "Stores information about clubs and their members",
+            "parameters": ["clubName", "clubDescription", "clubMembers"]
+          },
+          "DeadlineHistory": {
+            "function": "Stores information about deadlines and their associated tasks",
+            "parameters": [
+              "deadlineName",
+              "deadlineDescription",
+              "deadlineTasks"
+            ]
+          }
+        }
+      },
+      "lib": {
+        "ratelimiter.js": { "file_type": ".js", "functions": {} },
+        "Schema.js": { "file_type": ".js", "functions": {} }
+      },
+      "mongo.js": {
+        "file_type": ".js",
+        "functions": {
+          "constructor": {
+            "function": "Constructor for the MongoDBWrapper class, initializes the MongoDB client",
+            "parameters": []
+          },
+          "connect": {
+            "function": "Connects to the MongoDB client, returns the collection",
+            "parameters": ["collection_name"]
+          },
+          "close": { "function": "Closes the MongoDB client", "parameters": [] }
+        }
+      },
+      "schemas": {
+        "ClubInfo.js": {
+          "file_type": ".js",
+          "functions": {
+            "club_name": {
+              "function": "Validates that the club_name is a string",
+              "parameters": ["club_name"]
+            },
+            "club_description": {
+              "function": "Validates that the club_description is a string and is not longer than the specified length",
+              "parameters": ["club_description"]
+            },
+            "initiated_date": {
+              "function": "Validates that the initiated_date is a string",
+              "parameters": ["initiated_date"]
+            },
+            "notion_integration_key": {
+              "function": "Validates that the notion_integration_key is a string",
+              "parameters": ["notion_integration_key"]
+            },
+            "database_id": {
+              "function": "Validates that the database_id is a string",
+              "parameters": ["database_id"]
+            }
+          }
+        },
+        "Deadline.js": {
+          "file_type": ".js",
+          "functions": {
+            "context": {
+              "function": "Checks if the context is a string",
+              "parameters": ["context"]
+            },
+            "finish_date": {
+              "function": "Checks if the finish_date is a string",
+              "parameters": ["finish_date"]
+            },
+            "status": {
+              "function": "Checks if the status is a string",
+              "parameters": ["status"]
+            },
+            "deadline_id": {
+              "function": "Checks if the deadline_id is a string",
+              "parameters": ["deadline_id"]
+            },
+            "discord_id": {
+              "function": "Checks if the discord_id is a string",
+              "parameters": ["discord_id"]
+            }
+          }
+        },
+        "example.js": {
+          "file_type": ".js",
+          "functions": {
+            "database_name": {
+              "function": "Returns the database name in uppercase",
+              "parameters": ["value"]
+            },
+            "collection_name": {
+              "function": "Returns the collection name",
+              "parameters": ["value"]
+            }
+          }
+        },
+        "Template.js": {
+          "file_type": ".js",
+          "functions": {
+            "TemplateSchema": {
+              "function": "Creates a Schema object with a given template object",
+              "parameters": ["Template"]
+            }
+          }
+        },
+        "User.js": {
+          "file_type": ".js",
+          "functions": {
+            "name": {
+              "function": "Converts the value to uppercase if the value is a string",
+              "parameters": ["value"]
+            },
+            "notion_id": {
+              "function": "Converts the value to uppercase if the value is a string",
+              "parameters": ["value"]
+            },
+            "email": {
+              "function": "Converts the value to uppercase if the value is a string",
+              "parameters": ["value"]
+            },
+            "discord_id": {
+              "function": "Converts the value to uppercase if the value is a string",
+              "parameters": ["value"]
+            }
+          }
+        }
+      }
+    },
+    "notion.js": { "file_type": ".js", "functions": {} },
+    "openai": {
+      "autodocumenter.js": { "file_type": ".js", "functions": {} },
+      "documentation": {}
+    },
+    "tests": {
+      "mongodb.test.js": {
+        "file_type": ".js",
+        "functions": {
+          "UserRegistryDatabase": {
+            "connect": {
+              "function": "Connects to the UserRegistry database",
+              "parameters": []
+            },
+            "create": {
+              "function": "Creates a new user in the UserRegistry database",
+              "parameters": ["data", "server_id"]
+            },
+            "get": {
+              "function": "Gets a user from the UserRegistry database",
+              "parameters": ["data"]
+            },
+            "close": {
+              "function": "Closes the UserRegistry database",
+              "parameters": []
+            }
+          },
+          "DeadlineHistoryDatabase": {
+            "connect": {
+              "function": "Connects to the DeadlineHistory database",
+              "parameters": []
+            },
+            "create": {
+              "function": "Creates a new deadline in the DeadlineHistory database",
+              "parameters": ["data"]
+            },
+            "get": {
+              "function": "Gets a deadline from the DeadlineHistory database",
+              "parameters": ["data"]
+            },
+            "get_n": {
+              "function": "Gets the n most recent deadlines from the DeadlineHistory database",
+              "parameters": ["n"]
+            },
+            "get_recent": {
+              "function": "Gets the most recent deadline from the DeadlineHistory database",
+              "parameters": []
+            },
+            "update": {
+              "function": "Updates a deadline in the DeadlineHistory database",
+              "parameters": ["query", "data"]
+            },
+            "close": {
+              "function": "Closes the DeadlineHistory database",
+              "parameters": []
+            }
+          }
+        }
+      }
+    }
+  }
+}
