@@ -8,13 +8,6 @@ const ClubInfoDatabase = new ClubInfo();
 ClubInfoDatabase.connect();
 console.log("AFTER connect()");
 
-setTimeout(() => {
-    // TODO: Add await for testing get_info() in notion.js
-    const result = ClubInfoDatabase.queries.get.info({"server_id": "1019361421642965013"});
-    console.log(result.payload);
-    // console.log(result.payload["notion_integration_key"]);
-}, 3000);
-
 // const databaseId = process.env.NOTION_DATABASE_ID;
 // How to share a database with an notion integration/connection? 
 const TABLE_DEADLINES_ID = "beb4f1b15ec1443c87e16bd138832d06";
@@ -26,14 +19,26 @@ const TABLE_DEADLINES_ID = "beb4f1b15ec1443c87e16bd138832d06";
 //NOTION DEV TEAM 0f201482f6f1407899e8f7c8ae7dea28
 
 // TODO: Change the Notion Variable to be compatible with different servers
-notion = new Client({
-    auth: process.env.NOTION_KEY,
-});
+// notion = new Client({
+//     auth: process.env.NOTION_KEY,
+// });
 
+// TODO: Enable Compatibility for Multiple Guild Notion Connections
 active_notion_connections = {
-    "1019361421642965013": new Client({
-        auth: ClubInfoDatabase.queries
-    })
+    // "1019361421642965013": new Client({
+    //     auth: await ClubInfoDatabase.queries.get.info({"server_id": "1019361421642965013"})
+    // })
+}
+
+// TEST: Creates a test connection for our Notion Team Server
+setTimeout(async () => {
+    // TODO: Add await for testing get_info() in notion.js
+    const result = await ClubInfoDatabase.queries.get.info({"server_id": "1019361421642965013"});
+    console.log(result.payload);
+}, 0);
+
+const establishConnection = async (server_id) => {
+    
 }
 
 // const all_connections = []
@@ -57,7 +62,7 @@ const checkDataBase = async () => {
                 //console.log('Email: ', peopleArray[j]['person']['email']);
                 console.log();
             }
-
+            
             console.log('Finish Date: ', response.results[i]['properties']['Deadline']['date']['start']);    
             console.log('\n======================================================');
         }
@@ -74,7 +79,6 @@ class NotionDatabase
             auth: process.env.NOTION_KEY,
         })
 
-        // this.connectDatabase = connectDatabase;
         this.connectDatabase = TABLE_DEADLINES_ID;
         // TODO: Fix this so that it is scaleable with other servers
 
@@ -87,12 +91,19 @@ class NotionDatabase
 
     AddUser = async (server_id, info) =>
     {
+        establishConnection(server_id);
+    }
+
+    GetUserDeadline = async (server_id, info) => 
+    {
+        await establishConnection(server_id);
         
+
     }
 
     PushDeadlines = async () =>
     {
-
+        establishConnection(server_id);
     }
     
     
