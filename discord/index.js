@@ -1,8 +1,12 @@
 // Importing the Client, GatewayIntentBits and Events objects from the discord.js library
 const { Client, GatewayIntentBits, Events } = require("discord.js");
 
-// Importing the ready and interactionCreate events from the events.js file
-const { ready, interactionCreate } = require("./events");
+const {
+  ready,
+  interactionCreate,
+  guildCreate,
+  guildDelete,
+} = require("./events");
 
 // Importing the initialize function from the Discord library
 const { initialize } = require("./library/Discord");
@@ -26,6 +30,8 @@ initialize(client);
 // Logging in to the client using the stored token
 client.login(TOKEN);
 
-// Adding event listeners for the ready and InteractionCreate events, passing the client object to each one
+// Adding event listeners passing the client object to each one
 client.on(Events.ready, ready(client));
 client.on(Events.InteractionCreate, interactionCreate(client));
+client.on(Events.GuildCreate, guildCreate(client));
+client.on(Events.GuildDelete, guildDelete(client));
