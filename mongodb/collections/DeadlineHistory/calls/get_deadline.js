@@ -1,6 +1,6 @@
 const { DeadlineSchema } = require("../../../schemas/Deadline");
 const get_deadline = ({ DeadlineHistory }) =>
-  async function (data) {
+  async function (data) { 
     const result = {
       status: null,
       error: null,

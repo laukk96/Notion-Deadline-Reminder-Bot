@@ -19,7 +19,11 @@ const create_user = ({ UserRegistry }) =>
       } else {
         const payload = await UserRegistry.updateOne(
           { _id: server_id },
-          { $set: { [User.discord_id]: User } }
+          { $set: 
+            {
+              'officers': { [User.discord_id]: User }
+            } 
+          }
         );
         result.payload = payload;
       }
