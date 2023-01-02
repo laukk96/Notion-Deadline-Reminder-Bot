@@ -31,6 +31,8 @@ initialize(client);
 // Logging in to the client using the stored token
 client.login(TOKEN);
 
+// Create the 
+
 // Adding event listeners passing the client object to each one
 client.on(Events.ready, ready(client));
 client.on(Events.InteractionCreate, interactionCreate(client));
