@@ -1,5 +1,10 @@
 // Imports ActionRowBuilder and ButtonBuilder from discord.js
-const { ActionRowBuilder, ButtonBuilder } = require("discord.js");
+const { 
+  ActionRowBuilder, 
+  ButtonBuilder, 
+  ButtonStyle 
+} = require("discord.js");
+
 
 // Asynchronous function that takes an interaction as an argument
 async function update(interaction) {
