@@ -8,12 +8,17 @@ const ClubInfoDatabase = new ClubInfo();
 ClubInfoDatabase.connect();
 console.log("AFTER connect()");
 
-setTimeout(() => {
+
+// EXAMPLE: How to use the Asyncronous Collection Methods: 
+setTimeout(async () => {
   // TODO: Add await for testing get_info() in notion.js
-  const result = ClubInfoDatabase.queries.get.info({
+  const result = await ClubInfoDatabase.queries.get.info({
     server_id: "1019361421642965013",
   });
-  console.log(result.payload);
+  console.log(`The Payload Results: ${result.payload}`);
+  for (const [key, value] of Object.entries(result.payload)) {
+    console.log(`${key}, ${value}`);
+  }
   // console.log(result.payload["notion_integration_key"]);
 }, 3000);
 
