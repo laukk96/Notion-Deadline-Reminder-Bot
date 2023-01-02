@@ -14,11 +14,12 @@ const get_info = ({ ClubInfo }) =>
       Club_Data._id = server_id;
       // Club not found:
       if (!guild_data) {
-        result.status = "Could not find the server inside the ClubInfo Collection";
-        result.payload = payload;
-      // Club found, returning all info from ClubInfo
-      } else { 
-        result.payload = guild_data
+        result.status =
+          "Could not find the server inside the ClubInfo Collection";
+        result.payload = null;
+        // Club found, returning all info from ClubInfo
+      } else {
+        result.payload = guild_data;
         console.log("result payload (guild_data):", result.payload);
         console.log("result:" + result);
       }
