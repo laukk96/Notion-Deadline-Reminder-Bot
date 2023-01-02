@@ -1,0 +1,644 @@
+{
+  "_root/": {
+    "index.js": { "file_type": ".js", "summary": {}, "functions": {} },
+    "notion.js": {
+      "file_type": ".js",
+      "summary": "\nThis code imports dotenv, NotionHQ client, Discord.js features, and MongoDB collections. It also set ups a Notion connection and establishes an active_notion_connections object. The checkDataBase() function is called and is used to log information from the Notion Database. Notion Database class is initialized and functions are created such as AddUser(), PushDeadlines(), parseNotionId(), getPerson(), getTask(), getDueDate(). Testing for certain tasks",
+      "functions": {}
+    },
+    "discord/": {
+      "command_list.js": {
+        "file_type": ".js",
+        "summary": "This code imports a function from library/Commands, generates commands from an object containing descriptions, and then exports the commands generated from the generate_commands() function.",
+        "functions": {
+          "generate_commands": {
+            "function": "Generates a list of commands from a given object of commands and their descriptions",
+            "parameters": ["commands_object"]
+          },
+          "update/": {
+            "description": "Send a manual notification to officers!"
+          },
+          "help/": {
+            "description": "If you need help to link your notion to discord!"
+          },
+          "credits/": { "description": "The original authors of the bot" },
+          "adduser/": { "description": "Add a User to the Database" },
+          "getusers/": {
+            "description": "Get a list of the users in the database"
+          },
+          "initiate/": {
+            "description": "Initiate the server for Notion Deadline Reminders."
+          },
+          "removeusers/": {
+            "description": "Use this to remove users from the database!"
+          }
+        }
+      },
+      "config.js": {
+        "file_type": ".js",
+        "summary": "This code imports the dotenv module to access the variables stored in the .env file. It then creates constants for the Discord client ID and token and sets them to their respective values in the .env file. Finally, it exports the constants so they can be accessed outside the file.",
+        "functions": {
+          "require_dotenv": {
+            "function": "Require the dotenv module and configure it to the .env file in the parent directory",
+            "parameters": []
+          },
+          "create_client_id_constant": {
+            "function": "Create a constant for the Discord client ID and set it to the value of the DISCORD_CLIENT_ID key in the .env file",
+            "parameters": []
+          },
+          "create_token_constant": {
+            "function": "Create a constant for the Discord token and set it to the value of the DISCORD_TOKEN key in the .env file",
+            "parameters": []
+          },
+          "export_constants": {
+            "function": "Export the CLIENT_ID and TOKEN constants so they can be accessed outside this file",
+            "parameters": []
+          }
+        }
+      },
+      "index.js": {
+        "file_type": ".js",
+        "summary": "This code imports objects from the discord.js library, imports a function from the Discord library, imports a token from the config file and creates a Client object with specified intents. The client is then initialized, logged in using the token and event listeners are added with the client object being passed to each one.",
+        "functions": {}
+      },
+      "events/": {
+        "guildCreate.js": {
+          "file_type": ".js",
+          "summary": "This code is a module export which creates a function named \"guildCreate\" that logs a string containing the guild's id when the guild is first joined.",
+          "functions": {
+            "guildCreate": {
+              "function": "Logs the ID of the guild the client has joined",
+              "parameters": ["guild"]
+            }
+          }
+        },
+        "guildDelete.js": {
+          "file_type": ".js",
+          "summary": "This code is used to create a function which is used to log a message and remove entries from a database when the bot leaves a guild.",
+          "functions": {
+            "guildDelete": {
+              "function": "Removes a guild from the Database",
+              "parameters": ["guild"]
+            }
+          }
+        },
+        "index.js": {
+          "file_type": ".js",
+          "summary": "This code is exporting four functions from different files, which are interactionCreate, ready, guildCreate, and guildDelete.",
+          "functions": {
+            "interactionCreate": {
+              "function": "Handles user interactions with the bot",
+              "parameters": []
+            },
+            "ready": {
+              "function": "Handles the bot's ready state",
+              "parameters": []
+            },
+            "guildCreate": {
+              "function": "Handles the bot's joining of a guild",
+              "parameters": []
+            },
+            "guildDelete": {
+              "function": "Handles the bot's leaving of a guild",
+              "parameters": []
+            }
+          }
+        },
+        "interactionCreate.js": {
+          "file_type": ".js",
+          "summary": "This code requires multiple modules and packages to create an interaction with a chatbot. If the chatbot receives an input command, it will execute the associated command. If the input is a modal submission or button press, a modal submit function will be called. If the input is a select menu, a select menu function will be called.",
+          "functions": {
+            "interactionCreate": {
+              "function": "Handles interactions from the user, such as chat input commands, modal submissions, and select menus",
+              "parameters": ["interaction"]
+            }
+          }
+        },
+        "ready.js": {
+          "file_type": ".js",
+          "summary": "This code is used to set up the initial connection of a client to a platform. It logs the user in, then sets the activity as \"Project Notion 2\".",
+          "functions": {
+            "ready": {
+              "function": "Logs in the client and sets the activity to 'Project Notion 2'",
+              "parameters": ["client"]
+            }
+          }
+        }
+      },
+      "interactions/": {
+        "commands/": {
+          "adduser.js": {
+            "file_type": ".js",
+            "summary": "This code imports the ModalBuilder, TextInputBuilder, and ActionRowBuilder classes and defines an async function, addusers(), which uses these classes to create a modal with text inputs and action rows to collect user input. The modal is then displayed to the user, and the addusers() function is then exported to be used by other files.",
+            "functions": {
+              "addusers": {
+                "function": "Adds users to a Notion page",
+                "parameters": ["interaction"]
+              }
+            }
+          },
+          "credits.js": {
+            "file_type": ".js",
+            "summary": "This code creates an asynchronous function that generates a \"credits\" embed, which includes a title, author, description, thumbnail, fields, and footer. It then sends the embed and exports the \"credits\" function.",
+            "functions": {
+              "credits": {
+                "function": "Generates a credits embed",
+                "parameters": ["interaction"]
+              }
+            }
+          },
+          "getusers.js": {
+            "file_type": ".js",
+            "summary": "This code exports a function called getusers, which can be used to perform an asynchronous action/interaction.",
+            "functions": {
+              "getusers": {
+                "function": "Retrieves a list of users from a given interaction",
+                "parameters": ["interaction"]
+              }
+            }
+          },
+          "help.js": {
+            "file_type": ".js",
+            "summary": "This code imports three functions from the discord.js library and sets up an async function called help(). It creates an ActionRowBuilder with a SelectMenuBuilder component that has 3 different options. It then creates an EmbedBuilder component and adds properties to it. The help() function replies to the interaction parameter with the embed and row. The help() function is then exported.",
+            "functions": {
+              "help": {
+                "function": "Provides help for the Notion Deadline Reminder Bot",
+                "parameters": ["interaction"]
+              }
+            }
+          },
+          "initiate.js": {
+            "file_type": ".js",
+            "summary": "This code exports a function to check if the user has administrator permissions. If they do, it displays a modal with text inputs containing a variety of labels, styles, maximum lengths, and other attributes. These text inputs have been stored in action rows, which are added to the modal.",
+            "functions": {
+              "initiate": {
+                "function": "Checks if the user has administrator permissions and if so, creates a modal with text input builders and action rows for the user to fill out and agree to",
+                "parameters": ["interaction"]
+              }
+            }
+          },
+          "removeusers.js": {
+            "file_type": ".js",
+            "summary": "This function creates a SelectMenuBuilder object with a customId of \"removeme\" and sets the options to a list of label/value pairs. It then creates a new ActionRowBuilder object and sets its components to the SelectMenuBuilder object. Finally, it responds with the ActionRowBuilder component and exports the removeusers function.",
+            "functions": {
+              "removeusers": {
+                "function": "Takes in an interaction parameter and creates a new ActionRowBuilder, sets the components of the ActionRowBuilder to a SelectMenuBuilder, sets the customId of the SelectMenuBuilder to 'removeme', and sets the options of the SelectMenuBuilder to a list of label/value pairs. The interaction is then replied with the ActionRowBuilder component.",
+                "parameters": ["interaction"]
+              }
+            }
+          },
+          "update.js": {
+            "file_type": ".js",
+            "summary": "This code imports the ActionRowBuilder and ButtonBuilder from discord.js, then creates an asynchronous function that takes an interaction as an argument. It then creates an ActionRowBuilder with a button component, setting a custom id, label, and style. Finally, it sends a reply to the interaction with a content and the button component, and exports the function.",
+            "functions": {
+              "update": {
+                "function": "Sends a reply to the interaction with a content and the button component",
+                "parameters": ["interaction"]
+              }
+            }
+          }
+        },
+        "menu/": {
+          "selectMenu.js": {
+            "file_type": ".js",
+            "summary": "This code exports a function that allows a user to select from three options: first_option, second_option, and third_option. When each option is selected, it will respond with a corresponding Discord embed message. The messages for the first_option and third_option are detailed instructions and tips, while the second_option does not have a message attached.",
+            "functions": {}
+          }
+        },
+        "modals/": {
+          "submitModal.js": {
+            "file_type": ".js",
+            "summary": "This code uses the Discord.js EmbedBuilder and connects to three MongoDB databases: ClubInfo, UserRegistry, and DeadlineHistory. The submitModal function takes user input from two different modals (initiateModal, adduserModal) and depending on the customId, it creates various data packets for the databases. If agreementInput is not \"Agree\", it will reply with an error embed; otherwise, it creates the data packets and sends a success reply embed",
+            "functions": {}
+          }
+        }
+      },
+      "library/": {
+        "Commands.js": {
+          "file_type": ".js",
+          "summary": "This code imports necessary libraries and generates commands by constructing a SlashCommandBuilder instance from the Commands object and using the necessary command file. The generated SlashCommands array and Commands object are then returned. The generate_commands function is then exported so it can be used elsewhere.",
+          "functions": {
+            "generate_commands": {
+              "function": "Generates commands from the given commands object",
+              "parameters": ["Commands"]
+            }
+          }
+        },
+        "Discord.js": {
+          "file_type": ".js",
+          "summary": "This code imports the REST and Routes from the Discord.js library, the command list from a separate file, the token and client ID from the config file and chalk for coloring in the console. It then exports an asynchronous initialize function which sends a PUT request to the applicationCommands route with the client ID set to the commands array and logs either a success or an error.",
+          "functions": {
+            "initialize": {
+              "function": "Initializes the application commands",
+              "parameters": ["TOKEN", "CLIENT_ID"]
+            }
+          }
+        }
+      }
+    },
+    "mongodb/": {
+      "collections.js": {
+        "file_type": ".js",
+        "summary": "This code imports the UserRegistry, ClubInfo, and DeadlineHistory collections and exports them as modules.",
+        "functions": {
+          "UserRegistry": {
+            "function": "Registers users and stores their information",
+            "parameters": ["username", "password", "email", "phone", "address"]
+          },
+          "ClubInfo": {
+            "function": "Stores information about clubs and their members",
+            "parameters": ["clubName", "clubDescription", "clubMembers"]
+          },
+          "DeadlineHistory": {
+            "function": "Stores information about deadlines and their associated tasks",
+            "parameters": [
+              "deadlineName",
+              "deadlineDescription",
+              "deadlineTasks"
+            ]
+          }
+        }
+      },
+      "mongo.js": {
+        "file_type": ".js",
+        "summary": "This code is a wrapper for a MongoDB server connection, which includes a constructor and connect/close methods. The constructor creates a MongoClient connection and the connect method retrieves the database and collection specified. The close method closes the MongoClient connection. The class also includes logic for error handling.",
+        "functions": {
+          "connect": {
+            "function": "Connects to the MongoDB client, returns the collection",
+            "parameters": ["collection_name"]
+          },
+          "close": { "function": "Closes the MongoDB client", "parameters": [] }
+        }
+      },
+      "collections/": {
+        "ClubInfo/": {
+          "ClubInfo.js": {
+            "file_type": ".js",
+            "summary": "This code creates a class called \"ClubInfo\" which when instantiated will create a new MongoDBWrapper. The class also has a connect method which attempts to connect to a database with the collection name from an .env file and search using queries that are imported from a queries file. It also has a catch block in case there is an error which defines what should happen. The class is then exported.",
+            "functions": {
+              "connect": {
+                "function": "Connects to the MongoDB database and sets the Collection and Dependencies objects",
+                "parameters": []
+              }
+            }
+          },
+          "queries.js": {
+            "file_type": ".js",
+            "summary": "This code exports a function called queries, which passes in Dependencies as an argument. This function returns a JavaScript object that contains functions to get and create info and a guild key, and to update something, all of which are subject to a ratelimiter.",
+            "functions": {
+              "get/": { "info": "Gets the info of the guild" },
+              "create/": { "club": "Creates a guild key" },
+              "update/": {}
+            }
+          },
+          "calls/": {
+            "create_guild_key.js": {
+              "file_type": ".js",
+              "summary": "This code imports the ClubSchema and exports the create_guild_key function. The function takes an object of ClubInfo as an argument and checks for an existing guild_key using the _id. If no guild_key is found, a new one is created. Otherwise, an existing guild_key is updated. Finally, it returns the payload with a status of either 1 for success or 0 for failure.",
+              "functions": {
+                "create_guild_key": {
+                  "function": "Creates a guild key for a given server_id and data",
+                  "parameters": ["server_id", "data"]
+                }
+              }
+            },
+            "get_info.js": {
+              "file_type": ".js",
+              "summary": "This code exports a function, 'get_info', which is used to get information from the 'ClubInfo' collection in a database. The information is retrieved either when a server is found in the collection, or an error is thrown if it is not. The 'exclude(data)' function is used to remove some of the elements before returning the result.",
+              "functions": {
+                "get_info": {
+                  "function": "Retrieves the information from the ClubInfo collection based on the server_id",
+                  "parameters": ["server_id", "data"]
+                }
+              }
+            }
+          }
+        },
+        "DeadlineHistory/": {
+          "DeadlineHistory.js": {
+            "file_type": ".js",
+            "summary": "This code is a class that defines a DeadlineHistory and creates a connection to a MongoDB database. A MongoDBWrapper and queries are imported, and a collection name is defined and assigned to the environment variable DEADLINE_HISTORY_COLLECTION_NAME. If a connection is established, status is assigned to 1 and if there is an error, status is assigned to 0 and errors are responded with an error object. Finally the class is exported.",
+            "functions": {
+              "connect": {
+                "function": "Connects to the MongoDB database and creates the collection to store the deadline history",
+                "parameters": []
+              }
+            }
+          },
+          "queries.js": {
+            "file_type": ".js",
+            "summary": "This code requires the modules get_deadline, create_deadline, rate_limiter, RateLimitError, and create_guild_key from various files. It then exports the queries from the Dependencies modules, separated into 'get', 'create' and 'update'.",
+            "functions": {
+              "update": {
+                "function": "No functions",
+                "parameters": "No parameters"
+              },
+              "get/": {
+                "deadline": {
+                  "function": "Gets the deadline for the given guild",
+                  "parameters": ["Dependencies"]
+                }
+              },
+              "create/": {
+                "deadline": {
+                  "function": "Creates a deadline for the given guild",
+                  "parameters": ["Dependencies"]
+                },
+                "deadline_history": {
+                  "function": "Creates a guild key for the given guild",
+                  "parameters": ["Dependencies"]
+                }
+              }
+            }
+          },
+          "calls/": {
+            "create_deadline.js": {
+              "file_type": ".js",
+              "summary": "This code exports a function named create_deadline which takes in a data object and a server id. It uses a DeadlineSchema to update the DeadlineHistory of a server, then returns a result object with a status, a payload, and an error as properties. If an error occurs, the status will be 0, otherwise it will be 1.",
+              "functions": {
+                "create_deadline": {
+                  "function": "Creates a deadline object in the deadline history collection",
+                  "parameters": ["data", "server_id"]
+                }
+              }
+            },
+            "create_guild_key.js": {
+              "file_type": ".js",
+              "summary": "This code imports the schena TemplateSchema, then creates a function create_guild_key which reads in data and either adds a new guild key to DeadlineHistory if it doesn't exist, or updates the existing one based on the server_id using TemplateSchema. It also includes an error handling block, before finally exporting the create_guild_key function.",
+              "functions": {
+                "create_guild_key": {
+                  "function": "Creates a guild key in the DeadlineHistory collection with the given data",
+                  "parameters": ["server_id", "data"]
+                }
+              }
+            },
+            "get_deadline.js": {
+              "file_type": ".js",
+              "summary": "This code exports a function to search for deadline information in a DeadlineHistory collection, which only allows properties that are also in the DeadlineSchema. It returns a result notification object with status, the payload, and an error if the query fails. The try/catch creates a result based on the query, and if successful, exclusive DeadlineSchema properties will be included.",
+              "functions": {
+                "get_deadline": {
+                  "function": "Retrieves a deadline from the DeadlineHistory collection based on the given parameters",
+                  "parameters": ["Deadline"]
+                }
+              }
+            },
+            "get_deadlines.js": {
+              "file_type": ".js",
+              "summary": "This code is for retrieving information from a DeadlineHistory database that contains the DeadlineSchema. It checks the given data for properties from the DeadlineSchema only, validates the strings, and finds one object from DeadlineHistory that corresponds to that data. The resulting object is then filtered to exclude unwanted properties and is returned to the user along with a status and any errors that occurred.",
+              "functions": {
+                "get_deadline": {
+                  "function": "Retrieves a deadline from the database based on the given parameters",
+                  "parameters": ["Deadline"]
+                }
+              }
+            }
+          }
+        },
+        "UserRegistry/": {
+          "queries.js": {
+            "file_type": ".js",
+            "summary": "This code imports functions from several files, wraps them in rate limiters, and exports an object with get, create and update functions.",
+            "functions": {
+              "get/": { "user": "Retrieves a user from the database" },
+              "create/": {
+                "user": "Creates a user in the database",
+                "user_registry": "Creates a guild key in the database"
+              },
+              "update/": {
+                "remove/": { "user": "Removes a user from the database" }
+              }
+            }
+          },
+          "UserRegistry.js": {
+            "file_type": ".js",
+            "summary": "\nThis code creates a class named UsRegistry which includes a constructor and the async function connect(). The constructor function initializes the MongoDBWrapper object, the connect function creates the collection name and connects and performs the queries specified in the queries file. Finally, the module exports the UserRegistry class.",
+            "functions": {
+              "UserRegistry": {
+                "function": "Connects to the MongoDB database and creates the UserRegistry collection",
+                "parameters": ["COLLECTION_NAME"]
+              }
+            }
+          },
+          "calls/": {
+            "create_guild_key.js": {
+              "file_type": ".js",
+              "summary": "This code creates an async function that allows a user registry to be updated or created. It utilizes a TemplateSchema to perform this task. It also returns a payload and errors (if applicable) associated with the task. Finally, it exports the function for use elsewhere.",
+              "functions": {
+                "create_guild_key": {
+                  "function": "Creates a guild key in the UserRegistry database with the given data",
+                  "parameters": ["server_id", "data"]
+                }
+              }
+            },
+            "create_user.js": {
+              "file_type": ".js",
+              "summary": "This code defines a function named create_user that requires an object \"UserRegistry\" as an argument. It uses the UserSchema to remove certain user data from the argument, and checks to see if the server_id exists in UserRegistry. If it does, it updates the officers field of that server in UserRegistry with the UserSchema. Otherwise, it inserts a new entry in UserRegistry for the server_id with the UserSchema. The code then sets",
+              "functions": {
+                "create_user": {
+                  "function": "Creates a user in a server registry or updates an existing user in a server registry",
+                  "parameters": ["server_id", "data"]
+                }
+              }
+            },
+            "get_user.js": {
+              "file_type": ".js",
+              "summary": "This code uses the schemas from the \"../../../schemas/User\" file to get information from a UserRegistry. It creates an object to notify the end user of the result of the query, and uses the UserSchema to allow only the desired properties that can be accepted. It tries to find the user data and if successful, will return the result with a payload. If an error is encountered, the result will be a 0 status with the error attached. The code",
+              "functions": {
+                "get_user": {
+                  "function": "Retrieves a user from the UserRegistry based on the given user data",
+                  "parameters": ["user_data"]
+                }
+              }
+            },
+            "remove_user.js": {
+              "file_type": ".js",
+              "summary": "This code removes a user from a registry using certain parameters. The function receives a 'user' object and 'server_id' as input, then passes them through to a user schema for further processing. A result object contains the payload, status and error that may result from the process. The module is then exported.",
+              "functions": {
+                "remove_user": {
+                  "function": "Removes a user from a given server_id using a user query data from a given user object",
+                  "parameters": ["user", "server_id"]
+                }
+              }
+            }
+          }
+        }
+      },
+      "lib/": {
+        "ratelimiter.js": {
+          "file_type": ".js",
+          "summary": "This code creates a module to export a rate limiter function to be used on queries. The rate limiter consists of a function that receives a query as an argument and returns the query as the output.",
+          "functions": {}
+        },
+        "Schema.js": {
+          "file_type": ".js",
+          "summary": "This code is a \"Schema\" class which includes methods for excluding object B from object A and intersecting object B from object A. It also includes a constructor which stores data from parameters passed in. A module is also exported which allows other files to access the Schema class.",
+          "functions": {}
+        }
+      },
+      "schemas/": {
+        "ClubInfo.js": {
+          "file_type": ".js",
+          "summary": "This code imports the Schema module from a library, defines the Club object with several properties, and creates a ClubSchema with 'Club' as the parameter. Then, it exports the ClubSchema. For each property in Club, functions are defined to check if their type is a string and in some cases, that it is within a specified length.",
+          "functions": {
+            "club_name": {
+              "function": "Validates that the club_name is a string",
+              "parameters": ["club_name"]
+            },
+            "club_description": {
+              "function": "Validates that the club_description is a string and is not longer than the specified length",
+              "parameters": ["club_description"]
+            },
+            "initiated_date": {
+              "function": "Validates that the initiated_date is a string",
+              "parameters": ["initiated_date"]
+            },
+            "notion_integration_key": {
+              "function": "Validates that the notion_integration_key is a string",
+              "parameters": ["notion_integration_key"]
+            },
+            "database_id": {
+              "function": "Validates that the database_id is a string",
+              "parameters": ["database_id"]
+            }
+          }
+        },
+        "Deadline.js": {
+          "file_type": ".js",
+          "summary": "This code is a part of an application which uses the lib/Schema library to create a DeadlineSchema that requires strings for the properties context, finish_date, status, deadline_id, and discord_id. The program requires that any input given for these properties is a string, and it will throw and error if a different type of input is given. Finally, the module exports a DeadlineSchema that has the given properties.",
+          "functions": {
+            "context": {
+              "function": "Checks if the context is a string",
+              "parameters": ["context"]
+            },
+            "finish_date": {
+              "function": "Checks if the finish_date is a string",
+              "parameters": ["finish_date"]
+            },
+            "status": {
+              "function": "Checks if the status is a string",
+              "parameters": ["status"]
+            },
+            "deadline_id": {
+              "function": "Checks if the deadline_id is a string",
+              "parameters": ["deadline_id"]
+            },
+            "discord_id": {
+              "function": "Checks if the discord_id is a string",
+              "parameters": ["discord_id"]
+            }
+          }
+        },
+        "example.js": {
+          "file_type": ".js",
+          "summary": "This code sets up a schema called CollectionSchema which sets the properties of 'database_name' and 'collection_name'. Some checks have been made to ensure that the input is of type string, and it enforces capitalization of the 'database_name'. Finally, the created schema is exported as a module.",
+          "functions": {
+            "database_name": {
+              "function": "Returns the database name in uppercase",
+              "parameters": ["value"]
+            },
+            "collection_name": {
+              "function": "Returns the collection name",
+              "parameters": ["value"]
+            }
+          }
+        },
+        "Template.js": {
+          "file_type": ".js",
+          "summary": "This code creates a Template object and a new Schema from that Template. It also exports an object containing the TemplateSchema.",
+          "functions": {
+            "TemplateSchema": {
+              "function": "Creates a Schema object with a given template object",
+              "parameters": ["Template"]
+            }
+          }
+        },
+        "User.js": {
+          "file_type": ".js",
+          "summary": "This code creates an object named \"User\" with four properties that are assigned to values of null. Functions are then assigned to each property, which will transform the value to an uppercase string if the value is a string. Otherwise, an error will be thrown. The User object is then used to create a Schema and is exported as a module.",
+          "functions": {
+            "name": {
+              "function": "Converts the value to uppercase if the value is a string",
+              "parameters": ["value"]
+            },
+            "notion_id": {
+              "function": "Converts the value to uppercase if the value is a string",
+              "parameters": ["value"]
+            },
+            "email": {
+              "function": "Converts the value to uppercase if the value is a string",
+              "parameters": ["value"]
+            },
+            "discord_id": {
+              "function": "Converts the value to uppercase if the value is a string",
+              "parameters": ["value"]
+            }
+          }
+        }
+      }
+    },
+    "openai/": {
+      "autodocumenter.js": {
+        "file_type": ".js",
+        "summary": "This code requires the contents of \"../.env\" and the fs package to use the create_path_object() function to generate a tree structure, which is written to \"./documentation/documentation_tree.json\". It uses the query() function to get a summarization of each file's code to include in the tree. Total number of queries and query number is also logged.",
+        "functions": {}
+      },
+      "documentation/": {}
+    },
+    "tests/": {
+      "mongodb.test.js": {
+        "file_type": ".js",
+        "summary": "This code imports collections from a mongodb database and then runs tests to check that the connection, create, and get functions are working properly for both the UserRegistry and DeadlineHistory collections.",
+        "functions": {
+          "UserRegistryDatabase/": {
+            "connect": {
+              "function": "Connects to the UserRegistry database",
+              "parameters": []
+            },
+            "create": {
+              "function": "Creates a new user in the UserRegistry database",
+              "parameters": ["data", "server_id"]
+            },
+            "get": {
+              "function": "Gets a user from the UserRegistry database",
+              "parameters": ["data"]
+            },
+            "close": {
+              "function": "Closes the UserRegistry database",
+              "parameters": []
+            }
+          },
+          "DeadlineHistoryDatabase/": {
+            "connect": {
+              "function": "Connects to the DeadlineHistory database",
+              "parameters": []
+            },
+            "create": {
+              "function": "Creates a new deadline in the DeadlineHistory database",
+              "parameters": ["data"]
+            },
+            "get": {
+              "function": "Gets a deadline from the DeadlineHistory database",
+              "parameters": ["data"]
+            },
+            "get_n": {
+              "function": "Gets the n most recent deadlines from the DeadlineHistory database",
+              "parameters": ["n"]
+            },
+            "get_recent": {
+              "function": "Gets the most recent deadline from the DeadlineHistory database",
+              "parameters": []
+            },
+            "update": {
+              "function": "Updates a deadline in the DeadlineHistory database",
+              "parameters": ["query", "data"]
+            },
+            "close": {
+              "function": "Closes the DeadlineHistory database",
+              "parameters": []
+            }
+          }
+        }
+      }
+    }
+  }
+}
