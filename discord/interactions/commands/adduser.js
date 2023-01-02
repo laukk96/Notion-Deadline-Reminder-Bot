@@ -3,13 +3,18 @@ const {
   ModalBuilder,
   TextInputBuilder,
   ActionRowBuilder,
+  TextInputStyle,
 } = require("discord.js");
+
+const {
+  NotionDatabase
+} = require("../../../notion.js");
 
 // This is an async function used to add users
 async function addusers(interaction) {
   // Create the modal which will be used to collect the user's input
   const modal = new ModalBuilder()
-    .setCustomId("addUserModal")
+    .setCustomId("adduserModal")
     .setTitle("Add User");
 
   // Create the text input components which will be used to collect the user's input

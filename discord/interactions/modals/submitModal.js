@@ -91,7 +91,7 @@ async function submitModal(interaction) {
       notion_id: null,
     };
     // parse the Notion ID from the dashboard
-    data[notion_id] = tempNotionDatabase.parseNotionId(email);
+    data.notion_id = tempNotionDatabase.parseNotionId(email);
     // TODO 3:
 
     const mongo_packet = {

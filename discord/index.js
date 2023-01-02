@@ -13,6 +13,7 @@ const { initialize } = require("./library/Discord");
 
 // Importing the token from the config.js file
 const { TOKEN } = require("./config");
+const { NotionDatabase } = require("../notion.js");
 
 // Creating a new client object with the specified intents
 const client = new Client({
