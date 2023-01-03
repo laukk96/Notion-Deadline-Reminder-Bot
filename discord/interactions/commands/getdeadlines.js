@@ -5,9 +5,19 @@ const {
   EmbedBuilder,
 } = require("discord.js");
 
-//Declaring getdeadlines() as an async function that takes an interaction argument
-async function getdeadlines(interaction) {
-  //Creating a new EmbedBuilder component and adding properties to it
+// SUPPORT FUNCTIONS
+async function getNameFromDiscordId(interaction, packages) {
+  // Deconstruct "packages" Dictionary Object from index.js
+  const {notionDatabase, ClubInfoDatabase, UserRegistryDatabase} = packages;
+  
+  // UserRegistry Collection Function
+  user_info = UserRegistryDatabase.queries.get.user();
+}
+
+// Declaring getdeadlines() as an async function that takes an interaction argument
+async function getdeadlines(interaction, packages) {
+  
+  // Creating a new EmbedBuilder component and adding properties to it
   const embed = new EmbedBuilder()
     .setColor("Blue")
     .setTitle(`All Deadlines for ${interaction.user.username}`)

@@ -8,19 +8,18 @@ const ClubInfoDatabase = new ClubInfo();
 ClubInfoDatabase.connect();
 console.log("AFTER connect()");
 
-
 // EXAMPLE: How to use the Asyncronous Collection Methods: 
 setTimeout(async () => {
   // TODO: Add await for testing get_info() in notion.js
   const result = await ClubInfoDatabase.queries.get.info({
     server_id: "1019361421642965013",
   });
-  console.log(`The Payload Results: ${result.payload}`);
-  for (const [key, value] of Object.entries(result.payload)) {
-    console.log(`${key}, ${value}`);
-  }
+//   console.log(`The Payload Results: ${result.payload}`);
+//   for (const [key, value] of Object.entries(result.payload)) {
+//     console.log(`${key}, ${value}`);
+//   }
   // console.log(result.payload["notion_integration_key"]);
-}, 3000);
+}, 3000);   
 
 // const databaseId = process.env.NOTION_DATABASE_ID;
 // How to share a database with an notion integration/connection?
@@ -38,11 +37,11 @@ notion = new Client({
 });
 
 // TODO: Enable Compatibility for Multiple Guild Notion Connections
-active_notion_connections = {
-  "1019361421642965013": new Client({
-    auth: ClubInfoDatabase.queries,
-  }),
-};
+// active_notion_connections = {
+//   "1019361421642965013": new Client({
+//     auth: ClubInfoDatabase.queries,
+//   }),
+// };
 
 // const all_connections = []
 
@@ -223,10 +222,10 @@ class NotionDatabase {
 
 //ALL CODE BELOW IS FOR TESTING:
 
-// database1 = new NotionDatabase(TABLE_DEADLINES_ID);
+database1 = new NotionDatabase(TABLE_DEADLINES_ID);
 
 //database1.getTask("Afraz");
-// database1.parseNotionId("jsaleh849@insite.4cd.edu");
+database1.parseNotionId("jsaleh849@insite.4cd.edu");
 
 module.exports = { NotionDatabase };
 

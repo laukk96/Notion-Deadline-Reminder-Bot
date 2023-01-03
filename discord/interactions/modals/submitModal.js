@@ -1,3 +1,4 @@
+const { makeConsoleLogger } = require("@notionhq/client/build/src/logging");
 const { EmbedBuilder } = require("discord.js");
 
 const {
@@ -13,7 +14,7 @@ ClubInfoDatabase.connect();
 UserRegistryDatabase.connect();
 DeadlineHistoryDatabase.connect();
 
-async function submitModal(interaction) {
+async function submitModal(interaction, packages) {
   console.log("Received a Modal: ", interaction.customId);
 
   // adduser Modal
@@ -90,9 +91,12 @@ async function submitModal(interaction) {
       discord_id: discord_id,
       notion_id: null,
     };
+
+    // Destructure packages
+    const {notionDatabase, ClubInfoDatabase, UserRegistryDatabase} = packages;
     // parse the Notion ID from the dashboard
-    data.notion_id = tempNotionDatabase.parseNotionId(email);
-    // TODO 3:
+    data.notion_id = await notionDatabase.parseNotionId(email);
+    console.log(`>> Parsed Notion Id: ${data.notion_id}, \n\t>> Using this email: ${data.email}`);
 
     const mongo_packet = {
       server_id: interaction.guild.id,

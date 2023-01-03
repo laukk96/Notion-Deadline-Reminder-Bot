@@ -15,6 +15,11 @@ const { initialize } = require("./library/Discord");
 const { TOKEN } = require("./config");
 const { NotionDatabase } = require("../notion.js");
 
+// Import collections
+const { ClubInfo } = require("../mongodb/collections/ClubInfo/ClubInfo.js");
+const { UserRegistry } = require("../mongodb/collections/UserRegistry/UserRegistry.js");
+
+
 // Creating a new client object with the specified intents
 const client = new Client({
   intents: [
@@ -31,10 +36,27 @@ initialize(client);
 // Logging in to the client using the stored token
 client.login(TOKEN);
 
-// Create the 
+// Create the NotionDatabase for use in the functions
+const TABLE_DEADLINES_ID = "beb4f1b15ec1443c87e16bd138832d06";
+const notionDatabase = new NotionDatabase(TABLE_DEADLINES_ID);
+
+// Create the ClubInfoDatabase Collection Variable
+const ClubInfoDatabase = new ClubInfo();
+ClubInfoDatabase.connect();
+
+// Create the UserRegistryDatabase Collection Variable
+const UserRegistryDatabase = new UserRegistry();
+UserRegistryDatabase.connect();
+
+// Send a package of necessary Collections / Notion Databases
+const packages = {
+  notionDatabase: notionDatabase,
+  ClubInfoDatabase: ClubInfoDatabase,
+  UserRegistryDatabase: UserRegistryDatabase
+}
 
 // Adding event listeners passing the client object to each one
 client.on(Events.ready, ready(client));
-client.on(Events.InteractionCreate, interactionCreate(client));
+client.on(Events.InteractionCreate, interactionCreate(client, packages));
 client.on(Events.GuildCreate, guildCreate(client));
 client.on(Events.GuildDelete, guildDelete(client));
