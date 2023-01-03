@@ -8,6 +8,7 @@ const create_user = ({ UserRegistry }) =>
     };
     try {
       const User = UserSchema.exclude(data);
+      console.log(UserRegistry);
       const server = await UserRegistry.findOne({ _id: server_id });
 
       if (!server) {
@@ -19,10 +20,10 @@ const create_user = ({ UserRegistry }) =>
       } else {
         const payload = await UserRegistry.updateOne(
           { _id: server_id },
-          { $set: 
-            {
-              'officers': { [User.discord_id]: User }
-            } 
+          {
+            $set: {
+              [User.discord_id]: User,
+            },
           }
         );
         result.payload = payload;

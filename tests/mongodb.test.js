@@ -10,8 +10,8 @@ async function UserRegistryDatabase() {
   //tests-------------------------------------------//
   const USER_REGISTRY_DATABASE = new UserRegistry();
   await connect(USER_REGISTRY_DATABASE);
-  await create(USER_REGISTRY_DATABASE);
-  //await get(USER_REGISTRY_DATABASE);
+  //await create(USER_REGISTRY_DATABASE);
+  await get(USER_REGISTRY_DATABASE);
   //await close(USER_REGISTRY_DATABASE);
 
   //unit tests--------------------------------------//
@@ -23,9 +23,9 @@ async function UserRegistryDatabase() {
   // Just for Notion
   async function create(USER_REGISTRY_DATABASE) {
     const data = {
-      name: "John",
+      name: "Adams",
       notion_id: "123",
-      discord_id: "123123123",
+      discord_id: "123123daw",
     };
     const result = await USER_REGISTRY_DATABASE.queries.create.user({
       data: data,
@@ -33,12 +33,17 @@ async function UserRegistryDatabase() {
     });
     console.log("TEST_MONGODB_STORE:", result);
   }
-  
+
   async function get(USER_REGISTRY_DATABASE) {
     const data = {
-      email: "epidemeus@gmail.com",
+      name: "Adams",
+      notion_id: "123",
+      discord_id: "123123daw",
     };
-    const result = await USER_REGISTRY_DATABASE.queries.get.user(data);
+    const result = await USER_REGISTRY_DATABASE.queries.get.user({
+      data: data,
+      server_id: "1019361421642965014",
+    });
     console.log("TEST_MONGODB_GET:", result);
   }
 
