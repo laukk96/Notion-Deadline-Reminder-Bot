@@ -11,7 +11,9 @@ async function getNameFromDiscordId(interaction, packages) {
   const {notionDatabase, ClubInfoDatabase, UserRegistryDatabase} = packages;
   
   // UserRegistry Collection Function
-  user_info = UserRegistryDatabase.queries.get.user();
+  const data_packet = {discord_id: interaction.user.id};
+  user_info = await UserRegistryDatabase.queries.get.user(data_packet);
+  return user_info;
 }
 
 // Declaring getdeadlines() as an async function that takes an interaction argument
