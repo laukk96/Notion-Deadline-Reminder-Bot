@@ -8,7 +8,7 @@ const ClubInfoDatabase = new ClubInfo();
 ClubInfoDatabase.connect();
 console.log("AFTER connect()");
 
-
+/*
 // EXAMPLE: How to use the Asyncronous Collection Methods: 
 setTimeout(async () => {
   // TODO: Add await for testing get_info() in notion.js
@@ -21,11 +21,13 @@ setTimeout(async () => {
   }
   // console.log(result.payload["notion_integration_key"]);
 }, 3000);
+*/
 
 // const databaseId = process.env.NOTION_DATABASE_ID;
 // How to share a database with an notion integration/connection?
 const TABLE_DEADLINES_ID = "f944e134b0584cc289d0a97775384d76";
 
+// TABLE: beb4f1b15ec1443c87e16bd138832d06
 // Old: f944e134b0584cc289d0a97775384d76
 // New: beb4f1b15ec1443c87e16bd138832d06
 
@@ -104,22 +106,42 @@ class NotionDatabase {
       database_id: this.connectDatabase,
     });
     console.log("Getting " + email + "'s Notion ID...");
-    outerloop: for (let i = 0; i < response.results.length; i++) {
-      if (response.results[i]["properties"]["Deadline"]["date"] != null) {
-        const peopleArray = response.results[i]["properties"]["Taskee"]["people"];
-        let j = 0;
-        while (j < peopleArray.length) {
-          if (peopleArray[j]["person"]["email"] != null) {
-            if (peopleArray[j]["person"]["email"].includes(email)) {
-              console.log(peopleArray[j]["id"]);
-              break outerloop;
+    // outerloop: for (let i = 0; i < response.results.length; i++) {
+    //   if (response.results[i]["properties"]["Deadline"]["date"] != null) {
+    //     const peopleArray = response.results[i]["properties"]["Taskee"]["people"];
+    //     let j = 0;
+    //     while (j < peopleArray.length) {
+    //       if (peopleArray[j]["person"]["email"] != null) {
+    //         if (peopleArray[j]["person"]["email"].includes(email)) {
+    //           var notionId = peopleArray[j]["id"];
+    //           break outerloop;
+    //         }
+    //       }
+    //       j++;
+    //     }
+    //   }
+    // }
+    var alldeadlines = [];
+    for (let i = 0; i < response.results.length; i++){
+      if (response.results[i]['properties']['Deadline']['date'] != null){
+        console.log(`${i} : ${response.results[i]['properties']['Task']['title'][0]['plain_text']}`);
+          
+        const peopleArray = response.results[i]['properties']['Taskee']['people'];
+        for (let j = 0; j < peopleArray.length; j++){
+          // if (response.results[j]['properties']['Deadline']['date'] != null){
+          if (email == peopleArray[j]["person"]["email"]){
+            var jsonElement = {
+                "title": response.results[i]['properties']['Task']['title'][0]['plain_text'],
+                "finish_date": response.results[i]['properties']['Deadline']['date']['start']
             }
-          }
-          j++;
+            alldeadlines.push(jsonElement);
+            break;
+          };
+          // }
         }
       }
     }
-    //console.log(response.results[deadLineIndex]['properties']['Taskee'][personIndex]['people']['id']);
+    console.log(alldeadlines);
   };
 
   getPerson = async (deadline) => {
@@ -223,11 +245,12 @@ class NotionDatabase {
 
 //ALL CODE BELOW IS FOR TESTING:
 
-// database1 = new NotionDatabase(TABLE_DEADLINES_ID);
+database1 = new NotionDatabase(TABLE_DEADLINES_ID);
 
-//database1.getTask("Afraz");
-// database1.parseNotionId("jsaleh849@insite.4cd.edu");
+//database1.getPerson("Afraz");
+database1.parseNotionId("afrazah123@gmail.com");
 
-module.exports = { NotionDatabase };
+//module.exports = { NotionDatabase };
 
 //jsaleh849@insite.4cd.edu
+//afrazah123@gmail.com
