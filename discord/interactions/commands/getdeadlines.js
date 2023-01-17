@@ -21,6 +21,7 @@ async function getNameFromDiscordId(interaction, packages) {
 async function getdeadlines(interaction, packages) {
   const imageUrl = interaction.user.avatarURL()
   const nameUrl = interaction.user.username
+  
   const row = new ActionRowBuilder()
 			.addComponents(
         new ButtonBuilder()
@@ -39,7 +40,7 @@ async function getdeadlines(interaction, packages) {
         { name: 'Here is task #2', value: 'Task #' },
         { name: 'Here is task #3', value: 'Task #' },
         { name: 'Here is task #4', value: 'Task #' },
-
+  
     )
     .setTimestamp()
     .setFooter({
