@@ -22,17 +22,16 @@ async function getdeadlines(interaction, packages) {
 
   const taskEmbed = new EmbedBuilder()
     .setColor("Red")
-    .setTitle("All Deadlines for ${nameUrl}")
+    .setTitle(`All Deadlines for ${nameUrl}`)
     .setAuthor({ name: "Get Deadlines", iconURL: imageUrl, url: 'https://www.notion.so/Overall-Task-List-beb4f1b15ec1443c87e16bd138832d06' })
     .setThumbnail(imageUrl)
     .addFields(
         { name: 'Here is your main task', value: 'Task #', inline: true },
         { name: 'Here is task #2', value: 'Task #' },
         { name: 'Here is task #3', value: 'Task #' },
-    { name: 'Here is task #4', value: 'Task #' },
+        { name: 'Here is task #4', value: 'Task #' },
 
     )
-    .setImage('https://i.ytimg.com/vi/dnHQn_mpDpk/maxresdefault.jpg%27')
     .setTimestamp()
     .setFooter({
     text: "Courtesy of the GDSC Development Team",
