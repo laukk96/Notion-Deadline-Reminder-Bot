@@ -3,8 +3,10 @@ const { REST, Routes } = require("discord.js"); // Importing the REST and Routes
 const commands = require("../command_list"); // Importing the command list from a separate file
 const { TOKEN, CLIENT_ID } = require("../config"); // Importing the token and the client ID from the config file
 const chalk = require("chalk");
-module.exports.initialize = async function () {
+
+module.exports.initialize = async function (client, packages) {
   // Exporting the initialize function
+
   const rest = new REST({
     // Setting up the REST
     version: "10",

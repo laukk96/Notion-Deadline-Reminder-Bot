@@ -1,6 +1,6 @@
 const { EmbedBuilder } = require("discord.js");
 
-async function selectMenu(interaction) {
+async function selectMenu(interaction, packages) {
   const selected = interaction.values[0];
 
   if (selected === "first_option") {

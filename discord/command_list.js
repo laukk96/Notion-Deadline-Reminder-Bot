@@ -21,9 +21,6 @@ const CommandsIntent = {
   initiate: {
     description: "Initiate the server for Notion Deadline Reminders.",
   },
-  removeusers: {
-    description: "Use this to remove users from the database!",
-  },
   getdeadlines: {
     description: "Get your deadlines from the Notion Dashboard",
   }

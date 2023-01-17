@@ -12,6 +12,7 @@ const {
 
 // This is an async function used to add users
 async function addusers(interaction, packages) {
+  console.log('Inside addusers: ', packages);
   // Create the modal which will be used to collect the user's input
   const modal = new ModalBuilder()
     .setCustomId("adduserModal")
