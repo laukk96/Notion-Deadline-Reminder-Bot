@@ -9,33 +9,6 @@ const {
 
 const chalk = require('chalk');
 
-// // Importing the token from the config.js file
-// const { TOKEN } = require("./../../config.js");
-// const { NotionDatabase } = require("../../../notion.js");
-
-// // Import collections
-// const { ClubInfo } = require("../../../mongodb/collections/ClubInfo/ClubInfo.js");
-// const { UserRegistry } = require("../../../mongodb/collections/UserRegistry/UserRegistry.js");
-
-
-// // Create the NotionDatabase for use in the functions
-// const TABLE_DEADLINES_ID = "beb4f1b15ec1443c87e16bd138832d06";
-// const notionDatabase = new NotionDatabase(TABLE_DEADLINES_ID);
-// // Create the ClubInfoDatabase Collection Variable
-// const ClubInfoDatabase = new ClubInfo();
-// ClubInfoDatabase.connect();
-// // Create the UserRegistryDatabase Collection Variable
-// const UserRegistryDatabase = new UserRegistry();
-// UserRegistryDatabase.connect();
-
-// // Send a package of necessary Collections / Notion Databases
-// const packages = {
-//   notionDatabase: notionDatabase,
-//   ClubInfoDatabase: ClubInfoDatabase,
-//   UserRegistryDatabase: UserRegistryDatabase
-// }
-
-
 // SUPPORT FUNCTIONS
 async function getNameFromDiscordId(interaction) {
   // Deconstruct "packages" Dictionary Object from index.js
@@ -48,6 +21,18 @@ async function getNameFromDiscordId(interaction) {
 
 // Exporting the getdeadlines() function
 async function getdeadlines(interaction, packages) {
+  // Destructure Packages
+  const {notionDatabase, ClubInfoDatabase, UserRegistryDatabase} = packages;
+
+  // Get the email of the user
+  const data_packet = {discord_id: interaction.user.id};
+  user_info = await UserRegistryDatabase.queries.get.user(data_packet);
+  const user_email = user_info['email']
+
+  // Get the deadlines of the user  by sending in the email
+  const allUserDeadlines = notionDatabase.getDeadlinesForEmail(user_email);
+  const task1 = allUserDeadlines[0];
+
   const imageUrl = interaction.user.avatarURL()
   const nameUrl = interaction.user.username
   
