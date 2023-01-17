@@ -7,7 +7,7 @@ const CommandsIntent = {
     description: "Send a manual notification to officers!",
   },
   help: {
-    description: "If you need help to link your notion to discord!",
+    description: "Documentation of the bot",
   },
   credits: {
     description: "The original authors of the bot",
@@ -20,9 +20,6 @@ const CommandsIntent = {
   },
   initiate: {
     description: "Initiate the server for Notion Deadline Reminders.",
-  },
-  removeusers: {
-    description: "Use this to remove users from the database!",
   },
   getdeadlines: {
     description: "Get your deadlines from the Notion Dashboard",
