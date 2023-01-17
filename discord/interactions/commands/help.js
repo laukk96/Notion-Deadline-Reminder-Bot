@@ -26,12 +26,12 @@ async function help(interaction) {
           value: "first_option",
         },
         {
-          label: "Bot Setup",
-          description: "This is how to setup the bot",
+          label: "Guide to using Notion",
+          description: "Documentation to using the Notion Dashboard",
           value: "second_option",
         },
         {
-          label: "Github Documentation",
+          label: "GitHub Documentation",
           description: "Technical Documentation of Notion Bot",
           value: "third_option",
         },

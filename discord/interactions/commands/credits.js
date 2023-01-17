@@ -8,7 +8,7 @@ async function credits(interaction) {
     //set the color of the embed to light blue
     .setColor(0x1099ff)
     //set the title of the embed
-    .setTitle("Credits")
+    .setTitle("Credits to the authors!")
     //set the author of the embed with name, an image, and a url
     .setAuthor({
       name: "Google Developer Student Club",
@@ -16,12 +16,6 @@ async function credits(interaction) {
         "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%3Fid%3DOIP.g1-tsdPVN-SCgajIwi75MQHaC5%26pid%3DApi&f=1&ipt=8bd00114b7cc9f8ccc54c9b084bb19abf05f20acd2b6f8831f285f3a4c789218&ipo=images",
       url: "https://discord.gg/nxKfjYKFby",
     })
-    //set the description of the embed
-    .setDescription("Credits to the authors!")
-    //set the thumbnail of the embed
-    .setThumbnail(
-      "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%3Fid%3DOIP.g1-tsdPVN-SCgajIwi75MQHaC5%26pid%3DApi&f=1&ipt=8bd00114b7cc9f8ccc54c9b084bb19abf05f20acd2b6f8831f285f3a4c789218&ipo=images"
-    )
     //add fields with the project leads and other contributors
     .addFields(
       {
