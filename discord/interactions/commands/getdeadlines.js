@@ -3,6 +3,8 @@ const {
   ActionRowBuilder,
   SelectMenuBuilder,
   EmbedBuilder,
+  ButtonBuilder,
+  ButtonStyle
 } = require("discord.js");
 
 // SUPPORT FUNCTIONS
@@ -19,6 +21,13 @@ async function getNameFromDiscordId(interaction, packages) {
 async function getdeadlines(interaction, packages) {
   const imageUrl = interaction.user.avatarURL()
   const nameUrl = interaction.user.username
+  const row = new ActionRowBuilder()
+			.addComponents(
+        new ButtonBuilder()
+        .setLabel('GDSC Notion Page')
+        .setURL('https://www.notion.so/Overall-Task-List-beb4f1b15ec1443c87e16bd138832d06')
+        .setStyle(ButtonStyle.Link),
+			);
 
   const taskEmbed = new EmbedBuilder()
     .setColor("Red")
@@ -40,9 +49,10 @@ async function getdeadlines(interaction, packages) {
   });
 
   await interaction.reply({
-    embeds: [taskEmbed]
+    embeds: [taskEmbed], components: [row]
   });
 }
+			
 
 //Exporting the getdeadlines() function
 module.exports = getdeadlines; 
