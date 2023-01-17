@@ -16,30 +16,32 @@ async function getNameFromDiscordId(interaction, packages) {
   return user_info;
 }
 
-// Declaring getdeadlines() as an async function that takes an interaction argument
 async function getdeadlines(interaction, packages) {
-  
-  // Creating a new EmbedBuilder component and adding properties to it
-  const embed = new EmbedBuilder()
-    .setColor("Blue")
-    .setTitle(`All Deadlines for ${interaction.user.username}`)
-    .setURL("https://www.simple.ink/integrations/discord-in-notion")
-    .setAuthor({
-      name: "Notion Deadline Reminder Bot",
-      iconURL:
-        "https://upload.wikimedia.org/wikipedia/commons/4/45/Notion_app_logo.png",
-      url: "https://discord.js.org",
-    })
+  const imageUrl = interaction.user.avatarURL()
+  const nameUrl = interaction.user.username
+
+  const taskEmbed = new EmbedBuilder()
+    .setColor("Red")
+    .setTitle("All Deadlines for ${nameUrl}")
+    .setAuthor({ name: "Get Deadlines", iconURL: imageUrl, url: 'https://www.notion.so/Overall-Task-List-beb4f1b15ec1443c87e16bd138832d06' })
+    .setThumbnail(imageUrl)
+    .addFields(
+        { name: 'Here is your main task', value: 'Task #', inline: true },
+        { name: 'Here is task #2', value: 'Task #' },
+        { name: 'Here is task #3', value: 'Task #' },
+    { name: 'Here is task #4', value: 'Task #' },
+
+    )
+    .setImage('https://i.ytimg.com/vi/dnHQn_mpDpk/maxresdefault.jpg%27')
     .setTimestamp()
     .setFooter({
-      text: "Courtesy of the GDSC Development Team",
-      iconURL:
-        "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.Kg2FF2wpIK_HLyo8Q56ycAHaFj%26pid%3DApi&f=1&ipt=903b969ee37fcf7030b3b98b6b053ba7b2e31ca8f1478f60f135f1c5a5a5796a&ipo=images",
-    });
-  //Replying to the interaction with the embed and row
+    text: "Courtesy of the GDSC Development Team",
+    iconURL:
+      "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.Kg2FF2wpIK_HLyo8Q56ycAHaFj%26pid%3DApi&f=1&ipt=903b969ee37fcf7030b3b98b6b053ba7b2e31ca8f1478f60f135f1c5a5a5796a&ipo=images",
+  });
+
   await interaction.reply({
-    ephemeral: true,
-    embeds: [embed]
+    embeds: [taskEmbed]
   });
 }
 
