@@ -28,10 +28,10 @@ async function getdeadlines(interaction, packages) {
   const data_packet = {discord_id: interaction.user.id};
   user_info = await UserRegistryDatabase.queries.get.user(data_packet);
   const user_email = user_info['email']
+  console.log(user_email);
 
   // Get the deadlines of the user  by sending in the email
-  const alldeadlines = notionDatabase.getDeadlinesForEmail(user_email);
-  // const task1 = allUserDeadlines[0];
+  const allDeadlines = await notionDatabase.GetDeadlinesForEmail(user_email).then(response => {console.log("Response has been awaited")});
 
   const imageUrl = interaction.user.avatarURL()
   const nameUrl = interaction.user.username
@@ -50,10 +50,10 @@ async function getdeadlines(interaction, packages) {
     .setAuthor({ name: "Get Deadlines", iconURL: imageUrl, url: 'https://www.notion.so/Overall-Task-List-beb4f1b15ec1443c87e16bd138832d06' })
     .setThumbnail(imageUrl)
     .addFields(
-        { name: 'Here is task #1', value: 'Task #', inline: true },
-        { name: 'Here is task #2', value: 'Task #' },
-        { name: 'Here is task #3', value: 'Task #' },
-        { name: 'Here is task #4', value: 'Task #' },
+        { name: 'Task 1', value: allDeadlines[0][name], inline: true },
+        { name: 'Task 2', value: allDeadlines[1][name] },
+        { name: 'Task 3', value: allDeadlines[2][name] },
+        { name: 'Task 4', value: allDeadlines[3][name] },
     )
     .setTimestamp()
     .setFooter({
