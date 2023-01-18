@@ -30,8 +30,8 @@ async function getdeadlines(interaction, packages) {
   const user_email = user_info['email']
 
   // Get the deadlines of the user  by sending in the email
-  const allUserDeadlines = notionDatabase.getDeadlinesForEmail(user_email);
-  const task1 = allUserDeadlines[0];
+  const alldeadlines = notionDatabase.getDeadlinesForEmail(user_email);
+  // const task1 = allUserDeadlines[0];
 
   const imageUrl = interaction.user.avatarURL()
   const nameUrl = interaction.user.username
@@ -50,11 +50,10 @@ async function getdeadlines(interaction, packages) {
     .setAuthor({ name: "Get Deadlines", iconURL: imageUrl, url: 'https://www.notion.so/Overall-Task-List-beb4f1b15ec1443c87e16bd138832d06' })
     .setThumbnail(imageUrl)
     .addFields(
-        { name: 'Here is your main task', value: 'Task #', inline: true },
+        { name: 'Here is task #1', value: 'Task #', inline: true },
         { name: 'Here is task #2', value: 'Task #' },
         { name: 'Here is task #3', value: 'Task #' },
         { name: 'Here is task #4', value: 'Task #' },
-  
     )
     .setTimestamp()
     .setFooter({
