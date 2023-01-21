@@ -2,10 +2,12 @@ require("dotenv").config("/.env");
 const { Client } = require("@notionhq/client");
 const { getDatabase } = require("@notionhq/client/build/src/api-endpoints");
 const { ThreadAutoArchiveDuration, time } = require("discord.js");
+const chalk = require("chalk");
 
 const { ClubInfo } = require("./mongodb/collections/ClubInfo/ClubInfo.js");
 const ClubInfoDatabase = new ClubInfo();
 ClubInfoDatabase.connect();
+
 console.log("AFTER connect()");
 
 // EXAMPLE: How to use the Asyncronous Collection Methods: 
@@ -36,16 +38,7 @@ notion = new Client({
   auth: process.env.NOTION_KEY,
 });
 
-// TODO: Enable Compatibility for Multiple Guild Notion Connections
-// active_notion_connections = {
-//   "1019361421642965013": new Client({
-//     auth: ClubInfoDatabase.queries,
-//   }),
-// };
-
-// const all_connections = []
-
-//just to check the objects in the properties
+// just to check the objects in the properties
 const checkDataBase = async () => {
   const response = await notion.databases.query({
     database_id: this.connectDatabase,
@@ -77,6 +70,12 @@ const checkDataBase = async () => {
   }
 };
 
+// Give an array a function: METATABLE
+const createSortFunction = (arr) => {
+  arr.insert = function(newDeadline){
+    arr.push(newDeadline);
+  };
+}
 class NotionDatabase {
   constructor(connectDatabase) {
     this.notion = new Client({
@@ -98,20 +97,35 @@ class NotionDatabase {
 
   PushDeadlines = async () => {};
 
-  parseNotionId = async (email) => {
+  GetDeadlinesForEmail = async (email) => {
     const response = await notion.databases.query({
       database_id: this.connectDatabase,
     });
-    console.log("Getting " + email + "'s Notion ID...");
+    
+    var allUserDeadlines = [];
+    // createSortFunction(allUserDeadlines);
+
     outerloop: for (let i = 0; i < response.results.length; i++) {
-      if (response.results[i]["properties"]["Deadline"]["date"] != null) {
-        const peopleArray = response.results[i]["properties"]["Taskee"]["people"];
+      const  properties = response.results[i]["properties"];
+      const task = properties["Task"];
+      const deadline = properties["Deadline"];
+
+      if (deadline["date"] != null) {
+        const peopleArray = properties["Taskee"]["people"];
         let j = 0;
         while (j < peopleArray.length) {
-          if (peopleArray[j]["person"]["email"] != null) {
+          // Make sure the object has a person and email property
+          if ("person" in peopleArray[j] && "email" in peopleArray[j]["person"]) {
             if (peopleArray[j]["person"]["email"].includes(email)) {
-              console.log(peopleArray[j]["id"]);
-              break outerloop;
+              // Create a deadline dictionary, with name / Date object
+              var deadline_dict = {
+                name: task["title"][0]["plain_text"],
+                date: new Date(deadline["date"]["start"]),
+              };
+              
+              // Add it to the array of deadlines
+              allUserDeadlines.push(deadline_dict);
+              continue outerloop;
             }
           }
           j++;
@@ -119,6 +133,10 @@ class NotionDatabase {
       }
     }
     //console.log(response.results[deadLineIndex]['properties']['Taskee'][personIndex]['people']['id']);
+    // SOURCE Date Sort: https://masteringjs.io/tutorials/fundamentals/sort-by-date#:~:text=Similarly%2C%20sorting%20an%20array%20of,in%20the%20sort()%20callback. 
+    allUserDeadlines.sort((a, b) => b.date - a.date);
+    console.log(allUserDeadlines);
+    return allUserDeadlines;
   };
 
   getPerson = async (deadline) => {
@@ -127,7 +145,6 @@ class NotionDatabase {
     });
 
     for (let i = 0; i < response.results.length; i++) {
-      // console.log(response.results[i]['properties']['Person']['people'][0]['name']);
       if (response.results[i]["properties"]["Deadline"]["date"] != null) {
         if (
           response.results[i]["properties"]["Task"]["title"][0][
@@ -225,8 +242,7 @@ class NotionDatabase {
 database1 = new NotionDatabase(TABLE_DEADLINES_ID);
 
 //database1.getTask("Afraz");
-database1.parseNotionId("jsaleh849@insite.4cd.edu");
+// console.log( chalk.greenBright(`${database1.GetDeadlinesForEmail("jsaleh849@insite.4cd.edu")}`) );
 
 module.exports = { NotionDatabase };
-
 //jsaleh849@insite.4cd.edu

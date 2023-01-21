@@ -20,8 +20,6 @@ const get_info = ({ ClubInfo }) =>
         // Club found, returning all info from ClubInfo
       } else {
         result.payload = guild_data;
-        console.log("result payload (guild_data):", result.payload);
-        console.log("result:" + result);
       }
 
       result.status = 1;
