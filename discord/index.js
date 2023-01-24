@@ -47,6 +47,12 @@ const packages = {
   UserRegistryDatabase: UserRegistryDatabase
 }
 
+// packet = {
+//   server_id: 682646740364427313,
+//   data: {discord_id: 263853089419821056}
+// }
+// console.log('>> INDEX.JS: ', UserRegistryDatabase.queries.get.user(packet));
+
 // Initializing the client
 initialize(client, packages);
 

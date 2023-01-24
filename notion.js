@@ -98,6 +98,7 @@ class NotionDatabase {
   PushDeadlines = async () => {};
 
   GetDeadlinesForEmail = async (email) => {
+    console.log('in notion.js : GetDeadinesForEmail called! =', email)
     const response = await notion.databases.query({
       database_id: this.connectDatabase,
     });
@@ -116,7 +117,8 @@ class NotionDatabase {
         while (j < peopleArray.length) {
           // Make sure the object has a person and email property
           if ("person" in peopleArray[j] && "email" in peopleArray[j]["person"]) {
-            if (peopleArray[j]["person"]["email"].includes(email)) {
+            const theEmail = peopleArray[j]["person"]["email"].toUpperCase();
+            if (theEmail.includes(email)) {
               // Create a deadline dictionary, with name / Date object
               var deadline_dict = {
                 name: task["title"][0]["plain_text"],

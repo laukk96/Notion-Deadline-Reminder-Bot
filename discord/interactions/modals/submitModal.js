@@ -39,7 +39,7 @@ async function submitModal(interaction, packages) {
           `You did not type \`"Agree"\`! \n\n This is an **End User License Agreement** which legally gives us permission to store your data on our MongoDB Cloud Database managed by the Development Team.`
         )
         .setColor("fc3c32");
-
+        
       interaction.reply({
         embeds: [initiateEmbed],
       });
@@ -94,8 +94,9 @@ async function submitModal(interaction, packages) {
 
     // Destructure packages
     const {notionDatabase, ClubInfoDatabase, UserRegistryDatabase} = packages;
-    // parse the Notion ID from the dashboard
-    data.notion_id = await notionDatabase.parseNotionId(email);
+    // parse the Notion ID from the dashboard (DEPRECATED)
+    // data.notion_id = await notionDatabase.parseNotionId(email);
+    data.notion_id = "undefined";
     console.log(`>> Parsed Notion Id: ${data.notion_id}, \n\t>> Using this email: ${data.email}`);
 
     const mongo_packet = {
