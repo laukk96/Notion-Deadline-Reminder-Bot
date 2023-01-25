@@ -32,9 +32,14 @@ async function getdeadlines(interaction, packages) {
 
 
   console.log('/getdeadlines.js: Checking UserInfo: ', user_info);
-  const user_name = user_info.payload['name']
-  const user_email = user_info.payload['email']
+  let user_name = user_info.payload['name'];
+  const user_email = user_info.payload['email'];
   
+  const spaceIndex = user_name.indexOf(" ");
+  const first_name = user_name[0].toUpperCase() + user_name.substring(1, spaceIndex+1).toLowerCase();
+  const last_name = user_name[spaceIndex+1].toUpperCase() + user_name.substring(spaceIndex+2).toLowerCase();
+  user_name = first_name + last_name;
+
   console.log(`in getdeadlines.js: User Email from USER_REGISTRY Collection: ${user_email}`);
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
   // Get the deadlines of the user  by sending in the email
@@ -43,10 +48,11 @@ async function getdeadlines(interaction, packages) {
   const imageUrl = interaction.user.avatarURL()
   const nameUrl = interaction.user.username
   
+  
   // Initiate the Task Embeds
   const taskEmbed = new EmbedBuilder()
     .setColor("Red")
-    .setTitle(`Deadlines for: ${user_name}`)
+    .setTitle(`\`Deadlines for:\` **${user_name}**`)
     .setAuthor({ name: "Get Deadlines", iconURL: imageUrl, url: 'https://www.notion.so/Overall-Task-List-beb4f1b15ec1443c87e16bd138832d06' })
     .setThumbnail(imageUrl)
     // .addFields(
@@ -71,10 +77,11 @@ async function getdeadlines(interaction, packages) {
       name: null,
       value: null,
     };
+    // Substring the date in order to remove the time accuracy portion
     let taskDate = allDeadlines[i].date.toString();
-    taskDate = taskDate.substring(0, taskDate.indexOf(':')-2);
-    taskField.name = `${i+1}: \`${allDeadlines[i].name}\``
-    taskField.value = `*${taskDate}*`
+    taskDate = taskDate.substring(0, taskDate.indexOf(':')-2); 
+    taskField.name = `${i+1}: ${allDeadlines[i].name}`
+    taskField.value = `\t*${taskDate}*`
     taskEmbed.addFields(taskField);
     
   }
