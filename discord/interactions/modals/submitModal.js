@@ -103,11 +103,17 @@ async function submitModal(interaction, packages) {
       server_id: interaction.guild.id,
       data: data,
     };
+    
     // TODO: Get the Notion ID from NotionClient.parseNotionId()
-
-    console.log("New User Info Received: ", data);
+    let UserInfoEmbed = new EmbedBuilder()
+      .setColor("Green")
+      .setTitle(`\`Deadlines for:\` **${user_name}**`)
+      .setAuthor({ name: "New User Added", iconURL: imageUrl, url: 'https://www.notion.so/Overall-Task-List-beb4f1b15ec1443c87e16bd138832d06' })
+      .setThumbnail(imageUrl)
+      .setTimestamp()
+    
     interaction.reply({
-      content: "Thank you for submitting your User Info!",
+      embeds: [UserInfoEmbed],
     });
     // TODO: Add the user to the UserRegistry and DeadlineHistory
     UserRegistryDatabase.queries.create.user(mongo_packet);

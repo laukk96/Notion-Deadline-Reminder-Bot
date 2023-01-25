@@ -21,19 +21,19 @@ async function addusers(interaction, packages) {
   // Create the text input components which will be used to collect the user's input
   const nameInput = new TextInputBuilder()
     .setCustomId("nameInput")
-    .setLabel("What is your full name?")
+    .setLabel("What is the person's full name?")
     .setStyle(TextInputStyle.Short)
     .setRequired(true);
 
   const discordInput = new TextInputBuilder()
     .setCustomId("discordInput")
-    .setLabel("What is this user's Discord UID?")
+    .setLabel("What is this person's Discord UID?")
     .setStyle(TextInputStyle.Short)
     .setRequired(true);
 
   const emailInput = new TextInputBuilder()
     .setCustomId("emailInput")
-    .setLabel("What is the user's Email on the Notion page?")
+    .setLabel("What is the person's Email on the Notion page?")
     .setStyle(TextInputStyle.Short)
     .setRequired(true);
 

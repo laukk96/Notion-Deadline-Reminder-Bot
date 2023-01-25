@@ -35,6 +35,7 @@ async function getdeadlines(interaction, packages) {
   let user_name = user_info.payload['name'];
   const user_email = user_info.payload['email'];
   
+  // Correct capitalization on the user_name
   const spaceIndex = user_name.indexOf(" ");
   const first_name = user_name[0].toUpperCase() + user_name.substring(1, spaceIndex+1).toLowerCase();
   const last_name = user_name[spaceIndex+1].toUpperCase() + user_name.substring(spaceIndex+2).toLowerCase();
@@ -55,12 +56,6 @@ async function getdeadlines(interaction, packages) {
     .setTitle(`\`Deadlines for:\` **${user_name}**`)
     .setAuthor({ name: "Get Deadlines", iconURL: imageUrl, url: 'https://www.notion.so/Overall-Task-List-beb4f1b15ec1443c87e16bd138832d06' })
     .setThumbnail(imageUrl)
-    // .addFields(
-    //     { name: 'Task 1', value: allDeadlines[0].name },
-    //     { name: 'Task 2', value: allDeadlines[1].name },
-    //     { name: 'Task 3', value: allDeadlines[2].name },
-    //     { name: 'Task 4', value: allDeadlines[3].name },
-    // )
     .setTimestamp()
     .setFooter({
     text: "Courtesy of the GDSC Development Team",
@@ -80,7 +75,7 @@ async function getdeadlines(interaction, packages) {
     // Substring the date in order to remove the time accuracy portion
     let taskDate = allDeadlines[i].date.toString();
     taskDate = taskDate.substring(0, taskDate.indexOf(':')-2); 
-    taskField.name = `${i+1}: ${allDeadlines[i].name}`
+    taskField.name = `${i+1}: __${allDeadlines[i].name}__`
     taskField.value = `\t*${taskDate}*`
     taskEmbed.addFields(taskField);
     
