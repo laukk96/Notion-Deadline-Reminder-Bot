@@ -21,7 +21,7 @@ async function addusers(interaction, packages) {
   // Create the text input components which will be used to collect the user's input
   const nameInput = new TextInputBuilder()
     .setCustomId("nameInput")
-    .setLabel("What is the user's Name?")
+    .setLabel("What is your full name?")
     .setStyle(TextInputStyle.Short)
     .setRequired(true);
 
