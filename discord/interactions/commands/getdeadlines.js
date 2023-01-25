@@ -73,8 +73,8 @@ async function getdeadlines(interaction, packages) {
     };
     let taskDate = allDeadlines[i].date.toString();
     taskDate = taskDate.substring(0, taskDate.indexOf(':')-2);
-    taskField.name = `Task ${i+1} `
-    taskField.value = `${allDeadlines[i].name} \n*${taskDate}*`
+    taskField.name = `${i+1}: \`${allDeadlines[i].name}\``
+    taskField.value = `*${taskDate}*`
     taskEmbed.addFields(taskField);
     
   }
