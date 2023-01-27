@@ -1,5 +1,5 @@
 const { makeConsoleLogger } = require("@notionhq/client/build/src/logging");
-const { EmbedBuilder } = require("discord.js");
+const { EmbedBuilder, Client } = require("discord.js");
 
 const {
   ClubInfo,
@@ -97,26 +97,44 @@ async function submitModal(interaction, packages) {
     // parse the Notion ID from the dashboard (DEPRECATED)
     // data.notion_id = await notionDatabase.parseNotionId(email);
     data.notion_id = "undefined";
-    console.log(`>> Parsed Notion Id: ${data.notion_id}, \n\t>> Using this email: ${data.email}`);
+    const imageUrl = "https://discord.com/assets/212e30e47232be03033a87dc58edaa95.svg"
 
     const mongo_packet = {
       server_id: interaction.guild.id,
       data: data,
     };
     
-    // TODO: Get the Notion ID from NotionClient.parseNotionId()
-    let UserInfoEmbed = new EmbedBuilder()
+    // Fetch the discord user with the provided id
+    // If unsuccessful, catch and send an error message
+    interaction.guild.members.fetch(data.discord_id).then(discord_user => {
+      // Input error check
+      console.log(`submitModal.js: The discord user: ${discord_user}\ntype: ${typeof(discord_user)}`);
+      console.log(`submitModal.js: user name: ${discord_user.name}`);
+      console.log(`submitModal.js: TAG: ${discord_user.tag}`);
+
+      let UserInfoEmbed = new EmbedBuilder()
       .setColor("Green")
-      .setTitle(`\`Deadlines for:\` **${user_name}**`)
-      .setAuthor({ name: "New User Added", iconURL: imageUrl, url: 'https://www.notion.so/Overall-Task-List-beb4f1b15ec1443c87e16bd138832d06' })
+      .setTitle(`\`New User Added\`: ${data.name}`)
+      // .setAuthor({ name: "New User Added", iconURL: imageUrl, url: 'https://www.notion.so/Overall-Task-List-beb4f1b15ec1443c87e16bd138832d06' })
       .setThumbnail(imageUrl)
-      .setTimestamp()
-    
-    interaction.reply({
-      embeds: [UserInfoEmbed],
+      .addFields(
+        {
+          name: `\`Discord Id\`: ${data.discord_id}`,
+          value: `\`Email\`: ${data.email}`
+        });
+      UserRegistryDatabase.queries.create.user(mongo_packet);
+      interaction.reply({
+          embeds: [UserInfoEmbed],
+          content: `:white_check_mark: ${discord_user} You have been added to the User-Registry!`
+      });
+    }).catch(() => {
+      // TODO: Add the user to the UserRegistry and DeadlineHistory
+      interaction.reply({
+        embeds: [UserInfoEmbed],
+      });
+      interaction.reply(`>${interaction.user} :no_entry: Could not find a user of id: \`${data.discord_id}\`!`);
+      return;
     });
-    // TODO: Add the user to the UserRegistry and DeadlineHistory
-    UserRegistryDatabase.queries.create.user(mongo_packet);
   }
 }
 
