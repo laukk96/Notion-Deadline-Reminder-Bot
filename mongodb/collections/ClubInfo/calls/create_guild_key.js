@@ -8,11 +8,9 @@ const create_guild_key = ({ ClubInfo }) =>
     };
     try {
       let Club_Data = ClubSchema.exclude(data);
-      console.log("yo")
-      const guild_key = await ClubInfo.findOne({ _id: server_id });
-      console.log("yo")             
+      const guild_key = await ClubInfo.findOne({ _id: server_id });     
       Club_Data._id = server_id;
-      console.log(Club_Data);
+      // console.log(Club_Data);
       // Initiate command starts
       if (!guild_key) {
         const payload = await ClubInfo.insertOne(
