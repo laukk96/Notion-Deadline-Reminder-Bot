@@ -6,6 +6,7 @@ const INTERACTIONS_PATH = "./interactions/commands/";
 
 // This function is used to generate commands
 const generate_commands = (Commands) => {
+
   // An array to store the created slash commands
   let SlashCommands = [];
   console.log(chalk.yellow("Discord: Loading commands..."));

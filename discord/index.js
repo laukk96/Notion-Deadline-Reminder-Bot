@@ -31,20 +31,12 @@ const client = new Client({
   ],
 });
 
-// Initializing the client
-initialize(client);
-
-// Logging in to the client using the stored token
-client.login(TOKEN);
-
 // Create the NotionDatabase for use in the functions
 const TABLE_DEADLINES_ID = "beb4f1b15ec1443c87e16bd138832d06";
 const notionDatabase = new NotionDatabase(TABLE_DEADLINES_ID);
-
 // Create the ClubInfoDatabase Collection Variable
 const ClubInfoDatabase = new ClubInfo();
 ClubInfoDatabase.connect();
-
 // Create the UserRegistryDatabase Collection Variable
 const UserRegistryDatabase = new UserRegistry();
 UserRegistryDatabase.connect();
@@ -56,6 +48,18 @@ const packages = {
   UserRegistryDatabase: UserRegistryDatabase,
   client: client,
 };
+
+// packet = {
+//   server_id: 682646740364427313,
+//   data: {discord_id: 263853089419821056}
+// }
+// console.log('>> INDEX.JS: ', UserRegistryDatabase.queries.get.user(packet));
+
+// Initializing the client
+initialize(client, packages);
+
+// Logging in to the client using the stored token
+client.login(TOKEN);
 
 // Adding event listeners passing the client object to each one
 client.on(Events.ready, ready(client));
