@@ -8,18 +8,18 @@ const ClubInfoDatabase = new ClubInfo();
 ClubInfoDatabase.connect();
 console.log("AFTER connect()");
 
-// EXAMPLE: How to use the Asyncronous Collection Methods: 
+// EXAMPLE: How to use the Asyncronous Collection Methods:
 setTimeout(async () => {
   // TODO: Add await for testing get_info() in notion.js
   const result = await ClubInfoDatabase.queries.get.info({
     server_id: "1019361421642965013",
   });
-//   console.log(`The Payload Results: ${result.payload}`);
-//   for (const [key, value] of Object.entries(result.payload)) {
-//     console.log(`${key}, ${value}`);
-//   }
+  //   console.log(`The Payload Results: ${result.payload}`);
+  //   for (const [key, value] of Object.entries(result.payload)) {
+  //     console.log(`${key}, ${value}`);
+  //   }
   // console.log(result.payload["notion_integration_key"]);
-}, 3000);   
+}, 3000);
 
 // const databaseId = process.env.NOTION_DATABASE_ID;
 // How to share a database with an notion integration/connection?
@@ -105,7 +105,8 @@ class NotionDatabase {
     console.log("Getting " + email + "'s Notion ID...");
     outerloop: for (let i = 0; i < response.results.length; i++) {
       if (response.results[i]["properties"]["Deadline"]["date"] != null) {
-        const peopleArray = response.results[i]["properties"]["Taskee"]["people"];
+        const peopleArray =
+          response.results[i]["properties"]["Taskee"]["people"];
         let j = 0;
         while (j < peopleArray.length) {
           if (peopleArray[j]["person"]["email"] != null) {
@@ -167,15 +168,26 @@ class NotionDatabase {
     const response = await notion.databases.query({
       database_id: this.connectDatabase,
     });
-
+    const data = [];
     for (let i = 0; i < response.results.length; i++) {
       // console.log(response.results[i]['properties']['Person']['people'][0]['name']);
       if (response.results[i]["properties"]["Deadline"]["date"] != null) {
         const peopleArray =
           response.results[i]["properties"]["Taskee"]["people"];
+
         for (let j = 0; j < peopleArray.length; j++) {
           if (peopleArray[j]["name"] != null) {
             if (peopleArray[j]["name"].includes(name)) {
+              data.push({
+                task_name:
+                  response.results[i]["properties"]["Task"]["title"][0][
+                    "plain_text"
+                  ],
+                tast_due:
+                  response.results[i]["properties"]["Deadline"]["date"][
+                    "start"
+                  ],
+              });
               console.log(
                 "\n======================================================"
               );
@@ -195,6 +207,7 @@ class NotionDatabase {
       }
     }
     console.log("\n======================================================");
+    return data;
   };
 
   getDueDate = async (deadline) => {
@@ -224,9 +237,7 @@ class NotionDatabase {
 
 database1 = new NotionDatabase(TABLE_DEADLINES_ID);
 
-//database1.getTask("Afraz");
 database1.parseNotionId("jsaleh849@insite.4cd.edu");
-
 module.exports = { NotionDatabase };
 
 //jsaleh849@insite.4cd.edu

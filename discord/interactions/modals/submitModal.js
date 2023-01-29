@@ -93,10 +93,12 @@ async function submitModal(interaction, packages) {
     };
 
     // Destructure packages
-    const {notionDatabase, ClubInfoDatabase, UserRegistryDatabase} = packages;
+    const { notionDatabase, ClubInfoDatabase, UserRegistryDatabase } = packages;
     // parse the Notion ID from the dashboard
     data.notion_id = await notionDatabase.parseNotionId(email);
-    console.log(`>> Parsed Notion Id: ${data.notion_id}, \n\t>> Using this email: ${data.email}`);
+    console.log(
+      `>> Parsed Notion Id: ${data.notion_id}, \n\t>> Using this email: ${data.email}`
+    );
 
     const mongo_packet = {
       server_id: interaction.guild.id,
@@ -110,6 +112,12 @@ async function submitModal(interaction, packages) {
     });
     // TODO: Add the user to the UserRegistry and DeadlineHistory
     UserRegistryDatabase.queries.create.user(mongo_packet);
+  } else if (interaction.customId == "UpdateTaskDone") {
+    const channel = interaction.message.channelId;
+    await interaction.message.delete();
+    await packages.client.channels.cache.get(channel).send({
+      content: `@everyone Task: ${interaction.message?.SelectedValue} finished 🎉`,
+    });
   }
 }
 
