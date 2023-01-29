@@ -12,7 +12,8 @@ ClubInfoDatabase.connect();
 
 console.log("AFTER connect()");
 
-// EXAMPLE: How to use the Asyncronous Collection Methods:
+/*
+// EXAMPLE: How to use the Asyncronous Collection Methods: 
 setTimeout(async () => {
   // TODO: Add await for testing get_info() in notion.js
   const result = await ClubInfoDatabase.queries.get.info({
@@ -24,11 +25,13 @@ setTimeout(async () => {
   //   }
   // console.log(result.payload["notion_integration_key"]);
 }, 3000);
+*/
 
 // const databaseId = process.env.NOTION_DATABASE_ID;
 // How to share a database with an notion integration/connection?
 const TABLE_DEADLINES_ID = "f944e134b0584cc289d0a97775384d76";
 
+// TABLE: beb4f1b15ec1443c87e16bd138832d06
 // Old: f944e134b0584cc289d0a97775384d76
 // New: beb4f1b15ec1443c87e16bd138832d06
 
@@ -40,7 +43,17 @@ notion = new Client({
   auth: process.env.NOTION_KEY,
 });
 
-// just to check the objects in the properties
+// TODO: Enable Compatibility for Multiple Guild Notion Connections
+active_notion_connections = {
+  "1019361421642965013": new Client({
+    auth: ClubInfoDatabase.queries,
+  }),
+};
+
+// const all_connections = []
+
+
+//just to check the objects in the properties
 const checkDataBase = async () => {
   const response = await notion.databases.query({
     database_id: this.connectDatabase,
@@ -104,46 +117,25 @@ class NotionDatabase {
     const response = await notion.databases.query({
       database_id: this.connectDatabase,
     });
-
-    var allUserDeadlines = [];
-    // createSortFunction(allUserDeadlines);
-
+    console.log("Getting " + email + "'s Notion ID...");
     outerloop: for (let i = 0; i < response.results.length; i++) {
-      const properties = response.results[i]["properties"];
-      const task = properties["Task"];
-      const deadline = properties["Deadline"];
-
-      if (deadline["date"] != null) {
-        const peopleArray = properties["Taskee"]["people"];
+      if (response.results[i]["properties"]["Deadline"]["date"] != null) {
+        const peopleArray = response.results[i]["properties"]["Taskee"]["people"];
         let j = 0;
         while (j < peopleArray.length) {
-          // Make sure the object has a person and email property
-          if (
-            "person" in peopleArray[j] &&
-            "email" in peopleArray[j]["person"]
-          ) {
-            const theEmail = peopleArray[j]["person"]["email"].toUpperCase();
-            if (theEmail.includes(email)) {
-              // Create a deadline dictionary, with name / Date object
-              var deadline_dict = {
-                name: task["title"][0]["plain_text"],
-                date: new Date(deadline["date"]["start"]),
-              };
-
-              // Add it to the array of deadlines
-              allUserDeadlines.push(deadline_dict);
-              continue outerloop;
+          if (peopleArray[j]["person"]["email"] != null) {
+            if (peopleArray[j]["person"]["email"].includes(email)) {
+              console.log(peopleArray[j]["id"]);
+              break outerloop;
             }
-          }
-          j++;
+            alldeadlines.push(jsonElement);
+            break;
+          };
+          // }
         }
       }
     }
     //console.log(response.results[deadLineIndex]['properties']['Taskee'][personIndex]['people']['id']);
-    // SOURCE Date Sort: https://masteringjs.io/tutorials/fundamentals/sort-by-date#:~:text=Similarly%2C%20sorting%20an%20array%20of,in%20the%20sort()%20callback.
-    allUserDeadlines.sort((a, b) => b.date - a.date);
-    console.log(allUserDeadlines);
-    return allUserDeadlines;
   };
 
   validateEmail = async (email) => {
@@ -278,17 +270,155 @@ class NotionDatabase {
       }
     }
   };
+}
+
+<<<<<<<<< Temporary merge branch 1
+class NotionDatabase 
+{
+    constructor (connectDatabase)
+    {
+        this.connectDatabase = connectDatabase;
+        console.log("The NotionDatabase is being created!");
+        (async () => {
+            const response = await notion.databases.query({
+                database_id: connectDatabase
+            });
+        })();
+    }
+
+    AddUser = async (server_id, info) =>
+    {
+        // 
+    }
+
+    PushDeadlines = async () =>
+    {
+
+    }
+    
+    parseNotionId = async (email) =>
+    {
+        const response = await notion.databases.query({
+            database_id: TABLE_DEADLINES_ID
+        });
+        console.log("Getting " + email + "'s Notion ID...");
+        outerloop: for (let i = 0; i < response.results.length; i++){
+            if (response.results[i]['properties']['Deadline']['date'] != null){
+                
+                const peopleArray = response.results[i]['properties']['Taskee']['people'];
+                let j = 0;
+                while (j < peopleArray.length)
+                {
+                    if (peopleArray[j]['person']['email'] != null)
+                    {
+                        if (peopleArray[j]['person']['email'].includes(email))
+                        {
+                            console.log(peopleArray[j]['id']);
+                            break outerloop;
+                        }
+                    }
+                    j++;
+                }
+            }
+        }
+        //console.log(response.results[deadLineIndex]['properties']['Taskee'][personIndex]['people']['id']);
+    }
+
+    getPerson = async (deadline) => {
+        const response = await notion.databases.query({
+            database_id: TABLE_DEADLINES_ID
+        });
+
+        for (let i = 0; i < response.results.length; i++){
+            // console.log(response.results[i]['properties']['Person']['people'][0]['name']);
+            if (response.results[i]['properties']['Deadline']['date'] != null){
+                if (response.results[i]['properties']['Task']['title'][0]['plain_text'].includes(deadline))
+                {
+                    console.log("> Deadline Title: ", response.results[i]['properties']['Task']['title'][0]['plain_text']);
+                    // console.log(response.results[i]['properties']['Taskee']['people']);
+                    
+                    // Print all the names of the people in a deadline
+                    const peopleArray = response.results[i]['properties']['Taskee']['people'];
+                    for (let j = 0; j < peopleArray.length; j++){
+                        console.log('Officer Name: ', peopleArray[j]['name']);
+                        console.log('Email: ', peopleArray[j]['person']['email']);
+                        console.log();
+                    }
+
+                    console.log('Finish Date: ', response.results[i]['properties']['Deadline']['date']['start']);    
+                    console.log('\n======================================================');
+                }
+            }
+        }
+    }
+
+    getTask = async (name) => {
+        console.log("Searching for " + name + "'s task...");
+        
+        const response = await notion.databases.query({
+            database_id: TABLE_DEADLINES_ID
+        });
+    
+        for (let i = 0; i < response.results.length; i++){
+            // console.log(response.results[i]['properties']['Person']['people'][0]['name']);
+            if (response.results[i]['properties']['Deadline']['date'] != null)
+            {
+                const peopleArray = response.results[i]['properties']['Taskee']['people'];
+                for (let j = 0; j < peopleArray.length; j++){
+                    if (peopleArray[j]['name'] != null)
+                    {
+                        if (peopleArray[j]['name'].includes(name))
+                        {
+                            console.log('\n======================================================');
+                            console.log();
+                            console.log(response.results[i]['properties']['Task']['title'][0]['plain_text']);
+                            console.log('Finish Date: ', response.results[i]['properties']['Deadline']['date']['start']);
+                        }
+                    }
+                }
+            }
+        }
+        console.log('\n======================================================');
+    }
+    
+    getDueDate = async (deadline) => 
+    {
+        const response = await notion.databases.query({
+            database_id: TABLE_DEADLINES_ID
+        });
+    
+        for (let i = 0; i < response.results.length; i++)
+        {
+            // console.log(response.results[i]['properties']['Person']['people'][0]['name']);
+            if (response.results[i]['properties']['Deadline']['date'] != null)
+            {
+                if (response.results[i]['properties']['Task']['title'][0]['plain_text'].includes(deadline))
+                {
+                    console.log('Finish Date: ', response.results[i]['properties']['Deadline']['date']['start']);
+                }
+            }
+        }
+    }
+
+}
 
 
+
+
+
+
+
+
+=========
+>>>>>>>>> Temporary merge branch 2
 //ALL CODE BELOW IS FOR TESTING:
 
-database1 = new NotionDatabase(TABLE_DEADLINES_ID);
+// database1 = new NotionDatabase(TABLE_DEADLINES_ID);
 
-//console.log(database1.GetDeadlinesForEmail("jsaleh849@insite.4cd.edu"));
-//console.log( chalk.greenBright(`${database1.GetDeadlinesForEmail("jsaleh849@insite.4cd.edu")}`) );
-
-console.log(database1.validateEmail("jsaleh849@insite.4cd.edu"));
-
+//database1.getTask("Afraz");
+// database1.parseNotionId("jsaleh849@insite.4cd.edu");
 
 module.exports = { NotionDatabase };
+
 //jsaleh849@insite.4cd.edu
+//afrazah123@gmail.com
