@@ -5,6 +5,8 @@ const { ThreadAutoArchiveDuration, time } = require("discord.js");
 const chalk = require("chalk");
 
 const { ClubInfo } = require("./mongodb/collections/ClubInfo/ClubInfo.js");
+const { truncatedNormal } = require("@tensorflow/tfjs");
+const { makeConsoleLogger } = require("@notionhq/client/build/src/logging.js");
 const ClubInfoDatabase = new ClubInfo();
 ClubInfoDatabase.connect();
 
@@ -33,10 +35,10 @@ const TABLE_DEADLINES_ID = "f944e134b0584cc289d0a97775384d76";
 //GDSC f944e134b0584cc289d0a97775384d76
 //NOTION DEV TEAM 0f201482f6f1407899e8f7c8ae7dea28
 
+// TODO: Change the Notion Variable to be compatible with different servers
 notion = new Client({
   auth: process.env.NOTION_KEY,
 });
-// const all_connections = []
 
 // just to check the objects in the properties
 const checkDataBase = async () => {
@@ -86,47 +88,51 @@ class NotionDatabase {
     this.connectDatabase = TABLE_DEADLINES_ID;
     // TODO: Fix this so that it is scaleable with other servers
 
-        (async () => {
-            const response = await this.notion.databases.query({
-                database_id: this.connectDatabase
-            });
-        })();
-    }
+    (async () => {
+      const response = await this.notion.databases.query({
+        database_id: this.connectDatabase,
+      });
+    })();
+  }
 
-    AddUser = async (server_id, info) =>
-    {
-        
-    }
+  AddUser = async (server_id, info) => {};
 
-    PushDeadlines = async () =>
-    {
+  PushDeadlines = async () => {};
 
-    }
-    
-    
-    parseNotionId = async (email) =>
-    {
-        const response = await notion.databases.query({
-            database_id: this.connectDatabase
-        });
-        console.log("Getting " + email + "'s Notion ID...");
-        outerloop: for (let i = 0; i < response.results.length; i++){
-            if (response.results[i]['properties']['Deadline']['date'] != null){
-                
-                const peopleArray = response.results[i]['properties']['Taskee']['people'];
-                let j = 0;
-                while (j < peopleArray.length)
-                {
-                    if (peopleArray[j]['person']['email'] != null)
-                    {
-                        if (peopleArray[j]['person']['email'].includes(email))
-                        {
-                            console.log(peopleArray[j]['id']);
-                            break outerloop;
-                        }
-                    }
-                    j++;
-                }
+  GetDeadlinesForEmail = async (email) => {
+    console.log("in notion.js : GetDeadinesForEmail called! =", email);
+    const response = await notion.databases.query({
+      database_id: this.connectDatabase,
+    });
+
+    var allUserDeadlines = [];
+    // createSortFunction(allUserDeadlines);
+
+    outerloop: for (let i = 0; i < response.results.length; i++) {
+      const properties = response.results[i]["properties"];
+      const task = properties["Task"];
+      const deadline = properties["Deadline"];
+
+      if (deadline["date"] != null) {
+        const peopleArray = properties["Taskee"]["people"];
+        let j = 0;
+        while (j < peopleArray.length) {
+          // Make sure the object has a person and email property
+          if (
+            "person" in peopleArray[j] &&
+            "email" in peopleArray[j]["person"]
+          ) {
+            const theEmail = peopleArray[j]["person"]["email"].toUpperCase();
+            if (theEmail.includes(email)) {
+              // Create a deadline dictionary, with name / Date object
+              var deadline_dict = {
+                name: task["title"][0]["plain_text"],
+                date: new Date(deadline["date"]["start"]),
+              };
+
+              // Add it to the array of deadlines
+              allUserDeadlines.push(deadline_dict);
+              continue outerloop;
             }
           }
           j++;
@@ -139,6 +145,30 @@ class NotionDatabase {
     console.log(allUserDeadlines);
     return allUserDeadlines;
   };
+
+  validateEmail = async (email) => {
+    console.log('in notion.js : validateEmail called! =', email);
+    const response = await notion.databases.query({
+        database_id: this.connectDatabase,
+    });
+
+    for (let i = 0; i < response.results.length; i++){
+        if (response.results[i]['properties']['Deadline']['date'] != null){
+            
+          const peopleArray = response.results[i]['properties']['Taskee']['people'];
+          for (let j = 0; j < peopleArray.length; j++){
+            if (response.results[j]['properties']['Deadline']['date'] != null){
+                if (email == peopleArray[j]["person"]["email"]){
+                    return true;
+                }
+            }
+          }
+        }
+      }
+    return false;
+    }
+    
+  }
 
   getPerson = async (deadline) => {
     const response = await notion.databases.query({
@@ -248,14 +278,17 @@ class NotionDatabase {
       }
     }
   };
-}
+
 
 //ALL CODE BELOW IS FOR TESTING:
 
 database1 = new NotionDatabase(TABLE_DEADLINES_ID);
 
-//database1.getTask("Afraz");
-// console.log( chalk.greenBright(`${database1.GetDeadlinesForEmail("jsaleh849@insite.4cd.edu")}`) );
+//console.log(database1.GetDeadlinesForEmail("jsaleh849@insite.4cd.edu"));
+//console.log( chalk.greenBright(`${database1.GetDeadlinesForEmail("jsaleh849@insite.4cd.edu")}`) );
+
+console.log(database1.validateEmail("jsaleh849@insite.4cd.edu"));
+
 
 module.exports = { NotionDatabase };
 //jsaleh849@insite.4cd.edu
