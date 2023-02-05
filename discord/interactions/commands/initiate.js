@@ -4,6 +4,8 @@ const {
   EmbedBuilder,
   ModalBuilder,
   TextInputBuilder,
+  TextInputStyle,
+  PermissionFlagsBits,
 } = require("discord.js");
 
 // This code is a function that checks if the user has administrator permissions. If not, it sends an embed to the user with an error message.
