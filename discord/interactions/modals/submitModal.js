@@ -39,7 +39,7 @@ async function submitModal(interaction, packages) {
           `You did not type \`"Agree"\`! \n\n This is an **End User License Agreement** which legally gives us permission to store your data on our MongoDB Cloud Database managed by the Development Team.`
         )
         .setColor("fc3c32");
-        
+
       interaction.reply({
         embeds: [initiateEmbed],
       });
@@ -93,48 +93,55 @@ async function submitModal(interaction, packages) {
     };
 
     // Destructure packages
-    const {notionDatabase, ClubInfoDatabase, UserRegistryDatabase} = packages;
+    const { notionDatabase, ClubInfoDatabase, UserRegistryDatabase } = packages;
     // parse the Notion ID from the dashboard (DEPRECATED)
     // data.notion_id = await notionDatabase.parseNotionId(email);
     data.notion_id = "undefined";
-    const imageUrl = "https://discord.com/assets/212e30e47232be03033a87dc58edaa95.svg"
+    const imageUrl =
+      "https://discord.com/assets/212e30e47232be03033a87dc58edaa95.svg";
 
     const mongo_packet = {
       server_id: interaction.guild.id,
       data: data,
     };
-    
+
     // Fetch the discord user with the provided id
     // If unsuccessful, catch and send an error message
-    interaction.guild.members.fetch(data.discord_id).then(discord_user => {
-      // Input error check
-      console.log(`submitModal.js: The discord user: ${discord_user}\ntype: ${typeof(discord_user)}`);
-      console.log(`submitModal.js: user name: ${discord_user.name}`);
-      console.log(`submitModal.js: TAG: ${discord_user.tag}`);
+    interaction.guild.members
+      .fetch(data.discord_id)
+      .then((discord_user) => {
+        // Input error check
+        console.log(
+          `submitModal.js: The discord user: ${discord_user}\ntype: ${typeof discord_user}`
+        );
+        console.log(`submitModal.js: user name: ${discord_user.name}`);
+        console.log(`submitModal.js: TAG: ${discord_user.tag}`);
 
-      let UserInfoEmbed = new EmbedBuilder()
-      .setColor("Green")
-      .setTitle(`\`New User Added\`: ${data.name}`)
-      // .setAuthor({ name: "New User Added", iconURL: imageUrl, url: 'https://www.notion.so/Overall-Task-List-beb4f1b15ec1443c87e16bd138832d06' })
-      .setThumbnail(imageUrl)
-      .addFields(
-        {
-          name: `\`Discord Id\`: ${data.discord_id}`,
-          value: `\`Email\`: ${data.email}`
-        });
-      UserRegistryDatabase.queries.create.user(mongo_packet);
-      interaction.reply({
+        let UserInfoEmbed = new EmbedBuilder()
+          .setColor("Green")
+          .setTitle(`\`New User Added\`: ${data.name}`)
+          // .setAuthor({ name: "New User Added", iconURL: imageUrl, url: 'https://www.notion.so/Overall-Task-List-beb4f1b15ec1443c87e16bd138832d06' })
+          .setThumbnail(imageUrl)
+          .addFields({
+            name: `\`Discord Id\`: ${data.discord_id}`,
+            value: `\`Email\`: ${data.email}`,
+          });
+        UserRegistryDatabase.queries.create.user(mongo_packet);
+        interaction.reply({
           embeds: [UserInfoEmbed],
-          content: `:white_check_mark: ${discord_user} You have been added to the User-Registry!`
+          content: `:white_check_mark: ${discord_user} You have been added to the User-Registry!`,
+        });
+      })
+      .catch(() => {
+        // TODO: Add the user to the UserRegistry and DeadlineHistory
+        interaction.reply({
+          embeds: [UserInfoEmbed],
+        });
+        interaction.reply(
+          `>${interaction.user} :no_entry: Could not find a user of id: \`${data.discord_id}\`!`
+        );
+        return;
       });
-    }).catch(() => {
-      // TODO: Add the user to the UserRegistry and DeadlineHistory
-      interaction.reply({
-        embeds: [UserInfoEmbed],
-      });
-      interaction.reply(`>${interaction.user} :no_entry: Could not find a user of id: \`${data.discord_id}\`!`);
-      return;
-    });
   }
 }
 

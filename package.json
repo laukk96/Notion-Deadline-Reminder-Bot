@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start-bot": "cd discord && node index.js"
   },
   "repository": {
     "type": "git",
@@ -20,7 +21,7 @@
     "@notionhq/client": "^2.2.3",
     "chalk": "^4.0.0",
     "deepmerge": "^4.2.2",
-    "discord.js": "^14.5.0",
+    "discord.js": "^14.7.1",
     "dotenv": "^16.0.3",
     "mongodb": "^4.10.0",
     "notion": "^0.0.1",

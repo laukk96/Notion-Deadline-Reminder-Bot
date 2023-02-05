@@ -17,8 +17,9 @@ const { NotionDatabase } = require("../notion.js");
 
 // Import collections
 const { ClubInfo } = require("../mongodb/collections/ClubInfo/ClubInfo.js");
-const { UserRegistry } = require("../mongodb/collections/UserRegistry/UserRegistry.js");
-
+const {
+  UserRegistry,
+} = require("../mongodb/collections/UserRegistry/UserRegistry.js");
 
 // Creating a new client object with the specified intents
 const client = new Client({
@@ -44,8 +45,9 @@ UserRegistryDatabase.connect();
 const packages = {
   notionDatabase: notionDatabase,
   ClubInfoDatabase: ClubInfoDatabase,
-  UserRegistryDatabase: UserRegistryDatabase
-}
+  UserRegistryDatabase: UserRegistryDatabase,
+  client: client,
+};
 
 // packet = {
 //   server_id: 682646740364427313,

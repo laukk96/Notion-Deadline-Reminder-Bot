@@ -10,19 +10,18 @@ ClubInfoDatabase.connect();
 
 console.log("AFTER connect()");
 
-// EXAMPLE: How to use the Asyncronous Collection Methods: 
+// EXAMPLE: How to use the Asyncronous Collection Methods:
 setTimeout(async () => {
   // TODO: Add await for testing get_info() in notion.js
   const result = await ClubInfoDatabase.queries.get.info({
     server_id: "1019361421642965013",
   });
-  
-//   console.log(`The Payload Results: ${result.payload}`);
-//   for (const [key, value] of Object.entries(result.payload)) {
-//     console.log(`${key}, ${value}`);
-//   }
+  //   console.log(`The Payload Results: ${result.payload}`);
+  //   for (const [key, value] of Object.entries(result.payload)) {
+  //     console.log(`${key}, ${value}`);
+  //   }
   // console.log(result.payload["notion_integration_key"]);
-}, 3000);   
+}, 3000);
 
 // const databaseId = process.env.NOTION_DATABASE_ID;
 // How to share a database with an notion integration/connection?
@@ -73,10 +72,10 @@ const checkDataBase = async () => {
 
 // Give an array a function: METATABLE
 const createSortFunction = (arr) => {
-  arr.insert = function(newDeadline){
+  arr.insert = function (newDeadline) {
     arr.push(newDeadline);
   };
-}
+};
 class NotionDatabase {
   constructor(connectDatabase) {
     this.notion = new Client({
@@ -99,16 +98,16 @@ class NotionDatabase {
   PushDeadlines = async () => {};
 
   GetDeadlinesForEmail = async (email) => {
-    console.log('in notion.js : GetDeadinesForEmail called! =', email)
+    console.log("in notion.js : GetDeadinesForEmail called! =", email);
     const response = await notion.databases.query({
       database_id: this.connectDatabase,
     });
-    
+
     var allUserDeadlines = [];
     // createSortFunction(allUserDeadlines);
 
     outerloop: for (let i = 0; i < response.results.length; i++) {
-      const  properties = response.results[i]["properties"];
+      const properties = response.results[i]["properties"];
       const task = properties["Task"];
       const deadline = properties["Deadline"];
 
@@ -117,7 +116,10 @@ class NotionDatabase {
         let j = 0;
         while (j < peopleArray.length) {
           // Make sure the object has a person and email property
-          if ("person" in peopleArray[j] && "email" in peopleArray[j]["person"]) {
+          if (
+            "person" in peopleArray[j] &&
+            "email" in peopleArray[j]["person"]
+          ) {
             const theEmail = peopleArray[j]["person"]["email"].toUpperCase();
             if (theEmail.includes(email)) {
               // Create a deadline dictionary, with name / Date object
@@ -125,7 +127,7 @@ class NotionDatabase {
                 name: task["title"][0]["plain_text"],
                 date: new Date(deadline["date"]["start"]),
               };
-              
+
               // Add it to the array of deadlines
               allUserDeadlines.push(deadline_dict);
               continue outerloop;
@@ -136,7 +138,7 @@ class NotionDatabase {
       }
     }
     //console.log(response.results[deadLineIndex]['properties']['Taskee'][personIndex]['people']['id']);
-    // SOURCE Date Sort: https://masteringjs.io/tutorials/fundamentals/sort-by-date#:~:text=Similarly%2C%20sorting%20an%20array%20of,in%20the%20sort()%20callback. 
+    // SOURCE Date Sort: https://masteringjs.io/tutorials/fundamentals/sort-by-date#:~:text=Similarly%2C%20sorting%20an%20array%20of,in%20the%20sort()%20callback.
     allUserDeadlines.sort((a, b) => b.date - a.date);
     console.log(allUserDeadlines);
     return allUserDeadlines;
@@ -187,15 +189,26 @@ class NotionDatabase {
     const response = await notion.databases.query({
       database_id: this.connectDatabase,
     });
-
+    const data = [];
     for (let i = 0; i < response.results.length; i++) {
       // console.log(response.results[i]['properties']['Person']['people'][0]['name']);
       if (response.results[i]["properties"]["Deadline"]["date"] != null) {
         const peopleArray =
           response.results[i]["properties"]["Taskee"]["people"];
+
         for (let j = 0; j < peopleArray.length; j++) {
           if (peopleArray[j]["name"] != null) {
             if (peopleArray[j]["name"].includes(name)) {
+              data.push({
+                task_name:
+                  response.results[i]["properties"]["Task"]["title"][0][
+                    "plain_text"
+                  ],
+                tast_due:
+                  response.results[i]["properties"]["Deadline"]["date"][
+                    "start"
+                  ],
+              });
               console.log(
                 "\n======================================================"
               );
@@ -215,6 +228,7 @@ class NotionDatabase {
       }
     }
     console.log("\n======================================================");
+    return data;
   };
 
   getDueDate = async (deadline) => {

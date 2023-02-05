@@ -1,7 +1,9 @@
-const { ActionRowBuilder, 
-        EmbedBuilder,
-        ButtonBuilder,
-        ButtonStyle } = require("discord.js");
+const {
+  ActionRowBuilder,
+  EmbedBuilder,
+  ButtonBuilder,
+  ButtonStyle,
+} = require("discord.js");
 
 async function selectMenu(interaction, packages) {
   const selected = interaction.values[0];
@@ -36,24 +38,24 @@ async function selectMenu(interaction, packages) {
     });
   } else if (selected === "second_option") {
     const setupEmbed = new EmbedBuilder()
-    .setColor("Red")
-    .setTitle("This is the link to the Notion Guide Page")
-    .setTimestamp()
-    .setFooter({
-      text: "Courtesy of the GDSC Development Team",
-      iconURL:
-        "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.Kg2FF2wpIK_HLyo8Q56ycAHaFj%26pid%3DApi&f=1&ipt=903b969ee37fcf7030b3b98b6b053ba7b2e31ca8f1478f60f135f1c5a5a5796a&ipo=images",
-    }); 
-    
-    const notionrow = new ActionRowBuilder()
-    .addComponents(
+      .setColor("Red")
+      .setTitle("This is the link to the Notion Guide Page")
+      .setTimestamp()
+      .setFooter({
+        text: "Courtesy of the GDSC Development Team",
+        iconURL:
+          "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.Kg2FF2wpIK_HLyo8Q56ycAHaFj%26pid%3DApi&f=1&ipt=903b969ee37fcf7030b3b98b6b053ba7b2e31ca8f1478f60f135f1c5a5a5796a&ipo=images",
+      });
+
+    const notionrow = new ActionRowBuilder().addComponents(
       new ButtonBuilder()
-      .setLabel('Notion Guide Page')
-      .setURL('https://www.notion.so/help/guides')
-      .setStyle(ButtonStyle.Link),
+        .setLabel("Notion Guide Page")
+        .setURL("https://www.notion.so/help/guides")
+        .setStyle(ButtonStyle.Link)
     );
     await interaction.reply({
-      embeds: [setupEmbed], components: [notionrow]
+      embeds: [setupEmbed],
+      components: [notionrow],
     });
   } else if (selected === "third_option") {
     const githubEmbed = new EmbedBuilder()
@@ -64,17 +66,17 @@ async function selectMenu(interaction, packages) {
         text: "Courtesy of the GDSC Development Team",
         iconURL:
           "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.Kg2FF2wpIK_HLyo8Q56ycAHaFj%26pid%3DApi&f=1&ipt=903b969ee37fcf7030b3b98b6b053ba7b2e31ca8f1478f60f135f1c5a5a5796a&ipo=images",
-      }); 
-      
-      const helprow = new ActionRowBuilder()
-			.addComponents(
-        new ButtonBuilder()
-        .setLabel('GDSC Notion Page')
-        .setURL('https://github.com/pluffpenguin/Notion-Deadline-Reminder-Bot')
-        .setStyle(ButtonStyle.Link),
-			);
+      });
+
+    const helprow = new ActionRowBuilder().addComponents(
+      new ButtonBuilder()
+        .setLabel("GDSC Notion Page")
+        .setURL("https://github.com/pluffpenguin/Notion-Deadline-Reminder-Bot")
+        .setStyle(ButtonStyle.Link)
+    );
     await interaction.reply({
-      embeds: [githubEmbed], components: [helprow]
+      embeds: [githubEmbed],
+      components: [helprow],
     });
   }
 }
