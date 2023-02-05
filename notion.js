@@ -16,6 +16,7 @@ setTimeout(async () => {
   const result = await ClubInfoDatabase.queries.get.info({
     server_id: "1019361421642965013",
   });
+  
 //   console.log(`The Payload Results: ${result.payload}`);
 //   for (const [key, value] of Object.entries(result.payload)) {
 //     console.log(`${key}, ${value}`);
