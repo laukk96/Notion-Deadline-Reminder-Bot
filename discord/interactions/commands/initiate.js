@@ -4,6 +4,8 @@ const {
   EmbedBuilder,
   ModalBuilder,
   TextInputBuilder,
+  TextInputStyle,
+  PermissionFlagsBits,
 } = require("discord.js");
 
 // This code is a function that checks if the user has administrator permissions. If not, it sends an embed to the user with an error message.
@@ -53,32 +55,45 @@ async function initiate(interaction) {
     .setStyle(TextInputStyle.Short)
     .setMaxLength(200)
     .setRequired(false);
+  
+  const deadlinePropertyNameInput = new TextInputBuilder()
+    .setCustomId("deadlinePropertyNameInput")
+    .setLabel("What is your Deadline property name?")
+    .setStyle(TextInputStyle.Short)
+    .setMaxLength(200)
+    .setRequired(false);
+  
+    const taskPropertyNameInput = new TextInputBuilder()
+    .setCustomId("taskPropertyNameInput")
+    .setLabel("What is your Task property name?")
+    .setStyle(TextInputStyle.Short)
+    .setMaxLength(200)
+    .setRequired(false);
 
   const agreementInput = new TextInputBuilder()
     .setCustomId("agreementInput")
-    .setLabel('Do you agree? (Type "Agree")')
+    .setLabel('Agree to data terms? (Type "Agree")')
     .setStyle(TextInputStyle.Short)
     .setMaxLength(8)
     .setRequired(true);
 
   // The following lines of code create action rows for the modal.
-  const firstActionRow = new ActionRowBuilder().addComponents(clubNameInput);
-  const secondActionRow = new ActionRowBuilder().addComponents(
-    clubDescriptionInput
-  );
-  const thirdActionRow = new ActionRowBuilder().addComponents(
-    notionIntegrationKeyInput
-  );
-  const fourthActionRow = new ActionRowBuilder().addComponents(databaseIdInput);
-  const fifthActionRow = new ActionRowBuilder().addComponents(agreementInput);
+  const actionRow1 = new ActionRowBuilder().addComponents(clubNameInput);
+  const actionRow2 = new ActionRowBuilder().addComponents(clubDescriptionInput);
+  const actionRow3 = new ActionRowBuilder().addComponents(notionIntegrationKeyInput);
+  const actionRow4 = new ActionRowBuilder().addComponents(databaseIdInput);
+  const actionRow5 = new ActionRowBuilder().addComponents(databaseIdInput);
+  const actionRow6 = new ActionRowBuilder().addComponents(databaseIdInput);
+  
+  const lastActionRow = new ActionRowBuilder().addComponents(agreementInput);
 
   // This line of code adds the action rows to the modal.
   initiateModal.addComponents([
-    firstActionRow,
-    secondActionRow,
-    thirdActionRow,
-    fourthActionRow,
-    fifthActionRow,
+    actionRow1,
+    actionRow2,
+    actionRow3,
+    actionRow4,
+    lastActionRow,
   ]);
 
   // This line of code displays the modal to the user.

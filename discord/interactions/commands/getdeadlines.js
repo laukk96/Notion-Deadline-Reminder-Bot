@@ -9,16 +9,13 @@ const {
 
 const chalk = require('chalk');
 
-// SUPPORT FUNCTIONS
-// async function getNameFromDiscordId(interaction) {
-//   // Deconstruct "packages" Dictionary Object from index.js
-  
-//   // UserRegistry Collection Function
-//   const data_packet = {discord_id: interaction.user.id};
-//   user_info = await UserRegistryDatabase.queries.get.user(data_packet);
-//   return user_info;
-// }
-
+// Helper Function to reduce all capitalization from MongoDB UserInfo
+function correctNameCapitalization(user_name){
+  const spaceIndex = user_name.indexOf(" ");
+  const first_name = user_name[0].toUpperCase() + user_name.substring(1, spaceIndex+1).toLowerCase();
+  const last_name = user_name[spaceIndex+1].toUpperCase() + user_name.substring(spaceIndex+2).toLowerCase();
+  return `${first_name} ${last_name}`
+}
 
 // Exporting the getdeadlines() function
 async function getdeadlines(interaction, packages) {
@@ -27,7 +24,6 @@ async function getdeadlines(interaction, packages) {
   // Get the email of the user
   const data_packet = {discord_id: interaction.user.id}
   const mongo_packet = {server_id: interaction.guildId, data: data_packet};
-  
   let user_info = await UserRegistryDatabase.queries.get.user(mongo_packet);
 
 
@@ -36,19 +32,14 @@ async function getdeadlines(interaction, packages) {
   const user_email = user_info.payload['email'];
   
   // Correct capitalization on the user_name
-  const spaceIndex = user_name.indexOf(" ");
-  const first_name = user_name[0].toUpperCase() + user_name.substring(1, spaceIndex+1).toLowerCase();
-  const last_name = user_name[spaceIndex+1].toUpperCase() + user_name.substring(spaceIndex+2).toLowerCase();
-  user_name = first_name + last_name;
+  
+  user_name = correctNameCapitalization(user_name)
 
-  console.log(`in getdeadlines.js: User Email from USER_REGISTRY Collection: ${user_email}`);
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
   // Get the deadlines of the user  by sending in the email
   const allDeadlines = await notionDatabase.GetDeadlinesForEmail(user_email);
 
   const imageUrl = interaction.user.avatarURL()
-  const nameUrl = interaction.user.username
-  
+  // const nameUrl = interaction.user.username
   
   // Initiate the Task Embeds
   const taskEmbed = new EmbedBuilder()
@@ -65,6 +56,7 @@ async function getdeadlines(interaction, packages) {
 
   // Add the deadlines to the Task Embed
   for (let i = 0; i < allDeadlines.length; i++){
+    // Four deadlines maximum
     if (i+1 > 4){
       break;
     }
