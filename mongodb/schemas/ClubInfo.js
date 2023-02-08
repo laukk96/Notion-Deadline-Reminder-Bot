@@ -7,6 +7,8 @@ const Club = {
   initiated_date: null,
   notion_integration_key: null,
   database_id: null,
+  deadline_property_name: null,
+  task_property_name: null,
 };
 
 
@@ -50,6 +52,22 @@ Club.database_id = (database_id) => {
     return database_id;
   } else {
     throw "database_id has to be a string.";
+  }
+};
+
+Club.deadline_property_name = (deadline_property_name) => {
+  if (typeof deadline_property_name === "string") {
+    return deadline_property_name;
+  } else {
+    throw "deadline_property_name has to be a string.";
+  }
+};
+
+Club.task_property_name = (task_property_name) => {
+  if (typeof task_property_name === "string") {
+    return task_property_name;
+  } else {
+    throw "task_property_name has to be a string.";
   }
 };
 

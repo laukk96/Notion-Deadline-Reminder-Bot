@@ -13,7 +13,7 @@ const { initialize } = require("./library/Discord");
 
 // Importing the token from the config.js file
 const { TOKEN } = require("./config");
-const { NotionDatabase } = require("../notion.js");
+const { NotionDatabase } = require("../notion/notion");
 
 // Import collections
 const { ClubInfo } = require("../mongodb/collections/ClubInfo/ClubInfo.js");
@@ -32,8 +32,9 @@ const client = new Client({
 });
 
 // Create the NotionDatabase for use in the functions
-const TABLE_DEADLINES_ID = "beb4f1b15ec1443c87e16bd138832d06";
+const TABLE_DEADLINES_ID = "f944e134b0584cc289d0a97775384d76";
 const notionDatabase = new NotionDatabase(TABLE_DEADLINES_ID);
+
 // Create the ClubInfoDatabase Collection Variable
 const ClubInfoDatabase = new ClubInfo();
 ClubInfoDatabase.connect();
