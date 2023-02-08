@@ -2,7 +2,7 @@ const {
     EmbedBuilder
 } = require("discord.js");
 
-async function getdeadlines(interaction, packages) {
+async function userinfo(interaction, packages) {
     const {
         notionDatabase,
         ClubInfoDatabase,
@@ -25,7 +25,6 @@ async function getdeadlines(interaction, packages) {
         .setAuthor({
             name: "Get Deadlines",
             iconURL: imageUrl,
-            url: 'https://www.notion.so/Overall-Task-List-beb4f1b15ec1443c87e16bd138832d06'
         })
         .setThumbnail(imageUrl)
         .addFields(
