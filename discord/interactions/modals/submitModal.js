@@ -1,5 +1,9 @@
 const { makeConsoleLogger } = require("@notionhq/client/build/src/logging");
-const { EmbedBuilder, Client } = require("discord.js");
+const { 
+  EmbedBuilder, 
+  Client,
+  ModalBuilder,
+} = require("discord.js");
 
 const {
   ClubInfo,
@@ -15,9 +19,10 @@ UserRegistryDatabase.connect();
 DeadlineHistoryDatabase.connect();
 
 async function submitModal(interaction, packages) {
+  console.log("Packages:", packages);
   console.log("Received a Modal: ", interaction.customId);
 
-  // adduser Modal
+  
   if (interaction.customId == "initiateModal") {
     const clubNameInput = interaction.fields.getTextInputValue("clubNameInput");
     const clubDescriptionInput = interaction.fields.getTextInputValue(
@@ -57,28 +62,36 @@ async function submitModal(interaction, packages) {
         club_description: clubDescriptionInput,
         notion_integration_key: notionIntegrationKeyInput,
         database_id: databaseIdInput,
+        deadline_property_name: null,
+        task_property_name: null,
       };
       const mongo_packet = {
         server_id: interaction.guild.id,
         data: data,
       };
-      console.log(data);
+      // Grab the PropertyNames from another modal
+
+
+      // Create the data in the ClubInfo Collection
       ClubInfoDatabase.queries.create.club(mongo_packet);
       // Send in the data packet with the server_id, data will be ignored by TemplateSchema
       UserRegistryDatabase.queries.create.user_registry(mongo_packet);
       DeadlineHistoryDatabase.queries.create.deadline_history(mongo_packet);
 
+      
       initiateEmbed = new EmbedBuilder()
         .setTitle("✅ Success!")
         .setDescription(
-          `Your Club \`${clubNameInput}\` has been successfully initiated in the MongoDB Database!`
+          `Your Club \`${clubNameInput}\` has been successfully initiated in the MongoDB Database!\nPlease run the command \`/setupnotion\` to continue.`
         )
         .setColor("02f933");
 
       interaction.reply({
         embeds: [initiateEmbed],
       });
+
     }
+  // adduser Modal
   } else if (interaction.customId == "adduserModal") {
     const name = interaction.fields.getTextInputValue("nameInput");
     const discord_id = interaction.fields.getTextInputValue("discordInput");

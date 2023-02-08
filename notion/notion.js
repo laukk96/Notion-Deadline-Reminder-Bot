@@ -6,7 +6,6 @@ const {
   getDueDate,
   getPerson,
   getTask,
-  createSortFunction,
   checkDataBase,
   PushDeadlines,
   AddUser,
