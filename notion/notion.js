@@ -1,6 +1,6 @@
 require("dotenv").config("/.env");
 const chalk = require("chalk");
-const { ClubInfo } = require("./mongodb/collections/ClubInfo/ClubInfo.js");
+const { ClubInfo } = require("../mongodb/collections/ClubInfo/ClubInfo.js");
 
 const GetDeadlinesForEmail = require("./functions/GetDeadlinesForEmail");
 const getDueDate = require("./functions/getDueDate");
@@ -9,7 +9,6 @@ const getTask = require("./functions/getTask");
 const checkDataBase = require("./functions/checkDatabase");
 const PushDeadlines = require("./functions/PushDeadlines");
 const AddUser = require("./functions/AddUser");
-const createSortFunction = require("./functions/createSortFunction");
 
 const ClubInfoDatabase = new ClubInfo();
 ClubInfoDatabase.connect();
@@ -75,8 +74,6 @@ class NotionDatabase {
   getTask = getTask;
 
   getDueDate = getDueDate;
-
-  validate = validate;
 }
 
 //ALL CODE BELOW IS FOR TESTING:
