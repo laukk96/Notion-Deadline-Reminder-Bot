@@ -2,7 +2,7 @@ const { EmbedBuilder } = require("discord.js");
 
 async function userinfo(interaction, packages) {
   const { notionDatabase, ClubInfoDatabase, UserRegistryDatabase } = packages;
-
+  
   const imageUrl = interaction.user.avatarURL();
   const nameUrl = interaction.user.username;
   const interactionUser = await interaction.guild.members.fetch(
@@ -38,7 +38,7 @@ async function userinfo(interaction, packages) {
       iconURL:
         "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.Kg2FF2wpIK_HLyo8Q56ycAHaFj%26pid%3DApi&f=1&ipt=903b969ee37fcf7030b3b98b6b053ba7b2e31ca8f1478f60f135f1c5a5a5796a&ipo=images",
     });
-
+    
   await interaction.reply({
     embeds: [userinfoEmbed],
   });
