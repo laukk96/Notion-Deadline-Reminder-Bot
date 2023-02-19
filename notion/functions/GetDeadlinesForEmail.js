@@ -1,6 +1,4 @@
 module.exports = async function (email, ClubInfo) {
-  console.log("in notion.js : GetDeadinesForEmail called! =", email);
-
   const response = await this.notion.databases.query({
     database_id: ClubInfo.database_id,
   });

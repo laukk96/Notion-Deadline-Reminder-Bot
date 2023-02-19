@@ -1,5 +1,7 @@
 const { EmbedBuilder } = require("discord.js");
+const chalk = require("chalk");
 module.exports = function ErrorHandler({ object, message, code }) {
+  console.log(chalk.red(`⚠️\n${message}\n`, object, "\n⚠️"));
   return {
     getEmbed: () => {
       return new EmbedBuilder()
