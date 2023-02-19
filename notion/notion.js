@@ -9,6 +9,7 @@ const getTask = require("./functions/getTask");
 const checkDataBase = require("./functions/checkDatabase");
 const PushDeadlines = require("./functions/PushDeadlines");
 const AddUser = require("./functions/AddUser");
+const NewClient = require("./functions/NewClient");
 
 const ClubInfoDatabase = new ClubInfo();
 ClubInfoDatabase.connect();
@@ -47,21 +48,13 @@ setTimeout(async () => {
 // just to check the objects in the properties
 
 class NotionDatabase {
-  constructor(TABLE_ID) {
-    this.notion = new Client({
-      auth: process.env.NOTION_KEY,
-    });
-
+  constructor() {
+    this.notion = null;
     // this.connectDatabase = connectDatabase;
-    this.connectDatabase = TABLE_ID;
+    //this.connectDatabase = TABLE_ID;
     // TODO: Fix this so that it is scaleable with other servers
-
-    (async () => {
-      const response = await this.notion.databases.query({
-        database_id: this.connectDatabase,
-      });
-    })();
   }
+  NewClient = NewClient;
 
   AddUser = AddUser;
 
@@ -77,8 +70,6 @@ class NotionDatabase {
 }
 
 //ALL CODE BELOW IS FOR TESTING:
-
-database1 = new NotionDatabase(TABLE_DEADLINES_ID);
 
 //database1.getTask("Afraz");
 // console.log( chalk.greenBright(`${database1.GetDeadlinesForEmail("jsaleh849@insite.4cd.edu")}`) );

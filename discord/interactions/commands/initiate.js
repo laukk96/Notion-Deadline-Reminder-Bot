@@ -19,7 +19,6 @@ async function initiate(interaction) {
     interaction.reply({
       embeds: [rejectionEmbed],
     });
-    return;
   }
   // TODO: Check if the server has not been initiated already
 
@@ -55,17 +54,17 @@ async function initiate(interaction) {
     .setStyle(TextInputStyle.Short)
     .setMaxLength(200)
     .setRequired(false);
-  
+
   const deadlinePropertyNameInput = new TextInputBuilder()
     .setCustomId("deadlinePropertyNameInput")
     .setLabel("What is your Deadline property name?")
     .setStyle(TextInputStyle.Short)
     .setMaxLength(200)
     .setRequired(false);
-  
-    const taskPropertyNameInput = new TextInputBuilder()
-    .setCustomId("taskPropertyNameInput")
-    .setLabel("What is your Task property name?")
+
+  const taskPropertyNameInput = new TextInputBuilder()
+    .setCustomId("taskeePropertyNameInput")
+    .setLabel("What is your Taskee property name?")
     .setStyle(TextInputStyle.Short)
     .setMaxLength(200)
     .setRequired(false);
@@ -80,11 +79,13 @@ async function initiate(interaction) {
   // The following lines of code create action rows for the modal.
   const actionRow1 = new ActionRowBuilder().addComponents(clubNameInput);
   const actionRow2 = new ActionRowBuilder().addComponents(clubDescriptionInput);
-  const actionRow3 = new ActionRowBuilder().addComponents(notionIntegrationKeyInput);
+  const actionRow3 = new ActionRowBuilder().addComponents(
+    notionIntegrationKeyInput
+  );
   const actionRow4 = new ActionRowBuilder().addComponents(databaseIdInput);
   const actionRow5 = new ActionRowBuilder().addComponents(databaseIdInput);
   const actionRow6 = new ActionRowBuilder().addComponents(databaseIdInput);
-  
+
   const lastActionRow = new ActionRowBuilder().addComponents(agreementInput);
 
   // This line of code adds the action rows to the modal.
