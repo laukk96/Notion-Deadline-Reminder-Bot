@@ -7,7 +7,7 @@ module.exports = (client, packages) =>
   async function interactionCreate(interaction) {
     if (interaction.isChatInputCommand()) {
       if (commands.Object[interaction.commandName]) {
-        commands.Object[interaction.commandName].interaction(
+        await commands.Object[interaction.commandName].interaction(
           interaction,
           packages
         );
