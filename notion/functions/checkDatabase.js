@@ -1,4 +1,4 @@
-module.exports = async function () {
+module.exports = async function (ClubInfo) {
   const response = await this.notion.databases.query({
     database_id: this.connectDatabase,
   });

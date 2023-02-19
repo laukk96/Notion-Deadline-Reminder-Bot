@@ -5,7 +5,9 @@ const { rate_limiter } = require("../../lib/ratelimiter");
 const { create_guild_key } = require("./calls/create_guild_key");
 const { get_info } = require("./calls/get_info");
 
-
+const {
+  update_notion_properties,
+} = require("./calls/update_notion_properties");
 const queries = (Dependencies) => {
   return {
     get: {
@@ -15,8 +17,12 @@ const queries = (Dependencies) => {
     create: {
       // deadline: rate_limiter(() => create_deadline(Dependencies)),
       club: rate_limiter(() => create_guild_key(Dependencies)),
-    },  
-    update: {},
+    },
+    update: {
+      update_notion_properties: rate_limiter(() =>
+        update_notion_properties(Dependencies)
+      ),
+    },
   };
 };
 module.exports = { queries };

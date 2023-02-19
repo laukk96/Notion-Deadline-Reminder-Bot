@@ -1,8 +1,8 @@
-module.exports = async function (name) {
+module.exports = async function (name, ClubInfo) {
   console.log("Searching for " + name + "'s task...");
 
   const response = await this.notion.databases.query({
-    database_id: this.connectDatabase,
+    database_id: ClubInfo.database_id,
   });
   const data = [];
   for (let i = 0; i < response.results.length; i++) {
